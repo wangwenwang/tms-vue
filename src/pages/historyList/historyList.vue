@@ -276,6 +276,7 @@ import FooterIndex from '../../components/footer.vue'
 			},
 			// 查看轨迹
 			ViewTrajectory(shipmentID){
+				console.log("ID: " + shipmentID);
 				// 安卓
 				try {
 
@@ -355,12 +356,11 @@ import FooterIndex from '../../components/footer.vue'
 				flex-grow: 1;
 			}
 			.currentTask{
-				border-bottom: 3/50rem solid #f0f0f0;
+				border-bottom: 6/50rem solid #fff;
 			}
 			.historyTask{
-				color: #fff;
-				background-color:#5965D8;
-				border-bottom: 3/50rem solid #5965D8;
+				color: #5965D8;
+				border-bottom: 6/50rem solid #5965D8;
 				position: relative;
 				i{
 					position: absolute;
@@ -372,49 +372,6 @@ import FooterIndex from '../../components/footer.vue'
 				}
 			}
 		}
-		// .summarized{
-		// 	width: 100%;
-		// 	position: fixed;
-		// 	top: 90/50rem;
-		// 	left: 0;
-		// 	z-index: 999;
-		// 	height: 110/50rem;
-		// 	background-color: #F5F5F5;
-		// 	padding:15/50rem 20/50rem;
-		// 	box-sizing: border-box;
-		// 	overflow: hidden;
-		// 	&>div{
-		// 		float: left;
-		// 		font-size: 30/50rem;
-		// 		color: #000;
-		// 		height: 80/50rem;
-		// 		line-height: 80/50rem;
-		// 		overflow: hidden;
-		// 		&:nth-child(1){
-		// 			// margin-right: 20/50rem;
-		// 		}
-		// 		.block{
-		// 			height: 100%;
-		// 			.el-date-editor--month{
-		// 				width: 300/50rem;
-		// 				height: 100%;
-		// 			}
-		// 			.monthInput{
-		// 				height: 70/50rem;
-		// 			}
-		// 		}
-		// 		&>div{
-		// 			font-size: 25/50rem;
-		// 			color: #9B9B9B;
-		// 			float: left;
-
-		// 			margin-bottom: 10/50rem;
-		// 			&:nth-child(1){
-		// 				margin-right: 30/50rem;
-		// 			}
-		// 		}
-		// 	}
-		// }
 		.container{
 			padding-top: 0;
 			margin-top: 0;

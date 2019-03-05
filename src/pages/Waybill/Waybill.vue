@@ -237,12 +237,11 @@
 			flex-grow: 1;
 		}
 		.currentTask{
-			color: #fff;
-			background-color:#5965D8;
-			border-bottom: 3/50rem solid #5965D8;
+			color: #5965D8;
+			border-bottom: 6/50rem solid #5965D8;
 		}
 		.historyTask{
-			border-bottom: 3/50rem solid #f0f0f0;
+			border-bottom: 6/50rem solid #fff;
 		}
 	}
 	.container{

@@ -3,7 +3,8 @@
     <div class="_template_WaybillInfo">
 
 		<div  class="bigList" v-for='(dataItem,index) in shipmentListData'  :id="index"  :key='index'  >
-	  		<div  class="listHead"  @click="Details_waybill(dataItem.shipmentID)" >
+	  		<div  class="listHead" >
+	  			<div  @click="Details_waybill(dataItem.shipmentID)" >
 				<!-- 导航 -->
 				<span  v-if="$store.state.IF_Navigation"  @click="Navigation(index)" class="Navigation">导航</span>
 				<!-- 状态 -->
@@ -43,9 +44,10 @@
 					<span>装货地址：</span>
 					<span>{{dataItem.issueAddrLiat[0].issueAddr1}}</span>
 				</div>
-				<div v-else @click="MultiAddress(index)">
+				<div v-else>
 					<i class="iconfont icon-tishi" ></i>
-					<span style="color:#5965D8; ">查看多装货地址</span>
+					<span  @click="MultiAddress(index)" style="color:#5965D8; ">查看多装货地址</span>
+				</div>
 				</div>
 				<div class="mileage">
 					<div>
@@ -55,6 +57,9 @@
 					<div style="color: green;">
 						<span>里程数：</span>
 						<span>{{dataItem.distance}}</span>
+					</div>
+					<div>
+						<span  @click="ViewTrajectory(dataItem.shipmentID)">查看已行驶</span>
 					</div>
 				</div>
 				<div v-if="dataItem.issueAddrLiat.length == 1 && dataItem.issueAddrLiat[0].phoneAppointTime">
@@ -163,6 +168,30 @@ export default {
      	
     },
     methods:{
+		// 查看轨迹
+		ViewTrajectory(shipmentID){
+			console.log("ID: " + shipmentID);
+			// 安卓
+			try {
+
+				CallAndroidOrIOS.callAndroid("查看路线", shipmentID);
+
+			} 
+			catch(error) {
+
+				// console.log("没有CallAndroidOrIOS.callAndroid方法")
+			}
+
+			// 苹果
+			try {
+
+					CallAndroidOrIOS("查看路线",shipmentID);
+			}
+			catch(error) {
+
+				// console.log("没有CallAndroidOrIOS方法")
+			}
+		},
     	// 跳转到二维码页面
 		_ewm(shipmentCode){
 			event.stopPropagation();
@@ -298,7 +327,20 @@ export default {
 			}
 			&.mileage{
 				&>div{
-					width: 355/50rem;
+					width: 235/50rem;
+				}
+				div:nth-child(2){
+					text-align:center;
+				}
+				div:nth-child(3){
+					float: right;
+					width: 168/50rem;
+					padding-top: 2/50rem;
+					padding-bottom: 2/50rem;
+					text-align: center;
+					background-color: #5965D8;
+					color: #fff;
+					border-radius: 15/50rem;
 				}
 			}
 		}

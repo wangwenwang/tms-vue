@@ -84,6 +84,8 @@
       	mounted(){
       		var that = this;
 
+      		$('html,body').animate({ scrollTop: 0 }, 500);
+
 		    let canvas=this.$refs.canvasF;
 
 	        canvas.height = this.$refs.canvasHW.offsetHeight;

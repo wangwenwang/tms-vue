@@ -1,7 +1,7 @@
 <!-- _template_orderInfo.vue   订单信息 组件-->
 <template>
     <div class="OrderInfo_template">
-		<div class="orderHead" ><span class="selectAll" v-if="_orderInfo[0]? !_orderInfo[0].notOperate : true"  @click="selectAll">取消全选</span>订单信息</div>
+		<div class="orderHead" ><span class="selectAll" v-if="!historyList&&(_orderInfo[0]? !_orderInfo[0].notOperate : true)"  @click="selectAll">取消全选</span>订单信息</div>
 		<div class='goodsInfo'   v-for='(dataItem,index) in _orderInfo'  :id="index"  :key='index'  @click="selectData(index,dataItem.ifDeliver)">
 		    <div class='goodsHead'>
 		    	<span v-if="dataItem.ifDeliver" class="iconfont icon-xuanzhong"></span>
@@ -60,7 +60,7 @@
 		    	<span v-if="!dataItem.ifDeliver" class="g_btn" style="visibility:hidden;">交付</span>
 		    	
 		    </div>
-		    <div v-if="!historyList && _orderInfo[0]? !_orderInfo[0].notOperate : true"  class="g_doubleBtn bottomBtn">
+		    <div v-if=" (_orderInfo[0]? !_orderInfo[0].notOperate : true) && !historyList"  class="g_doubleBtn bottomBtn">
 	            <div @click="toOrderDeliver('selectAll')">批量交付</div>
 	            <div v-if="!selectAddr" @click="toSelectAdd(shipmentID)">按地址交付</div>
 	        </div>
@@ -161,32 +161,34 @@ export default {
 
 				}else{
 
-					var ifSame = [];
+					that.$router.push({
+						name:"orderDeliver",
+						query:{
+							deliverNo_list:deliverNo_list
+						}
+					})
 
-					for(var i = 0 ; i < validateArray.length;i++){
+					// var ifSame = [];
+
+					// for(var i = 0 ; i < validateArray.length;i++){
 
 						
-						// if(validateArray[0] == validateArray[i]){
+					// 	if(validateArray[0] == validateArray[i]){
 
-							ifSame[i] = 1;
+					// 		ifSame[i] = 1;
 
-							if(ifSame.length == validateArray.length){
+					// 		if(ifSame.length == validateArray.length){
 
-								that.$router.push({
-									name:"orderDeliver",
-									query:{
-										deliverNo_list:deliverNo_list
-									}
-								})
-							}
+								
+					// 		}
 
-						// }else{
+					// 	}else{
 
-						// 	that.$alert("选中的订单中存在不同收货人，请重新选择", '提示', {
-						//         confirmButtonText: '确定'
-						//    	})
-						// }
-					}
+					// 		that.$alert("选中的订单中存在不同收货人，请重新选择", '提示', {
+					// 	        confirmButtonText: '确定'
+					// 	   	})
+					// 	}
+					// }
 				}
 			}
 
