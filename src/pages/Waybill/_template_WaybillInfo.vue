@@ -78,14 +78,14 @@
 					未交付
 				 -->
 				<span v-if="dataItem.status == '新建'"  @click="LoadingAppoint(index)">装货预约</span>
-				<span v-else style="background-color: #aaa;">装货预约</span>
+				<!-- <span v-else style="background-color: #aaa;">装货预约</span> -->
 				<span v-if="dataItem.status == '新建' "  @click="toArrivalConfirm(index)">到达确认</span>
 				<span v-else   style="background-color: #aaa;">到达确认</span>
 				<span v-if="dataItem.status == '新建' || dataItem.status == '开始装车'"  @click="toDepartureConfirm(index)">发车确认</span>
 				<span v-else   style="background-color: #aaa;">发车确认</span>
 				<span v-if="dataItem.status == '在途'|| dataItem.status == '未交付' "  @click="toWayFeedback(index)">途中反馈</span>
 				<span v-else   style="background-color: #aaa;">途中反馈</span>
-				<span class="viewbtn"  @click="ViewTrajectory(dataItem.shipmentID)">查看已行驶</span>
+				<span class="viewbtn" v-if="dataItem.status != '新建' "  @click="ViewTrajectory(dataItem.shipmentID)">查看已行驶</span>
 			</p>
 		</div>
 		<!-- 查看多装货地址弹出框 -->
@@ -325,7 +325,7 @@ export default {
 				float: left;
 			}
 		}
-		&.mileage{
+		.mileage{
 			&>div{
 				width: 355/50rem;
 			}
