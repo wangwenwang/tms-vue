@@ -30,7 +30,9 @@
 				CurrentLocation:"",//当前位置
 				nowDate:"",//当前时间
 				tips_Msg:"",//提示信息
-				ifTips:false
+				ifTips:false,
+				longitude:"",//经度
+				latitude:""//纬度
 			}
 		},
 		mounted(){
@@ -57,7 +59,7 @@
 			this.nowDate = this.getNowTime();
 		},
 		methods:{
-			SetCurrAddress:function(address) {
+			SetCurrAddress:function(address, lng, lat) {
 
 				if(address == "") {
 
@@ -69,6 +71,8 @@
 				}else {
 
 					this.CurrentLocation = address;
+					this.longitude = lng;
+					this.latitude = lat;
 				}
 			},
 			submit(){
@@ -80,7 +84,9 @@
 				    shipTime : this.nowDate,//发车时间  2018-08-06 18:56:43
 				    shipUser : that.$store.state.userInfo.userName,//发车人
 				    tenantCode : this.dataList.tenantCode,//租户代码
-				    shipPosition: this.CurrentLocation// 当前位置
+				    shipPosition: this.CurrentLocation,// 当前位置
+				    longitude: this.longitude,// 经度
+				    latitude: this.latitude// 纬度
 			    }
 
 				this.httpRequest( "shipConfirmation.do",postData,function(res){

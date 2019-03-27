@@ -78,7 +78,9 @@
 		        endX:0,
 		        w:null,
 		        h:null,
-		        isDown:false
+		        isDown:false,
+				longitude:"",//经度
+				latitude:""//纬度
 			}
 		},
       	mounted(){
@@ -124,7 +126,7 @@
 		},
 		methods:{
 			// 定位
-			SetCurrAddress:function(address) {
+			SetCurrAddress:function(address, lng, lat) {
 
 				if(address == "") {
 
@@ -200,6 +202,8 @@
 					driverName: that.$store.state.userInfo.userName,//司机名称，当前APP登录用户名
 					autograph:strDataURI,// 电子签名
 					daoDaPlace:this.CurrentLocation,//当前位置
+					longitude:this.longitude,//经度
+					latitude:this.latitude//纬度
 				}
 
 				this.httpRequest( "deliverConfirmation.do",postData,function(res){

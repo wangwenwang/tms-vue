@@ -59,6 +59,7 @@ Vue.prototype.HOST = "http://k56.kaidongyuan.com/tmsApp/"    //正式   外网
 // Vue.prototype.HOST = "http://zwlttest.3322.org:8081/tmsApp/"
 
 // Vue.prototype.HOST = "http://119.23.172.113:8086/tmsApp/"
+// Vue.prototype.HOST = "http://192.168.20.113:8880/cyscm/tmsApp/"    //许三晏电脑IP，本地调试
 
 
 
@@ -166,6 +167,12 @@ Vue.prototype.Geolocation=function (){
 	        .then(function(res){
 
 				console.log(res);
+				console.log("地址：" + res.data.result.formatted_address);
+				console.log("经度：" + res.data.result.location.lng);
+				console.log("纬度：" + res.data.result.location.lat);
+
+				that.longitude = res.data.result.location.lng;
+				that.latitude = res.data.result.location.lat;
 
 				that.$emit('isLoading', false);
 
@@ -184,9 +191,9 @@ Vue.prototype.Geolocation=function (){
 
 				that.$emit('isLoading', false);
 
-				that.$alert("获取位置失败", '提示', {
-		            confirmButtonText: '确定'
-	           	})
+				// that.$alert("获取位置失败", '提示', {
+		  //           confirmButtonText: '确定'
+	   //         	})
 			})
         }
     }, { enableHighAccuracy: true })
