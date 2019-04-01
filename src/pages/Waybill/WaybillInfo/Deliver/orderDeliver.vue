@@ -138,7 +138,8 @@
 				}else {
 
 					this.CurrentLocation = address;
-
+					this.longitude = lng;
+					this.latitude = lat;
 					this.canvasTxt.fillText(address, 5, this.$refs.canvasF.height - 10);
 				}
 			},
