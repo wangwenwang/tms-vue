@@ -19,7 +19,7 @@
 				<div class="uploadImg">
 					<div class="LoadImg_head">卸货车照</div>
 					<div>
-						<el-upload :action = " HOST+'confirmationUpload.do'"  :limit="6" :multiple="true"  :data="uploadParams" ref='upload_ref1' :auto-upload="false" list-type="picture-card"  :before-upload="beforeUpload"   :on-error="uploadError" :on-success="uploadSuccess"   :on-preview="handlePictureCardPreview" >
+						<el-upload :action = " HOST+'confirmationUpload.do'"  :limit="3" :multiple="true"  :data="uploadParams" ref='upload_ref1' :auto-upload="false" list-type="picture-card"  :before-upload="beforeUpload"   :on-error="uploadError" :on-success="uploadSuccess"   :on-preview="handlePictureCardPreview" >
 						  <i class="el-icon-plus"></i>
 						</el-upload>
 						<el-dialog :visible.sync="dialogVisible">
@@ -31,7 +31,7 @@
 				<div class="uploadImg">
 					<div class="LoadImg_head">签单回执</div>
 					<div>
-						<el-upload :action = "HOST+'confirmationUpload.do'"  :limit="6" :multiple="true"  :data="uploadParams" ref='upload_ref2' :auto-upload="false" list-type="picture-card"  :before-upload="beforeUpload"   :on-error="uploadError" :on-success="uploadSuccess"   :on-preview="handlePictureCardPreview" >
+						<el-upload :action = "HOST+'confirmationUpload.do'"  :limit="3" :multiple="true"  :data="uploadParams" ref='upload_ref2' :auto-upload="false" list-type="picture-card"  :before-upload="beforeUpload"   :on-error="uploadError" :on-success="uploadSuccess"   :on-preview="handlePictureCardPreview" >
 						  <i class="el-icon-plus"></i>
 						</el-upload>
 						<el-dialog :visible.sync="dialogVisible">

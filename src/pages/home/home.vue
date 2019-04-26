@@ -15,7 +15,7 @@
 		    		<div  @click="toHistoricalTrack"><i class="iconfont icon-lishiguiji" ></i><span>历史轨迹</span><i class="iconfont icon-xiangshang" ></i></div>
 		    		<div  @click="toPersonalData"><i class="iconfont icon-gerenziliaoxiugai" ></i><span>个人资料</span><i class="iconfont icon-xiangshang" ></i></div>
 		    		<div  @click="toPassword"><i class="iconfont icon-xiugaimima" ></i><span>修改密码</span><i class="iconfont icon-xiangshang" ></i></div>
-		    		<div><i class="iconfont icon-guanyu" ></i><span>关于</span><span>{{VersionNum}}.32</span></div>
+		    		<div  @click="toCheckVersion"><i class="iconfont icon-guanyu" ></i><span>版本更新</span><span>{{VersionNum}}.33</span></div>
 		    	</div>
 			    <div class='Exit_logon' >
 				    <i class="iconfont icon-icon-yxj-switch-account"  @click="exit" ></i>
@@ -45,6 +45,7 @@ import FooterIndex from "../../components/footer"
 			this.userName = this.$store.state.userInfo.userName;
 			this.cellphone = this.$store.state.userInfo.cellphone;
 			this.VersionNum =  this.$store.state.App_Version;
+			this.VersionNum = this.VersionNum.replace("版本:","")
 		},
 		methods:{
 			// 跳转到 历史轨迹 页面
@@ -73,6 +74,64 @@ import FooterIndex from "../../components/footer"
 					query:{
 					}
 				})
+			},
+			// 如果安卓版本低于或等于1.2.0，告诉vue
+			compareVersion(locati) {
+
+				var arr = locati.split('.');
+
+				var loc1 = arr[0];
+				var loc2 = arr[1];
+				var loc3 = arr[2];
+
+				if(loc1 < 1) {
+					return 1;
+				}else if(loc2 < 2) {
+					return 1;
+				}else if(loc2 == 2 && loc3 == 0) {
+					return 1;
+				}else {
+					return 0;
+				}
+			},
+			// 告诉原生代码 检查版本更新
+			toCheckVersion(){
+
+				var AppVersion = this.$store.state.App_Version;
+				var AppDevice = this.$store.state.Device;
+
+				var needUpdate = this.compareVersion(AppVersion);
+
+				if(needUpdate == 1 && AppDevice == "android") {
+
+			        this.$alert('版本太低，请退出APP，再次打开进行更新', '提示', {
+			            confirmButtonText: '确认',
+			            type: 'warning'
+			        });
+				}
+
+				if(AppDevice == "iOS" || AppDevice == "") {
+
+					this.$alert('请移步至App Store检查更新', '提示', {
+			            confirmButtonText: '确认',
+			            type: 'warning'
+			        });
+				}
+
+				// 安卓
+				try {
+					CallAndroidOrIOS.callAndroid("检查版本更新");
+				} 
+				catch(error) {
+					console.log("没有CallAndroidOrIOS.callAndroid方法")
+				}
+				// 苹果
+				try {
+					CallAndroidOrIOS("检查版本更新");
+				}
+				catch(error) {
+					console.log("没有CallAndroidOrIOS方法")
+				}
 			},
 			// 切换账号 按钮
 			exit(){
