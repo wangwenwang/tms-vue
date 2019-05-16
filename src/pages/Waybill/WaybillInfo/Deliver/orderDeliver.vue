@@ -13,13 +13,14 @@
 		                @mousemove="mouseMove"
 		                @mouseup="mouseUp"></canvas>
 		        	<div class="btnBox"   @click="overwrite">重写</div>
+		        	<div class="tip_assist">{{ setDistance() }}</div>
 		      	</div>
 		    </div>
 			<div class="Upload">
 				<div class="uploadImg">
 					<div class="LoadImg_head">卸货车照</div>
 					<div>
-						<el-upload :action = " HOST+'confirmationUpload.do'"  :limit="3" :multiple="true"  :data="uploadParams" ref='upload_ref1' :auto-upload="false" list-type="picture-card"  :before-upload="beforeUpload"   :on-error="uploadError" :on-success="uploadSuccess"   :on-preview="handlePictureCardPreview" >
+						<el-upload :action = " HOST+'confirmationUpload.do'"  :limit="3" :multiple="true"  :data="uploadParams" ref='upload_ref1' :auto-upload="false" list-type="picture-card"  :before-upload="beforeUpload"   :on-error="uploadErrorInCurrVue" :on-success="uploadSuccessInCurrVue"   :on-preview="handlePictureCardPreview" >
 						  <i class="el-icon-plus"></i>
 						</el-upload>
 						<el-dialog :visible.sync="dialogVisible">
@@ -31,7 +32,7 @@
 				<div class="uploadImg">
 					<div class="LoadImg_head">签单回执</div>
 					<div>
-						<el-upload :action = "HOST+'confirmationUpload.do'"  :limit="3" :multiple="true"  :data="uploadParams" ref='upload_ref2' :auto-upload="false" list-type="picture-card"  :before-upload="beforeUpload"   :on-error="uploadError" :on-success="uploadSuccess"   :on-preview="handlePictureCardPreview" >
+						<el-upload :action = "HOST+'confirmationUpload.do'"  :limit="3" :multiple="true"  :data="uploadParams" ref='upload_ref2' :auto-upload="false" list-type="picture-card"  :before-upload="beforeUpload"   :on-error="uploadErrorInCurrVue" :on-success="uploadSuccessInCurrVue"   :on-preview="handlePictureCardPreview" >
 						  <i class="el-icon-plus"></i>
 						</el-upload>
 						<el-dialog :visible.sync="dialogVisible">
@@ -80,7 +81,8 @@
 		        h:null,
 		        isDown:false,
 				longitude:"",//经度
-				latitude:""//纬度
+				latitude:"",//纬度
+				distance:""//与收货地址的距离
 			}
 		},
       	mounted(){
@@ -128,9 +130,11 @@
 			// 定位
 			SetCurrAddress:function(address, lng, lat) {
 
+				var that = this;
+
 				if(address == "") {
 
-					this.$alert(msg, '定位失败', {
+					this.$alert("定位失败，请退出APP，重新打开", '提示', {
 	            		confirmButtonText: '确定',
 	            		callback: action => {
 	            		}
@@ -141,6 +145,29 @@
 					this.longitude = lng;
 					this.latitude = lat;
 					this.canvasTxt.fillText(address, 5, this.$refs.canvasF.height - 10);
+
+					var postData = {
+						deliveryIds:that.$route.query.deliverNo_list,//运单ID，比如：1001,1002,1003)，一个或多个交付统一传数组字符串
+						longitude:lng,//经度
+						latitude:lat//纬度
+					}
+
+					that.httpRequest( "deliveryCheckRange.do",postData,function(res){
+
+						that.distance = res.data.warnMsg;
+					})
+				}
+			},
+			setDistance(){
+
+				// 按收货地址交付
+				if(this.$route.query.selectAddr == true || this.$route.query.deliverNo_list.length == 1) {
+
+					if(this.distance == "") {
+						return "";
+					}else {
+						return this.distance + "(如提示有误请忽略)";
+					} 
 				}
 			},
 			submit(){
@@ -170,61 +197,25 @@
 		           	return;
 				}
 
+				var XHQty = $(".Upload>div.uploadImg:eq(0) ul>li").length;
+				var HZQty = $(".Upload>div.uploadImg:eq(1) ul>li").length;
+
+				console.log("卸货车照数量：" + XHQty);
+				console.log("签单回执数量：" + HZQty);
+				console.log("照片总数量：" + (XHQty + HZQty));
+
+				this.$store.state.orderDeliver_picture_finish_qty = 0;
+				this.$store.state.orderDeliver_picture_total_qty = (XHQty + HZQty);
+
 				// 上传图片
 				this.$refs.upload_ref1.submit();
 				this.$refs.upload_ref2.submit();
 
-				// 将电子签名图片转为base64编码
-				var oCanvas = document.getElementById("thecanvas");
-				var context = oCanvas.getContext("2d");
+				this.$store.state.orderDeliver_CurrentLocation = this.CurrentLocation;
+				this.$store.state.orderDeliver_longitude = this.longitude;
+				this.$store.state.orderDeliver_latitude = this.latitude;
 
-				// 将canvas的透明背景设置成白色
-				var imageData = context.getImageData(0, 0, oCanvas.width, oCanvas.height);
-
-				for(var i = 0; i < imageData.data.length; i += 4) {
-				    // 当该像素是透明的，则设置成白色
-				    if(imageData.data[i + 3] == 0) {
-				        imageData.data[i] = 255;
-				        imageData.data[i + 1] = 255;
-				        imageData.data[i + 2] = 255;
-				        imageData.data[i + 3] = 255; 
-				    }
-				}
-				context.putImageData(imageData, 0, 0);
-
-				// 将电图片转为base64编码
-				var strDataURI = oCanvas.toDataURL();
-
-				var deliverNo_list = this.$route.query.deliverNo_list;
-
-				var postData = {
-					tenantCode:  this.$store.state.Waybill.WaybillInfo.WaybillInfo.tenantCode,//组织代码
-					deliveryIds: deliverNo_list,//运单ID，比如：1001,1002,1003)，一个或多个交付统一传数组字符串
-					driverName: that.$store.state.userInfo.userName,//司机名称，当前APP登录用户名
-					autograph:strDataURI,// 电子签名
-					daoDaPlace:this.CurrentLocation,//当前位置
-					longitude:this.longitude,//经度
-					latitude:this.latitude//纬度
-				}
-
-				this.httpRequest( "deliverConfirmation.do",postData,function(res){
-
-					that.ifTips = true;
-					that.tips_Msg = "操作成功";
-
-					setTimeout(function(){
-
-						that.ifTips = false;
-
-						that.$router.push({
-							name:"Waybill",
-							query:{
-							}
-						})
-						that.$store.state.Waybill_needRefresh = true;
-					},1000)
-				})
-
+				that.$emit('isLoading', true,"拼命加载中");
 			},
 			// 预览放大图片
 			handlePictureCardPreview (file) {
@@ -379,7 +370,85 @@
 
 				this.canvasTxt.font="15px Microsoft JhengHei";
 				this.canvasTxt.fillText(currentdate, 5, this.$refs.canvasF.height - 35);
-	        }
+	        },
+
+
+			// 文件上传成功时的钩子
+			uploadSuccessInCurrVue(response, file, fileList){
+
+				var that = this;
+
+				this.$store.state.orderDeliver_picture_finish_qty = (this.$store.state.orderDeliver_picture_finish_qty + 1);
+
+				console.log("已完成：" + this.$store.state.orderDeliver_picture_finish_qty + "，总数量：" + this.$store.state.orderDeliver_picture_total_qty)
+
+				console.log(response)
+
+				if(this.$store.state.orderDeliver_picture_finish_qty == this.$store.state.orderDeliver_picture_total_qty) {
+
+					console.log("上传图片完成，调用上传签名接口")
+					console.log(that.CurrentLocation)
+
+					// 将电子签名图片转为base64编码
+					var oCanvas = document.getElementById("thecanvas");
+					var context = oCanvas.getContext("2d");
+					// 将canvas的透明背景设置成白色
+					var imageData = context.getImageData(0, 0, oCanvas.width, oCanvas.height);
+					for(var i = 0; i < imageData.data.length; i += 4) {
+					    // 当该像素是透明的，则设置成白色
+					    if(imageData.data[i + 3] == 0) {
+					        imageData.data[i] = 255;
+					        imageData.data[i + 1] = 255;
+					        imageData.data[i + 2] = 255;
+					        imageData.data[i + 3] = 255; 
+					    }
+					}
+					context.putImageData(imageData, 0, 0);
+					// 将电图片转为base64编码
+					var strDataURI = oCanvas.toDataURL();
+
+					var postData = {
+						tenantCode: this.$store.state.Waybill.WaybillInfo.WaybillInfo.tenantCode,//组织代码
+						deliveryIds:this.$route.query.deliverNo_list,//运单ID，比如：1001,1002,1003)，一个或多个交付统一传数组字符串
+						driverName:this.$store.state.userInfo.userName,//司机名称，当前APP登录用户名
+						autograph:strDataURI,// 电子签名
+						daoDaPlace:this.$store.state.orderDeliver_CurrentLocation,//当前位置
+						longitude:this.$store.state.orderDeliver_longitude,//经度
+						latitude:this.$store.state.orderDeliver_latitude//纬度
+					}
+
+					that.httpRequest( "deliverConfirmation.do",postData,function(res){
+
+						that.ifTips = true;
+						that.tips_Msg = "操作成功";
+
+						setTimeout(function(){
+
+							that.ifTips = false;
+
+							that.$router.push({
+								name:"Waybill",
+								query:{
+								}
+							})
+							that.$store.state.Waybill_needRefresh = true;
+						},1000)
+					})
+				}
+			},
+
+			// 文件上传失败时的钩子
+			uploadErrorInCurrVue(err, file, fileList){
+
+				var that = this;
+
+				that.$emit('isLoading', false);
+
+				that.$alert('网络不稳定，上传照片失败，请稍候再试！', '提示', {
+			            confirmButtonText: '确定'
+		        })
+				console.log(err)
+			}
 		}
 	}
 </script>
@@ -419,7 +488,7 @@
 
 	.signatureBox{
 	    width: 100%;
-	    height: 550/50rem;
+	    height: 610/50rem;
 	    box-sizing: border-box;
 	    overflow: hidden;
 	    background: #fff;
@@ -456,6 +525,9 @@
 	    text-align: center;
 	    border-radius: 8/50rem;
 	    margin: 10/50rem auto;
+	}
+	.tip_assist{
+	    color: #696969;
 	}
 
 	@media screen and (max-width: 374px){

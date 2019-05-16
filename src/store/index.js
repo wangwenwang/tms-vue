@@ -41,5 +41,11 @@ export default new vuex.Store({
 
 		WX_Openid:'',//微信登录 Openid
 		App_Version:'',//App版本号
+
+		orderDeliver_picture_total_qty:0,//交付照片总数量（不包括签名图片)
+		orderDeliver_picture_finish_qty:0,//交付照片已上传数量（不包括签名图片)
+		orderDeliver_CurrentLocation:"",//交付地址
+		orderDeliver_longitude:"",//交付经度
+		orderDeliver_latitude:"",//交付纬度
 	}
 })

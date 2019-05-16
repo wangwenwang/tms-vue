@@ -96,7 +96,15 @@
 					    cellphone: that.$store.state.userInfo.cellphone,//手机号   15013418360
 				    };
 
+					var myDate = new Date();
+				    console.log("发起列表请求：" + myDate.toLocaleTimeString() + ":" + myDate.getMilliseconds());
+
+
+
 					this.httpRequest("queryShipmentData.do",postData,function(res){
+
+						var myDate2 = new Date();
+						console.log("发起列表完成：" + myDate2.toLocaleTimeString() + ":" + myDate2.getMilliseconds());
 
 						if(load){
 							if(load == "TopLoad"){

@@ -60,6 +60,7 @@ Vue.prototype.HOST = "http://k56.kaidongyuan.com/tmsApp/"    //正式   外网
 
 // Vue.prototype.HOST = "http://119.23.172.113:8086/tmsApp/"
 // Vue.prototype.HOST = "http://192.168.20.113:8880/cyscm/tmsApp/"    //许三晏电脑IP，本地调试
+// Vue.prototype.HOST = "http://192.168.20.131:8880/cyscm/tmsApp/"    //黄伟雄电脑IP，本地调试
 
 
 
@@ -116,7 +117,7 @@ Vue.prototype.httpRequest=function (url,params,success){
 
 			}else{
 
-				msg = "请求失败";
+				msg = url + "请求失败";
 			}
 
 			that.$alert(msg, '提示', {
@@ -131,7 +132,7 @@ Vue.prototype.httpRequest=function (url,params,success){
 
 		that.$emit('isLoading', false);
 			
-		that.$alert("请求失败", '提示', {
+		that.$alert("http请求失败", '提示', {
 	        confirmButtonText: '确定',
 	        callback: action => {
 	            
@@ -180,6 +181,17 @@ Vue.prototype.Geolocation=function (){
 
 					that.CurrentLocation = res.data.result.formatted_address;
 					that.canvasTxt.fillText(that.CurrentLocation, 5, that.$refs.canvasHW.offsetHeight - 10);
+
+					var postData = {
+						deliveryIds:that.$route.query.deliverNo_list,//运单ID，比如：1001,1002,1003)，一个或多个交付统一传数组字符串
+						longitude:that.longitude,//经度
+						latitude:that.latitude//纬度
+					}
+
+					that.httpRequest( "deliveryCheckRange.do",postData,function(res){
+
+						that.distance = res.data.warnMsg;
+					})
 					
 				}else{
 

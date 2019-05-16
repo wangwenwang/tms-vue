@@ -164,7 +164,8 @@ export default {
 					that.$router.push({
 						name:"orderDeliver",
 						query:{
-							deliverNo_list:deliverNo_list
+							deliverNo_list:deliverNo_list,
+							selectAddr:that.selectAddr
 						}
 					})
 
