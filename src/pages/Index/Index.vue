@@ -151,16 +151,8 @@ import FooterIndex from '../../components/footer.vue'
 			loadBottom(){
 
 			    var that = this;
-
-			    console.log(233)
-
-			    if (that.allLoaded){
-			     	that.$refs.loadmore.onBottomLoaded();
-			        return;
-			    }else{
 			     
-			        that.loadPage += 1;
-			    }
+			    that.loadPage += 1;
 
 				this.loadData("BottomLoad");
 			}
