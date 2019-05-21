@@ -85,7 +85,7 @@
 				<span v-else   style="background-color: #aaa;">发车确认</span>
 				<span v-if="dataItem.status == '在途'|| dataItem.status == '未交付' "  @click="toWayFeedback(index)">途中反馈</span>
 				<span v-else   style="background-color: #aaa;">途中反馈</span>
-				<span class="viewbtn" v-if="dataItem.status != '新建' "  @click="ViewTrajectory(dataItem.shipmentID)">查看已行驶</span>
+				<span class="viewbtn" v-if="dataItem.status != '新建' "  @click="ViewTrajectoryInVue(dataItem.shipmentID, dataItem.shipmentCode)">查看已行驶</span>
 			</p>
 		</div>
 		<!-- 查看多装货地址弹出框 -->
@@ -165,28 +165,9 @@ export default {
     },
     methods:{
 		// 查看轨迹
-		ViewTrajectory(shipmentID){
-			console.log("ID: " + shipmentID);
-			// 安卓
-			try {
-
-				CallAndroidOrIOS.callAndroid("查看路线", shipmentID);
-
-			} 
-			catch(error) {
-
-				// console.log("没有CallAndroidOrIOS.callAndroid方法")
-			}
-
-			// 苹果
-			try {
-
-					CallAndroidOrIOS("查看路线",shipmentID);
-			}
-			catch(error) {
-
-				// console.log("没有CallAndroidOrIOS方法")
-			}
+		ViewTrajectoryInVue(shipmentID, shipmentCode){
+			
+			this.ViewTrajectoryInMain(shipmentID, shipmentCode);
 		},
     	// 跳转到二维码页面
 		_ewm(shipmentCode){

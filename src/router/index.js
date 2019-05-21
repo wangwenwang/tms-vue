@@ -53,6 +53,7 @@ import QRCode from '@/pages/Waybill/WaybillInfo/Deliver/ewm'  //二维码页面
 // 历史任务
 import historyList from '@/pages/historyList/historyList'  //历史任务首页
 import WaybillDetail from '@/pages/historyList/WaybillDetail/WaybillDetail'  //运单详情
+import CheckDeliverPicture from '@/pages/historyList/WaybillDetail/CheckDeliverPicture'  //查看交付照片
 
 
 // 搜索
@@ -162,6 +163,11 @@ export default new Router({
       path: '/WaybillDetail',
       name: 'WaybillDetail',
       component: WaybillDetail
+    },
+    {
+      path: '/CheckDeliverPicture',
+      name: 'CheckDeliverPicture',
+      component: CheckDeliverPicture
     },
     //我的任务模块  交付
     {

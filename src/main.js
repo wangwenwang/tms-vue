@@ -24,6 +24,11 @@ import BMap from 'BMap';
 // 百度地图
 Vue.prototype.BaiDuMap = "http://api.map.baidu.com/geocoder/v2/";
 
+// 引入图片查看器
+import preview from 'vue-photo-preview'
+import 'vue-photo-preview/dist/skin.css'
+Vue.use(preview)
+
 Vue.use(VueResouse)
 
 // element 日期时间选择器
@@ -91,6 +96,34 @@ Vue.prototype.TelliOSORAndroidVueMounted=function (msg){
 	catch(error) { }
 }
 
+
+// 查看轨迹
+Vue.prototype.ViewTrajectoryInMain=function (shipmentID, shipmentCode){
+	console.log("ID: " + shipmentID + "，shipmentCode: " + shipmentCode);
+	// 安卓
+	try {
+
+		CallAndroidOrIOS.callAndroid("查看路线", shipmentID);
+		CallAndroidOrIOS.callAndroid("查看路线", shipmentID, shipmentCode, "交付");
+
+	} 
+	catch(error) {
+
+		// console.log("没有CallAndroidOrIOS.callAndroid方法")
+	}
+
+	// 苹果
+	try {
+
+		CallAndroidOrIOS("查看路线", shipmentID);
+		CallAndroidOrIOS("查看路线", shipmentID, shipmentCode, "交付");
+	}
+	catch(error) {
+
+		// console.log("没有CallAndroidOrIOS方法")
+	}
+}
+
 //http请求
 Vue.prototype.httpRequest=function (url,params,success){
 
@@ -105,6 +138,60 @@ Vue.prototype.httpRequest=function (url,params,success){
 		that.$emit('isLoading', false);
 
 		if(res.data.status==1){
+
+			success(res.data);
+
+		}else{
+
+			var msg;
+			if(res.data.Msg){
+
+				msg = res.data.Msg;
+
+			}else{
+
+				msg = url + "请求失败";
+			}
+
+			that.$alert(msg, '提示', {
+	            confirmButtonText: '确定',
+	            callback: action => {
+		            
+	            }
+           	})
+		}
+	})
+	.catch(function(res){
+
+		that.$emit('isLoading', false);
+			
+		that.$alert("http请求失败", '提示', {
+	        confirmButtonText: '确定',
+	        callback: action => {
+	            
+	        }
+	   	})
+		
+	})
+}
+
+
+//http请求（带完整的url）
+Vue.prototype.httpRequestAllUrl=function (url,params,success){
+
+	var that = this;
+
+	console.log(url);
+
+	that.$emit('isLoading', true,"拼命加载中");
+
+	Axios.post(url,params)
+	.then(function(res){
+		console.log(res)
+
+		that.$emit('isLoading', false);
+
+		if(res.data.type==1){
 
 			success(res.data);
 

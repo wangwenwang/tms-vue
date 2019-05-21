@@ -371,10 +371,30 @@
 				this.canvasTxt.font="15px Microsoft JhengHei";
 				this.canvasTxt.fillText(currentdate, 5, this.$refs.canvasF.height - 35);
 	        },
-
-
 			// 文件上传成功时的钩子
 			uploadSuccessInCurrVue(response, file, fileList){
+
+				console.log("上传照片成功")
+				this.orderDeliverOnclick(response);
+			},
+			// 文件上传失败时的钩子
+			uploadErrorInCurrVue(err, file, fileList){
+
+				console.log("上传照片失败")
+
+				// var that = this;
+
+				// that.$emit('isLoading', false);
+
+				// that.$alert('网络不稳定，上传照片失败，请稍候再试！', '提示', {
+			 //            confirmButtonText: '确定'
+		  //       })
+				// console.log(err)
+
+				this.orderDeliverOnclick(err);
+			},
+			// 交付
+			orderDeliverOnclick(response){
 
 				var that = this;
 
@@ -435,19 +455,6 @@
 						},1000)
 					})
 				}
-			},
-
-			// 文件上传失败时的钩子
-			uploadErrorInCurrVue(err, file, fileList){
-
-				var that = this;
-
-				that.$emit('isLoading', false);
-
-				that.$alert('网络不稳定，上传照片失败，请稍候再试！', '提示', {
-			            confirmButtonText: '确定'
-		        })
-				console.log(err)
 			}
 		}
 	}

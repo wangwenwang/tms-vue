@@ -47,7 +47,7 @@
 							</div>
 							<div class="detailBtn">
 								<span  class="g_btn" @click="toOrderDeliver(dataItem)">详情</span>
-						    	<span  class="g_btn" @click="ViewTrajectory(dataItem.shipmentID)">查看路线</span>
+						    	<span  class="g_btn" @click="ViewTrajectoryInVue(dataItem.shipmentID, dataItem.shipmentCode)">查看路线</span>
 						    </div>
 						</div>
 					</div>
@@ -275,28 +275,9 @@ import FooterIndex from '../../components/footer.vue'
 				this.loadData();
 			},
 			// 查看轨迹
-			ViewTrajectory(shipmentID){
-				console.log("ID: " + shipmentID);
-				// 安卓
-				try {
+			ViewTrajectoryInVue(shipmentID, shipmentCode){
 
-					CallAndroidOrIOS.callAndroid("查看路线", shipmentID);
-
-				} 
-				catch(error) {
-
-					// console.log("没有CallAndroidOrIOS.callAndroid方法")
-				}
-
-				// 苹果
-				try {
-
-						CallAndroidOrIOS("查看路线",shipmentID);
-				}
-				catch(error) {
-
-					// console.log("没有CallAndroidOrIOS方法")
-				}
+				this.ViewTrajectoryInMain(shipmentID, shipmentCode);
 			},
 			// 搜索后的列表  点击详情跳转到运单详情
 			toOrderDeliver(WaybillInfo){
