@@ -219,7 +219,7 @@ Vue.prototype.httpRequestAllUrl=function (url,params,success){
 
 		that.$emit('isLoading', false);
 			
-		that.$alert("http请求失败", '提示', {
+		that.$alert("http请求失败_All_URL", '提示', {
 	        confirmButtonText: '确定',
 	        callback: action => {
 	            

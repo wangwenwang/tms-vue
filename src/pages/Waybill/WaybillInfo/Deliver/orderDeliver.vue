@@ -131,6 +131,19 @@
 			SetCurrAddress:function(address, lng, lat) {
 
 				var that = this;
+				this.longitude = lng;
+				this.latitude = lat;
+
+				var postData = {
+					deliveryIds:that.$route.query.deliverNo_list,//运单ID，比如：1001,1002,1003)，一个或多个交付统一传数组字符串
+					longitude:lng,//经度
+					latitude:lat//纬度
+				}
+
+				that.httpRequest( "deliveryCheckRange.do",postData,function(res){
+
+					that.distance = res.data.warnMsg;
+				})
 
 				if(address == "") {
 
@@ -142,20 +155,7 @@
 				}else {
 
 					this.CurrentLocation = address;
-					this.longitude = lng;
-					this.latitude = lat;
 					this.canvasTxt.fillText(address, 5, this.$refs.canvasF.height - 10);
-
-					var postData = {
-						deliveryIds:that.$route.query.deliverNo_list,//运单ID，比如：1001,1002,1003)，一个或多个交付统一传数组字符串
-						longitude:lng,//经度
-						latitude:lat//纬度
-					}
-
-					that.httpRequest( "deliveryCheckRange.do",postData,function(res){
-
-						that.distance = res.data.warnMsg;
-					})
 				}
 			},
 			setDistance(){
