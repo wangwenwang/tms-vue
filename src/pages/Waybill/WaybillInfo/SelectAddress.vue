@@ -2,7 +2,7 @@
 	<div class="SelectAddress">
 		<header><i class="iconfont icon-xiangzuo1" @click="$router.back(-1)"></i><span>选择地址</span></header>
 		<div class="container">
-			<div class="addList"  v-for='(dataItem,index) in addressList'  :id="index"  :key='index'  @click="toOrderDetails(shipmentID,dataItem.receivePartyAddr1)">
+			<div class="addList"  v-for='(dataItem,index) in addressList'  :id="index"  :key='index'  @click="toOrderDetails(shipmentID,dataItem.receivePartyAddr1,shipmentListDataNo)">
 				
 				<div class="listLeft">
 					<span>收货地址：{{dataItem.receivePartyAddr1}}</span>
@@ -35,6 +35,7 @@
 			if(this.$route.query.shipmentID){
 
 				this.shipmentID = this.$route.query.shipmentID;
+				this.shipmentListDataNo = this.$route.query.shipmentListDataNo;
 			}
 
 			var postData = {
@@ -53,12 +54,13 @@
 		},
 		methods:{
 			// 跳转到 按地址交付 页面
-			toOrderDetails(shipmentID,receiveAddr){
+			toOrderDetails(shipmentID,receiveAddr,shipmentListDataNo){
 
 				this.$router.push({
 					name:"OrderDetails",
 					query:{
 						shipmentID:shipmentID,//配载单id
+						shipmentListDataNo:shipmentListDataNo,//配载单号
 						receiveAddr:receiveAddr,//收货地址
 					}
 				})

@@ -129,6 +129,8 @@ Vue.prototype.httpRequest=function (url,params,success){
 
 	var that = this;
 
+	console.log(url);
+
 	that.$emit('isLoading', true,"拼命加载中");
 
 	Axios.post(that.HOST+url,{"params": JSON.stringify(params)})
@@ -414,6 +416,18 @@ Vue.prototype.clearCookie = function () {
 
 //上传文件之前的钩子，参数为上传的文件，若返回 false 或者返回 Promise 且被 reject，则停止上传。
 Vue.prototype.beforeUpload = function (file){
+
+	var str= navigator.userAgent.toLowerCase(); 
+    var ver=str.match(/cpu iphone os (.*?) like mac os/);
+    if(ver){
+        var iOSVersion = ver[1].replace(/_/g,".");
+    	var partVersion = iOSVersion.substring(0,1);
+    	// iOS9不对图片进行压缩，lrz会有异常，后期更换压缩方法
+    	if(partVersion == "9") {
+    		
+    		return 	file;
+    	}
+    }
 
 	var base64 = lrz(file).then(function(rst) {
 

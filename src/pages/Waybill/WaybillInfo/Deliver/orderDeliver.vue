@@ -1,6 +1,6 @@
 <template>
 	<div class="orderDeliver">
-		<header><i class="iconfont icon-xiangzuo1"  @click="$router.back(-1)"></i><span>交付</span></header>
+		<header><i class="iconfont icon-xiangzuo1"  @click="$router.back(-1)"></i><span>交付{{ shipmentListDataNo }}</span></header>
 		<div class="container">
 			<div class="signatureBox">
 			    <div class="visaDetailTop">电子签名</div>
@@ -82,7 +82,8 @@
 		        isDown:false,
 				longitude:"",//经度
 				latitude:"",//纬度
-				distance:""//与收货地址的距离
+				distance:"",//与收货地址的距离
+				shipmentListDataNo:"",//配载编号
 			}
 		},
       	mounted(){
@@ -125,6 +126,8 @@
 
 			this.uploadParams.cellphone = this.$store.state.userInfo.cellphone;//交付人手机号
 
+			this.shipmentListDataNo = this.$route.query.shipmentListDataNo;
+
 		},
 		methods:{
 			// 定位
@@ -147,7 +150,7 @@
 
 				if(address == "") {
 
-					this.$alert("定位失败，请退出APP，重新打开", '提示', {
+					this.$alert("定位失败，建议退出APP，重新打开", '提示', {
 	            		confirmButtonText: '确定',
 	            		callback: action => {
 	            		}
@@ -191,6 +194,13 @@
 				}else if(!$(".Upload>div.uploadImg:eq(1) ul>li").length){
 
 					that.$alert('请上传签单回执照片', '提示', {
+			            confirmButtonText: '确定'
+		           	})
+
+		           	return;
+				}else if(this.longitude == ""){
+
+					that.$alert('未获取当前坐标，请打开GPS，退出APP重新打开', '提示', {
 			            confirmButtonText: '确定'
 		           	})
 

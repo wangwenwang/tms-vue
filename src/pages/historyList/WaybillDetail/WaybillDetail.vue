@@ -123,7 +123,15 @@
 
 				if(res.data.length){
 
-					that.shipmentListData = res.data[0][0];
+					// that.shipmentListData = res.data[0][0];
+
+					if(res.data[0].length){
+
+						that.shipmentListData = res.data[0][0];
+
+					}else{
+						that.shipmentListData = that.$store.state.search_WaybillDetail;
+					}
 
 					that.orderList = res.data[1];
 					

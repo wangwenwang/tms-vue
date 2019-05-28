@@ -13,7 +13,7 @@
 		    	</div>
 		    	<div>物流公司：<span>{{WaybillInfo.transPartyName}}</span></div>
 			</div>
-			<OrderInfo_template   v-bind:_orderInfo="orderList,selectAddr" />
+			<OrderInfo_template   v-bind:_orderInfo="orderList,selectAddr,shipmentListDataNo" />
 		</div>
 	</div>
 </template>
@@ -29,6 +29,7 @@
 				WaybillInfo:[],//头部总信息
 				orderList:[],//订单信息 数据
 				selectAddr:true,//是否是选择地址页面跳转来
+				shipmentListDataNo:"",//装运编号
 			}
 		},
 		components:{
@@ -39,6 +40,7 @@
 			var that = this;
 
 			this.WaybillInfo = that.$store.state.Waybill.WaybillInfo.WaybillInfo;
+			this.shipmentListDataNo = that.$route.query.shipmentListDataNo;
 
 			var postData = {
 				shipmentId: this.$route.query.shipmentID,//配载单ID

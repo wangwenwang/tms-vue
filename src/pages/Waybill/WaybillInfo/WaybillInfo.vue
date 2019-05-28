@@ -10,7 +10,7 @@
 					<WaybillInfo_template  @isLoading_="fullscreenLoading"   v-bind:shipmentListData="shipmentListData"  />
 
 					<!-- 订单信息 -->
-					<OrderInfo_template   v-bind:_orderInfo="orderList,shipmentID" />
+					<OrderInfo_template   v-bind:_orderInfo="orderList,shipmentID,shipmentListDataNo" />
 				</div>
 			</div>
 		</div>
@@ -33,6 +33,7 @@
 				shipmentID:"",//配载单id
 				shipmentListData:[],//配载单信息
 				orderList:[],//订单列表
+				shipmentListDataNo:"",//配载单号
 			}
 		},
 		components:{
@@ -58,6 +59,8 @@
 				if(res.data.length){
 
 					that.shipmentListData = res.data[0];//配载单信息
+
+					that.shipmentListDataNo = that.shipmentListData[0].shipmentCode;
 
 					that.$store.state.Waybill.WaybillInfo.WaybillInfo =  res.data[0][0];
 

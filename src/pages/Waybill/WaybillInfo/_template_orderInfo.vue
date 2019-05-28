@@ -1,7 +1,7 @@
 <!-- _template_orderInfo.vue   订单信息 组件-->
 <template>
     <div class="OrderInfo_template">
-		<div class="orderHead" ><span class="selectAll" v-if="!historyList&&(_orderInfo[0]? !_orderInfo[0].notOperate : true)"  @click="selectAll">取消全选</span>订单信息</div>
+		<div class="orderHead" ><span class="selectAll" v-if="!historyList&&(_orderInfo[0]? !_orderInfo[0].notOperate : true)"  @click="selectAll">取消全选</span>订单信息{{shipmentListDataNo}}</div>
 		<div class='goodsInfo'   v-for='(dataItem,index) in _orderInfo'  :id="index"  :key='index'  @click="selectData(index,dataItem.ifDeliver)">
 		    <div class='goodsHead'>
 		    	<span v-if="dataItem.ifDeliver" class="iconfont icon-xuanzhong"></span>
@@ -63,7 +63,7 @@
 		    </div>
 		    <div v-if=" (_orderInfo[0]? !_orderInfo[0].notOperate : true) && !historyList"  class="g_doubleBtn bottomBtn">
 	            <div @click="toOrderDeliver('selectAll')">批量交付</div>
-	            <div v-if="!selectAddr" @click="toSelectAdd(shipmentID)">按地址交付</div>
+	            <div v-if="!selectAddr" @click="toSelectAdd(shipmentID, shipmentListDataNo)">按地址交付</div>
 	        </div>
 		</div>
 		<!--   -->
@@ -85,6 +85,7 @@ export default {
 			}
     	},
     	shipmentID:0,
+    	shipmentListDataNo:"",
     	selectAddr:false,//是否是选择地址页面跳转来
     	historyList:false,//是否是历史任务页面跳转来
 
@@ -115,12 +116,13 @@ export default {
 			})
     	},
     	// 跳转到 选择地址页面
-    	toSelectAdd(shipmentID){
+    	toSelectAdd(shipmentID, shipmentListDataNo){
 
     		this.$router.push({
 				name:"SelectAddress",
 				query:{
-					shipmentID:shipmentID
+					shipmentID:shipmentID,
+					shipmentListDataNo:shipmentListDataNo,
 				}
 			})
     	},
@@ -147,7 +149,9 @@ export default {
 				that.$router.push({
 					name:"orderDeliver",
 					query:{
-						deliverNo_list:deliverNo_list
+						deliverNo_list:deliverNo_list,
+						shipmentListDataNo:that.shipmentListDataNo
+
 					}
 				})
 
@@ -178,7 +182,8 @@ export default {
 						name:"orderDeliver",
 						query:{
 							deliverNo_list:deliverNo_list,
-							selectAddr:that.selectAddr
+							selectAddr:that.selectAddr,
+							shipmentListDataNo:that.shipmentListDataNo
 						}
 					})
 
