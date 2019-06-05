@@ -70,14 +70,9 @@
 		},
 		mounted(){
 
-			if(this.$store.state.Device == "android") {
 
-				this.TelliOSORAndroidVueMounted("获取当前位置页面已加载");
-				window.SetCurrAddress = this.SetCurrAddress;
-			}else {
-
-				this.CurrentLocation = this.Geolocation();
-			}
+			this.TelliOSORAndroidVueMounted("获取当前位置页面已加载");
+			window.SetCurrAddress = this.SetCurrAddress;
 		},
 		created(){
 

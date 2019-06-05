@@ -18,12 +18,6 @@ import { Loadmore } from 'mint-ui';
 import 'mint-ui/lib/style.css'
 Vue.component(Loadmore.name, Loadmore);
 
-// 引入百度地图   index.html
-import BMap from 'BMap';
-
-// 百度地图
-Vue.prototype.BaiDuMap = "http://api.map.baidu.com/geocoder/v2/";
-
 // 引入图片查看器
 import preview from 'vue-photo-preview'
 import 'vue-photo-preview/dist/skin.css'
@@ -229,76 +223,6 @@ Vue.prototype.httpRequestAllUrl=function (url,params,success){
 		
 	})
 }
-
-// 获取当前位置
-Vue.prototype.Geolocation=function (){
-
-	var that = this;
-
-	 var gc=[],subPoints;
-
-	this.$emit('isLoading', true,"正在获取当前位置");
-
-	var geolocation = new BMap.Geolocation();
-
-    geolocation.getCurrentPosition((r) => {
-        if (r.point) {
-
-        	that.$http.jsonp(that.BaiDuMap,
-        		{
-        			params:{
-        				"location": r.point.lat +","+ r.point.lng,
-		        		"output": "json",
-		        		"ak": "sW0ZQ9d5I9e5REl2G2D7kxeLXYolGpsN"
-        			}
-        		}
-        	)
-	        .then(function(res){
-
-				console.log(res);
-				console.log("地址：" + res.data.result.formatted_address);
-				console.log("经度：" + res.data.result.location.lng);
-				console.log("纬度：" + res.data.result.location.lat);
-
-				that.longitude = res.data.result.location.lng;
-				that.latitude = res.data.result.location.lat;
-
-				that.$emit('isLoading', false);
-
-				if(res.data.status == 0 && res.data.result.formatted_address){
-
-					that.CurrentLocation = res.data.result.formatted_address;
-					that.canvasTxt.fillText(that.CurrentLocation, 5, that.$refs.canvasHW.offsetHeight - 10);
-
-					var postData = {
-						deliveryIds:that.$route.query.deliverNo_list,//运单ID，比如：1001,1002,1003)，一个或多个交付统一传数组字符串
-						longitude:that.longitude,//经度
-						latitude:that.latitude//纬度
-					}
-
-					that.httpRequest( "deliveryCheckRange.do",postData,function(res){
-
-						that.distance = res.data.warnMsg;
-					})
-					
-				}else{
-
-					that.$alert("获取位置失败", '提示', {
-			            confirmButtonText: '确定'
-		           	})
-				}
-			}).catch(function(res){
-
-				that.$emit('isLoading', false);
-
-				// that.$alert("获取位置失败", '提示', {
-		  //           confirmButtonText: '确定'
-	   //         	})
-			})
-        }
-    }, { enableHighAccuracy: true })
-}
-
 
 // 获取当前时间并处理时间格式
 Vue.prototype.getNowTime=function (){

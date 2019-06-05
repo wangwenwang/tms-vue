@@ -98,17 +98,10 @@
 
 	        this.canvasTxt=canvas.getContext("2d");
 
-	        if(this.$store.state.Device == "android") {
-
-				this.TelliOSORAndroidVueMounted("获取当前位置页面已加载");
-				window.SetCurrAddress = this.SetCurrAddress;
-			}else {
-
-				this.CurrentLocation = this.Geolocation('e');
-			}
+			this.TelliOSORAndroidVueMounted("获取当前位置页面已加载");
+			window.SetCurrAddress = this.SetCurrAddress;
 
    			var currentdate = this.getNowTime();
-
 			this.canvasTxt.font="15px Microsoft JhengHei";
 			this.canvasTxt.fillText(currentdate, 5, canvas.height - 35);
 		},
@@ -365,19 +358,10 @@
 		        this.points=[];
 		        this.ifSign = false;
 
-		        if(this.$store.state.Device == "android") {
-
-					this.TelliOSORAndroidVueMounted("获取当前位置页面已加载");
-
-					window.SetCurrAddress = this.SetCurrAddress;
-
-				}else {
-
-					this.CurrentLocation = this.Geolocation('e');
-				}
+				this.TelliOSORAndroidVueMounted("获取当前位置页面已加载");
+				window.SetCurrAddress = this.SetCurrAddress;
 
 	   			var currentdate = this.getNowTime();
-
 				this.canvasTxt.font="15px Microsoft JhengHei";
 				this.canvasTxt.fillText(currentdate, 5, this.$refs.canvasF.height - 35);
 	        },
