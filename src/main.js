@@ -98,13 +98,13 @@ Vue.prototype.TelliOSORAndroidVueMounted=function (msg){
 
 
 // 查看轨迹
-Vue.prototype.ViewTrajectoryInMain=function (shipmentID, shipmentCode){
-	console.log("ID: " + shipmentID + "，shipmentCode: " + shipmentCode);
+Vue.prototype.ViewTrajectoryInMain=function (shipmentID, shipmentCode, shipmentStatus){
+	console.log("ID: " + shipmentID + "，shipmentCode: " + shipmentCode + "shipmentStatus: " + shipmentStatus);
 	// 安卓
 	try {
 
 		CallAndroidOrIOS.callAndroid("查看路线", shipmentID);
-		CallAndroidOrIOS.callAndroid("查看路线", shipmentID, shipmentCode, "交付");
+		CallAndroidOrIOS.callAndroid("查看路线", shipmentID, shipmentCode, shipmentStatus);
 
 	} 
 	catch(error) {
@@ -115,8 +115,7 @@ Vue.prototype.ViewTrajectoryInMain=function (shipmentID, shipmentCode){
 	// 苹果
 	try {
 
-		CallAndroidOrIOS("查看路线", shipmentID);
-		CallAndroidOrIOS("查看路线", shipmentID, shipmentCode, "交付");
+		CallAndroidOrIOS("查看路线", shipmentID, shipmentCode, shipmentStatus);
 	}
 	catch(error) {
 

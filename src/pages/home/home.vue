@@ -15,7 +15,7 @@
 		    		<div  @click="toHistoricalTrack"><i class="iconfont icon-lishiguiji" ></i><span>历史轨迹</span><i class="iconfont icon-xiangshang" ></i></div>
 		    		<div  @click="toPersonalData"><i class="iconfont icon-gerenziliaoxiugai" ></i><span>个人资料</span><i class="iconfont icon-xiangshang" ></i></div>
 		    		<div  @click="toPassword"><i class="iconfont icon-xiugaimima" ></i><span>修改密码</span><i class="iconfont icon-xiangshang" ></i></div>
-		    		<div  @click="toCheckVersion"><i class="iconfont icon-guanyu" ></i><span>版本更新</span><span>{{VersionNum}}.40</span></div>
+		    		<div  @click="toCheckVersion"><i class="iconfont icon-guanyu" ></i><span>版本更新</span><span>{{VersionNum}}.41</span></div>
 		    	</div>
 			    <div class='Exit_logon' >
 				    <i class="iconfont icon-icon-yxj-switch-account"  @click="exit" ></i>
@@ -110,13 +110,13 @@ import FooterIndex from "../../components/footer"
 			        });
 				}
 
-				if(AppDevice == "iOS" || AppDevice == "") {
+				// if(AppDevice == "iOS" || AppDevice == "") {
 
-					this.$alert('请移步至App Store检查更新', '提示', {
-			            confirmButtonText: '确认',
-			            type: 'warning'
-			        });
-				}
+				// 	this.$alert('请移步至App Store检查更新', '提示', {
+			 //            confirmButtonText: '确认',
+			 //            type: 'warning'
+			 //        });
+				// }
 
 				// 安卓
 				try {

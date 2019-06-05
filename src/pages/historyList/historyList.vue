@@ -277,7 +277,7 @@ import FooterIndex from '../../components/footer.vue'
 			// 查看轨迹
 			ViewTrajectoryInVue(shipmentID, shipmentCode){
 
-				this.ViewTrajectoryInMain(shipmentID, shipmentCode);
+				this.ViewTrajectoryInMain(shipmentID, shipmentCode, "交付");
 			},
 			// 搜索后的列表  点击详情跳转到运单详情
 			toOrderDeliver(WaybillInfo){

@@ -167,7 +167,7 @@ export default {
 		// 查看轨迹
 		ViewTrajectoryInVue(shipmentID, shipmentCode){
 			
-			this.ViewTrajectoryInMain(shipmentID, shipmentCode);
+			this.ViewTrajectoryInMain(shipmentID, shipmentCode, "在途");
 		},
     	// 跳转到二维码页面
 		_ewm(shipmentCode){
