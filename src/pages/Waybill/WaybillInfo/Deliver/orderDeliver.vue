@@ -124,11 +124,67 @@
 		},
 		methods:{
 			// 定位
-			SetCurrAddress:function(address, lng, lat) {
+			SetCurrAddress:function(address, lng, lat, bdcode) {
 
 				var that = this;
 				this.longitude = lng;
 				this.latitude = lat;
+
+				// 经纬度带E，定位有问题
+				if(this.longitude == "" || this.longitude.indexOf('E') != -1) {
+
+					this.$alert("获取位置失败，建议退出APP，重新打开", '提示', {
+            		confirmButtonText: '确定',
+	            		callback: action => {
+	            		}
+	       			})
+
+					var code;
+					// bdcode有值，1.2.4或以上安卓版本
+					if(bdcode != undefined) {
+						code = bdcode;
+					}else {
+						code = "";
+					}
+					var postData = {
+						cellphone:that.$store.state.userInfo.cellphone,
+						userName:that.$store.state.userInfo.userName,
+						vehicleLocation:address,
+						lon:"",
+						lat:"",
+						uuid:"vue",
+						code:code,
+						brightscreen:"10",
+						charging:"",
+						os:that.$store.state.App_Version,
+					}
+					that.httpRequest( "timingTracking.do",postData,function(res){
+					})
+	       			return;	
+				}
+
+				// 每次进来都记录一下，用于分析bdcode，临时用
+				else{
+					if(bdcode != undefined) {
+						code = bdcode;
+					}else {
+						code = "";
+					}
+					var postData = {
+							cellphone:that.$store.state.userInfo.cellphone,
+							userName:that.$store.state.userInfo.userName,
+							vehicleLocation:address,
+							lon:"",
+							lat:"",
+							uuid:"vue",
+							code:code,
+							brightscreen:"11",
+							charging:"",
+							os:that.$store.state.App_Version,
+						}
+						that.httpRequest( "timingTracking.do",postData,function(res){
+					})
+				}
 
 				var postData = {
 					deliveryIds:that.$route.query.deliverNo_list,//运单ID，比如：1001,1002,1003)，一个或多个交付统一传数组字符串
@@ -141,18 +197,8 @@
 					that.distance = res.data.warnMsg;
 				})
 
-				if(address == "") {
-
-					this.$alert("定位失败，建议退出APP，重新打开", '提示', {
-	            		confirmButtonText: '确定',
-	            		callback: action => {
-	            		}
-           			})
-				}else {
-
-					this.CurrentLocation = address;
-					this.canvasTxt.fillText(address, 5, this.$refs.canvasF.height - 10);
-				}
+				this.CurrentLocation = address;
+				this.canvasTxt.fillText(this.CurrentLocation, 5, this.$refs.canvasF.height - 10);
 			},
 			setDistance(){
 
@@ -191,7 +237,7 @@
 		           	})
 
 		           	return;
-				}else if(this.longitude == ""){
+				}else if(this.longitude == "" || this.longitude.indexOf('E') != -1 || this.CurrentLocation == ""){
 
 					that.$alert('未获取当前坐标，请打开GPS，退出APP重新打开', '提示', {
 			            confirmButtonText: '确定'
