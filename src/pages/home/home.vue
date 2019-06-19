@@ -15,7 +15,7 @@
 		    		<div  @click="toHistoricalTrack"><i class="iconfont icon-lishiguiji" ></i><span>历史轨迹</span><i class="iconfont icon-xiangshang" ></i></div>
 		    		<div  @click="toPersonalData"><i class="iconfont icon-gerenziliaoxiugai" ></i><span>个人资料</span><i class="iconfont icon-xiangshang" ></i></div>
 		    		<div  @click="toPassword"><i class="iconfont icon-xiugaimima" ></i><span>修改密码</span><i class="iconfont icon-xiangshang" ></i></div>
-		    		<div  @click="toCheckVersion"><i class="iconfont icon-guanyu" ></i><span>版本更新</span><span>{{VersionNum}}.43</span></div>
+		    		<div  @click="toCheckVersion"><i class="iconfont icon-guanyu" ></i><span>版本更新</span><span>{{VersionNum}}.44</span></div>
 		    	</div>
 			    <div class='Exit_logon' >
 				    <i class="iconfont icon-icon-yxj-switch-account"  @click="exit" ></i>
