@@ -150,12 +150,12 @@
 						cellphone:that.$store.state.userInfo.cellphone,
 						userName:that.$store.state.userInfo.userName,
 						vehicleLocation:address,
-						lon:that.longitude,
-						lat:that.latitude,
+						lon:"",
+						lat:"",
 						uuid:"vue",
 						code:code,
 						brightscreen:"10",
-						charging:"",
+						charging:that.longitude + "," + that.latitude,
 						os:that.$store.state.App_Version,
 					}
 					that.httpRequest( "timingTracking.do",postData,function(res){

@@ -1,6 +1,6 @@
 <template>
 	<div class="CheckDeliverPicture">
-		<header><i class="iconfont icon-xiangzuo1"   @click="$router.back(-1)"></i><span>查看交付照片</span></header>
+		<header><i class="iconfont icon-xiangzuo1"   @click="$router.back(-1)"></i><span>查看交付照片{{ this.$route.query.orderID }}</span></header>
 		<div class="container">
 
 			<div  v-for='(dataItem,index) in urlParts'>
