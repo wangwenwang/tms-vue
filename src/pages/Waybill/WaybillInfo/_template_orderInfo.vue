@@ -62,7 +62,7 @@
 		    	
 		    </div>
 		    <div v-if=" (_orderInfo[0]? !_orderInfo[0].notOperate : true) && !historyList"  class="g_doubleBtn bottomBtn">
-	            <div @click="toOrderDeliver('selectAll')">批量交付</div>
+	            <!-- <div @click="toOrderDeliver('selectAll')">批量交付</div> -->
 	            <div v-if="!selectAddr" @click="toSelectAdd(shipmentID, shipmentListDataNo)">按地址交付</div>
 	        </div>
 		</div>
