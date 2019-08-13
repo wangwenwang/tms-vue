@@ -3,7 +3,7 @@
 		<header><i class="iconfont icon-xiangzuo1"  @click="$router.back(-1)"></i><span>交付{{ shipmentListDataNo }}</span></header>
 		<div class="container">
 			<div class="signatureBox">
-			    <div class="visaDetailTop">电子签名</div>
+			    <div class="visaDetailTop">电子签名({{this.$store.state.userInfo.cellphone}})</div>
 			    <div class="canvasBox" ref="canvasHW">
 		       		<canvas  allow = "geolocation" id="thecanvas" @touchstart='touchStart'
 		                @touchmove='touchMove'
