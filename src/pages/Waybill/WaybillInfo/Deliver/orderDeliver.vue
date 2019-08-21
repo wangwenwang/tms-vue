@@ -129,6 +129,7 @@
 				var that = this;
 				this.longitude = lng;
 				this.latitude = lat;
+				this.CurrentLocation = address;
 
 				// 经纬度带E，定位有问题
 				if(this.longitude == "" || this.longitude.indexOf('E') != -1) {
@@ -149,7 +150,7 @@
 					var postData = {
 						cellphone:that.$store.state.userInfo.cellphone,
 						userName:that.$store.state.userInfo.userName,
-						vehicleLocation:address,
+						vehicleLocation:that.CurrentLocation,
 						lon:"",
 						lat:"",
 						uuid:"vue",
@@ -173,7 +174,7 @@
 					var postData = {
 							cellphone:that.$store.state.userInfo.cellphone,
 							userName:that.$store.state.userInfo.userName,
-							vehicleLocation:address,
+							vehicleLocation:that.CurrentLocation,
 							lon:that.longitude,
 							lat:that.latitude,
 							uuid:"vue",
@@ -186,6 +187,9 @@
 					})
 				}
 
+				this.canvasTxt.fillText(this.CurrentLocation, 5, this.$refs.canvasF.height - 10);
+
+				// 这个请求放在最后面，以免这个请求报错，导致后面的代码不执行
 				var postData = {
 					deliveryIds:that.$route.query.deliverNo_list,//运单ID，比如：1001,1002,1003)，一个或多个交付统一传数组字符串
 					longitude:lng,//经度
@@ -196,9 +200,6 @@
 
 					that.distance = res.data.warnMsg;
 				})
-
-				this.CurrentLocation = address;
-				this.canvasTxt.fillText(this.CurrentLocation, 5, this.$refs.canvasF.height - 10);
 			},
 			setDistance(){
 
