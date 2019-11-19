@@ -170,8 +170,64 @@ Vue.prototype.httpRequest=function (url,params,success){
 	})
 }
 
+//卖货易http请求
+Vue.prototype.httpRequestMHY=function (url,params,success,isLoading_){
 
-//http请求（带完整的url）
+	var that = this;
+    if(isLoading_ && isLoading_ == 'isLoading_'){
+
+        that.$emit('isLoading_', true,"拼命加载中");
+
+    }else{
+
+	    that.$emit('isLoading', true,"拼命加载中");
+    }
+
+	Axios.post(url,{"params": JSON.stringify(params)})
+    .then(function(res){
+        console.log(res)
+    
+        if(isLoading_ && isLoading_ == 'isLoading_'){
+
+		    that.$emit('isLoading_', false);
+		}else{
+
+			that.$emit('isLoading', false);
+	    }
+
+	    if(res.data.status==1){
+
+		    success(res.data);
+	    }else{
+
+		    var msg = "请求失败";
+		    if(res.data.Msg){
+
+		        msg = res.data.Msg;
+		    }
+		    that.$alert(msg, '提示', {
+
+		        confirmButtonText: '确定',
+		    })
+		}
+    })
+    .catch(function(res){
+
+	    if(isLoading_ && isLoading_ == 'isLoading_'){
+
+	        that.$emit('isLoading_', false);
+	    }else{
+
+		    that.$emit('isLoading', false);
+	    }
+	    that.$alert("请求失败", '提示', {
+
+		    confirmButtonText: '确定',
+	    })  
+	})
+}
+
+//老K56C#后台http请求
 Vue.prototype.httpRequestAllUrl=function (url,params,success){
 
 	var that = this;

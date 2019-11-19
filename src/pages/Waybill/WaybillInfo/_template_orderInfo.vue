@@ -58,7 +58,7 @@
 		    	<span v-if="dataItem.ifDeliver" class="g_btn" @click="toOrderDeliver(index)">交付</span>
 		    	<span v-if="!historyList"  @click="_ewm(dataItem.omsNo)" class="g_btn ewm">二维码</span>
 		    	<span v-if="!dataItem.ifDeliver" class="g_btn" style="visibility:hidden;">交付</span>
-		    	<span v-if="historyList" class="g_btn" @click="toCheckDeliverPicture(dataItem.omsNo)">查看交付照片</span>
+		    	<span v-if="historyList" class="g_btn" @click="toCheckDeliverPicture(dataItem)">查看交付照片</span>
 		    	
 		    </div>
 		    <div v-if=" (_orderInfo[0]? !_orderInfo[0].notOperate : true) && !historyList"  class="g_doubleBtn bottomBtn">
@@ -104,14 +104,13 @@ export default {
     },
     methods:{
     	// 跳转查看交付照片
-    	toCheckDeliverPicture(orderID) {
-
-    		console.log(orderID)
+    	toCheckDeliverPicture(m) {
 
     		this.$router.push({
 				name:"CheckDeliverPicture",
 				query:{
-					orderID:orderID
+					omsNo:m.omsNo,
+					deliveryId:m.deliveryId
 				}
 			})
     	},

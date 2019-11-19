@@ -1,12 +1,12 @@
 <template>
 	<div class="CheckDeliverPicture">
-		<header><i class="iconfont icon-xiangzuo1"   @click="$router.back(-1)"></i><span>查看交付照片{{ this.$route.query.orderID }}</span></header>
+		<header><i class="iconfont icon-xiangzuo1"   @click="$router.back(-1)"></i><span>查看交付照片{{ this.$route.query.omsNo }}</span></header>
 		<div class="container">
 
 			<div  v-for='(dataItem,index) in urlParts'>
 
 				<div class="PictureContainer">
-	    			<img  class="picture" align="middle" :src="'http://k56.kaidongyuan.com/' + dataItem.PRODUCT_URL" preview='2'>
+	    			<img  class="picture" align="middle" :src="dataItem.Product_Url" preview='2'>
 				</div>
 
 			</div>
@@ -28,17 +28,15 @@
 			var that = this;
 
 			var postData = {
-				strOmsNo: this.$route.query.orderID,//配载单id
+				strOrderIdx: this.$route.query.deliveryId,//配载单id
 				strLicense:"",//查询已交付状态配载单
 		    };
 
-			that.$emit('isLoading', true,"拼命加载中");
-
-			this.httpRequestAllUrl("http://oms.kaidongyuan.com:8088/api/GetAutographOmsNoSaaS",postData,function(res){
+			this.httpRequestMHY("http://120.77.206.44:8088/easyToSell/GetOrderPicture.do",postData,function(res){
 
 				that.$emit('isLoading_',false);
 
-				that.urlParts = res.result;
+				that.urlParts = res.data;
 
 				that.$previewRefresh()
 			})
