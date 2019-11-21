@@ -58,7 +58,7 @@
 			this.tellServerAddress(this.HOST);
 		},
 		created(){
-
+			//
 			this.getCookie("e");
 		},
 		methods:{
