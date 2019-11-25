@@ -65,6 +65,12 @@ import Search from '@/pages/search'
 import ReportForms from "@/pages/ReportForms/ReportForms"
 
 
+// ——————————————————————————————————————货源——————————————————————————————————————————
+
+// 货源
+import goodsSource from "@/pages/goodsSource/goodsSource"
+
+
 
 // ——————————————————————————————————————个人——————————————————————————————————————————
 
@@ -189,6 +195,12 @@ export default new Router({
       path: '/ReportForms',
       name: 'ReportForms',
       component: ReportForms
+    },
+    //货源
+    {
+      path: '/goodsSource',
+      name: 'goodsSource',
+      component: goodsSource
     },
     // 历史任务
     {
