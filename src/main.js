@@ -61,7 +61,8 @@ Vue.prototype.HOST = "http://k56.kaidongyuan.com/tmsApp/"    //正式   外网
 // Vue.prototype.HOST = "http://192.168.20.113:8880/cyscm/tmsApp/"    //许三晏电脑IP，本地调试
 // Vue.prototype.HOST = "http://192.168.20.131:8880/cyscm/tmsApp/"    //黄伟雄电脑IP，本地调试
 
-Vue.prototype.HOST_ygy = "http://kdynnjk.3322.org:9998/cyscm/"    //袁功宜
+// Vue.prototype.HOST = "http://kdynnjk.3322.org:9998/cyscm/tmsApp/"    //袁功宜 配货易司机S
+// Vue.prototype.HOST_ygy = "http://kdynnjk.3322.org:9998/cyscm/"       //袁功宜 车货匹配
 
 
 

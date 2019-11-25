@@ -68,6 +68,32 @@ export default {
             },
           ]
         }
+        // 车货匹配未做完时，不影响老版本用户
+        else{
+
+          this.footList = [
+            {
+              path: "Index",
+              title: "首页",
+              icon: "icon-shouye-blue"
+            },
+            {
+              path: "Waybill",
+              title: "任务",
+              icon: "icon-woderenwu"
+            },
+            {
+              path: "ReportForms",
+              title: "报表",
+              icon: "icon-baobiao"
+            },
+            {
+              path: "HomeIndex",
+              title: "我的",
+              icon: "icon-gerenzhongxin"
+            },
+          ]
+        }
 
         for(var i = 0;i < this.footList.length; i++){
 
