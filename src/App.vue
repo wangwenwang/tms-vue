@@ -245,6 +245,21 @@ header>.icon-huabanfuben::before{
     }
   }
 }
+//下拉框
+.goodsSource .AddressStart .el-input--suffix .el-input__inner , .goodsSource .AddressEnd .el-input--suffix .el-input__inner {
+  // height: 40/50rem;
+  // line-height: 40/50rem;
+  width: 160/50rem;
+  border-style: none;
+}
+.goodsSource .Sort .el-input--suffix .el-input__inner {
+  width: 180/50rem;
+  border-style: none;
+}
+.goodsSource .el-cascader__label {
+  padding-left: 5/50rem;
+  padding-right: 10/50rem;
+}
 
 //选择弹框
 .SelectMeng{
