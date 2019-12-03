@@ -475,7 +475,8 @@
 						autograph:strDataURI,// 电子签名
 						daoDaPlace:this.$store.state.orderDeliver_CurrentLocation,//当前位置
 						longitude:this.$store.state.orderDeliver_longitude,//经度
-						latitude:this.$store.state.orderDeliver_latitude//纬度
+						latitude:this.$store.state.orderDeliver_latitude,//纬度
+				    	appUsersId:that.$store.state.userInfo.user_id,//用户id
 					}
 
 					that.httpRequest( "deliverConfirmation.do",postData,function(res){

@@ -80,7 +80,8 @@
 				    tenantCode : this.dataList.tenantCode,//租户代码
 				    shipPosition: this.CurrentLocation,// 当前位置
 				    longitude: this.longitude,// 经度
-				    latitude: this.latitude// 纬度
+				    latitude: this.latitude,// 纬度
+				    appUsersId:that.$store.state.userInfo.user_id,//用户id
 			    }
 
 				this.httpRequest( "shipConfirmation.do",postData,function(res){

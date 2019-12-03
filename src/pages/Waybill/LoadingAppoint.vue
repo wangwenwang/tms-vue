@@ -134,6 +134,7 @@
 				    yuYueTime : $("#datetime").val(),//预约时间  2018-07-24 2:09:12
 				    tenantCode: this.dataList.tenantCode,//租户代码
 				    appointLoadingSite:this.PlaceLoading,//装货地点
+				    appUsersId:that.$store.state.userInfo.user_id,//用户id
 			    }
 
 				this.httpRequest( "loadingReservation.do",postData,function(res){

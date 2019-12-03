@@ -161,6 +161,7 @@
 				    daoDaTime : this.nowDate,//到车时间  2018-08-06 18:56:43
 				    daoDaPeople: that.$store.state.userInfo.userName,//到达人
 				    daoDaPlace:this.PlaceLoading,//到达地点
+				    appUsersId:that.$store.state.userInfo.user_id,//用户id
 				}
 
 				this.httpRequest( "arriveConfirmation.do",postData,function(res){

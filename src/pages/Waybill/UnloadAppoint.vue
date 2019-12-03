@@ -84,6 +84,7 @@
 				    yuYueTime : $("#datetime").val(),//预约时间  2018-07-24 2:09:12
 				    tenantCode: this.$route.query.tenantCode,//租户代码
 				    receiveAddr:this.PlaceLoading,//卸货地址
+				    appUsersId:that.$store.state.userInfo.user_id,//用户id
 			    }
 
 				this.httpRequest( "unloadReservation.do",postData,function(res){

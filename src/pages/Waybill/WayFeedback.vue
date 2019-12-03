@@ -138,6 +138,7 @@
 				    trackRemarks : this.Remark,//备注信息
 				    traceCategory : this.type,//追踪类型
 				    tenantCode: this.dataList.tenantCode,//租户代码
+				    appUsersId:that.$store.state.userInfo.user_id,//用户id
 			    }
 
 				this.httpRequest( "abnormalInfo.do",postData,function(res){
