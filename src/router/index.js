@@ -69,6 +69,7 @@ import ReportForms from "@/pages/ReportForms/ReportForms"
 
 // 货源
 import goodsSource from "@/pages/goodsSource/goodsSource"
+import sourceDetail from "@/pages/goodsSource/sourceDetail"
 
 
 
@@ -201,6 +202,12 @@ export default new Router({
       path: '/goodsSource',
       name: 'goodsSource',
       component: goodsSource
+    },
+    //货源详情
+    {
+      path: '/sourceDetail',
+      name: 'sourceDetail',
+      component: sourceDetail
     },
     // 历史任务
     {

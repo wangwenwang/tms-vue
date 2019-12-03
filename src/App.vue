@@ -246,20 +246,26 @@ header>.icon-huabanfuben::before{
   }
 }
 //下拉框
-.goodsSource .AddressStart .el-input--suffix .el-input__inner , .goodsSource .AddressEnd .el-input--suffix .el-input__inner {
+.goodsSource .AddressStart .el-input--suffix .el-input__inner , .goodsSource .AddressEnd .el-input--suffix .el-input__inner ,.goodsSource .Screen .el-input--suffix .el-input__inner  {
   // height: 40/50rem;
   // line-height: 40/50rem;
-  width: 160/50rem;
+  width: 183/50rem;
   border-style: none;
 }
-.goodsSource .Sort .el-input--suffix .el-input__inner {
-  width: 180/50rem;
+ .goodsSource .Sort .el-input--suffix .el-input__inner {
+  // height: 40/50rem;
+  // line-height: 40/50rem;
+  width: 190/50rem;
   border-style: none;
 }
-.goodsSource .el-cascader__label {
-  padding-left: 5/50rem;
-  padding-right: 10/50rem;
+
+.goodsSource .el-cascader__label, .goodsSource  .el-input__inner {
+  padding-left: 25/50rem;
+  padding-right: 0/50rem;
 }
+.goodsSource .el-select__caret .el-input__icon .el-icon-arrow-up{ width: 5/50rem; }
+
+
 
 //选择弹框
 .SelectMeng{

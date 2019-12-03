@@ -192,7 +192,7 @@ import FooterIndex from "../../components/footer"
 				  width: 650/50rem;
 				  height: 350/50rem;
 				  position: absolute;
-				  top:150/50rem;
+				  top:110/50rem;
 				  left: 50/50rem;
 				  background-color: #fff;
 				  z-index: 33;
@@ -204,7 +204,7 @@ import FooterIndex from "../../components/footer"
 				  position: absolute;
 				  left: 0/50rem;
 				  z-index: 95;
-				  top: 75/50rem;
+				  top: 50/50rem;
 				}
 				.userinfo-avatar{
 				  width: 150/50rem;
@@ -214,7 +214,7 @@ import FooterIndex from "../../components/footer"
 				  margin: 0 auto 40/50rem; 
 				}
 				.stripInfo{
-					margin-top: 200/50rem;
+					margin-top: 170/50rem;
 					font-size: 30/50rem;
 					&>div{
 						width: 100%;

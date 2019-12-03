@@ -7,21 +7,23 @@
       </div>
       <div class="middleSuper">
         <div class="middle">
-          <div class="chooseAddress" @click="chooseAddress">不限</div>
           <div class="aroundResources" @click="chooseAround">周边资源</div>
+          <div class="chooseAddress" @click="chooseAddress">不限</div>
+          
         </div>
       </div>
     </header>
     <div class="container">
-      <div>
-        <div class="choose" v-if="AddressShow">
+      <div class="slectItem">
+      	<div class="Msg" v-if="AddressShow">以下是为您推荐的周边货源</div>
+        <div class="choose" v-if="!AddressShow">
           <div class="AddressStart">
             <span class="demonstration"></span>
-            <el-cascader :options="options" v-model="selectedOptions"  @change="handleChange"> </el-cascader>
+            <el-cascader :options="optionsAddress" :show-all-levels="false"  :filterable="true"  :clearable="true" @change="startChange"></el-cascader> </el-cascader>
           </div>
           <div class="AddressEnd">
             <span class="demonstration"></span>
-            <el-cascader :options="options"  v-model="selectedOptions" @change="handleChange"> </el-cascader>
+            <el-cascader :options="optionsAddress" :show-all-levels="false"  :filterable="true"  :clearable="true"   @change="endChange"> </el-cascader>
           </div>
           <div class="Sort">
             <template>
@@ -31,27 +33,72 @@
               </el-select>
             </template>
           </div>
-
         </div>
 
-        <div v-if="!AddressShow">以下是为您推荐的周边货源</div>
+        
 
-        <div>筛选</div>
+        <div class="Screen">
+          <template>
+            <el-select v-model="value7" placeholder="  筛选">
+              <el-option-group
+                v-for="group in options3"
+                :key="group.label"
+                :label="group.label">
+                <el-option
+                  v-for="item in group.options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-option-group>
+            </el-select>
+          </template>
+        </div>  
+
       </div>
 
-      
-
-      <!-- <div class="Address"></div>
-      <div class="screen"></div>
- -->    </div>
-    <!-- 页面数据为空时 -->
-    <div  class="NoData"  v-if="noDataShow">
-      <div>
-        <i  class="iconfont icon-meiyouwuliuxinxi"></i>
-        <div>没有数据</div>
+      <div class="dataItem" v-for='(dataItem,index) in goodsSourcedata' :id="index"  :key='index'  @click="tosourceDetail">
+        <div class="userImage"><img  class="userinfo-avatar" :src="dataItem.pictures?dataItem.pictures:'../../assets/images/defaultHead.png'" alt="">
+        </div>
+        <div class="rightContent">
+          <div class="one">
+            <span>{{dataItem.carrierCity}} </span><span> {{dataItem.carrierAddress3}}</span>
+            <span> → </span>
+            <span>{{dataItem.c_city}} </span><span> {{dataItem.c_address3}}</span>
+            <span class="releaseTime">{{dataItem.publishTime}}</span>
+          </div>
+          <div class="two">
+            <div class="left">
+            <span v-if='useType'>{{useType}}  </span>
+            <span v-if='conductor'>{{conductor}}  </span>
+            <span v-if='dataItem.vehicleType'>{{dataItem.vehicleType}}</span>
+            </div>
+            <!-- <span>{{endCity}} </span><span> {{endDistrict}}</span> -->
+            <div class="distance">约{{distance}}装货</div>
+          </div>
+          <div class="three">
+            <div class="left">
+            <span v-if='goods'>{{goods}} , </span>
+            <span > 木箱</span>
+            </div>
+            <div class="call"><i v-if='dataItem.ownerPhone' @click="callPhone(dataItem.ownerPhone)" class="iconfont icon-dianhua-copy"></i></div>
+          </div>
+          <div class="four">
+            <div class="left">
+            <span v-if='dataItem.ownerName'>{{dataItem.ownerName}}</span>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+      <!-- 页面数据为空时 -->
+      <div  class="NoData"  v-if="noDataShow">
+        <div>
+          <i  class="iconfont icon-meiyouwuliuxinxi"></i>
+          <div>没有数据</div>
+        </div>
+      </div>
     <FooterIndex/>
+    </div>
   </div>
 </template>
 <script type="text/javascript">
@@ -63,9 +110,11 @@ import $ from 'jquery'
       return{
         noDataShow:false,//没有数据
         xiaoxiSum:'10',//新消息数量
-        options:[],//地址
+        optionsAddress:[],//地址
+        options3:[],
+        value7:'',
         selectedOptions: [],//选择的地址
-         city_master_id:'',//上一级地址id
+        city_master_id:'',//上一级地址id
         AddressInfo:'',//地址信息
         AddressShow:true,//地址选择栏
         optionsSort: [{
@@ -73,51 +122,167 @@ import $ from 'jquery'
           label: '智能排序'
         }, {
           value: '选项2',
-          label: '默认排序'
+          label: '时间排序'
         }, {
           value: '选项3',
           label: '距离排序'
         }],
         value: '',//排序选择
-
+        startCity:'',//起点城市 
+        startDistrict:'',//起点区 
+        endCity:'',//终点城市 
+        endDistrict:'',//终点区 
+        // releaseTime:'',//发布时间 15:30
+        useType:'',//用车类型 整车/零担 
+        conductor:'',//车长 13米
+        // vehicleType:'',//车型 箱式/冷藏
+        distance:'',//距离 89km
+        goods:'',//运输物品 化妆品
+        // shipper:'',//货主 老王
+        goodsSourcedata:{},
+        longitude:"",//经度
+		latitude:""//纬度
       }
     },
     components:{
-        FooterIndex
+        FooterIndex,
     },
+    mounted(){
+
+	  this.TelliOSORAndroidVueMounted("获取当前位置页面已加载");
+	  window.SetCurrAddress = this.SetCurrAddress;
+	},
     created(){
-      console.log(111)
       var that = this;
       var AddressData = {
-          "types":'PROVINCE',//地址类型(省、市区、街道)
-          "city_master_id":that.AddressInfo.city_master_id,//上级地址id
-          }
+      // "types":'PROVINCE',//地址类型(省、市区、街道)
+      // "city_master_id":that.AddressInfo.city_master_id,//上级地址id
+      }
       // 获取门店信息
-      that.httpRequest_ygy("findCityByType.do",AddressData,function(AddressRes){
-            that.options = AddressRes.data;
-            console.log(that.options)
-      })
+      that.httpRequest_ygy("queryCityAll.do",AddressData,function(AddressRes){
 
+            that.optionsAddress = AddressRes.data.json2;
+      });
+
+      this.getGoodsData();
     },
     methods:{
       //点击消息
       Xiaoxi(){
 
       },
+      //获取当前位置经纬度
+      SetCurrAddress:function(address, lng, lat) {
+
+		if(address == "") {
+
+		  this.$alert(msg, '定位失败', {
+    		confirmButtonText: '确定',
+    		callback: action => {
+    		}
+		  })
+		}else {
+		  this.longitude = lng;
+		  this.latitude = lat;
+		}
+	  },
+
+      //获取起点城市、区
+      startChange(value) {
+        if(value.length){
+          this.startCity = value[1];
+          this.startDistrict = value[2];
+        }else{
+          this.startCity = "";
+          this.startDistrict = "";
+        }
+        this.getGoodsData(); 
+      },
+      //获取终点城市、区
+      endChange(value) {
+        
+        if(value.length){
+          this.endCity = value[1];
+          this.endDistrict = value[2];
+        }else{
+          this.endCity = "";
+          this.endDistrict = "";
+        }
+        this.getGoodsData()
+      },
+      getGoodsData(){
+
+        var that = this;
+        var AddressData = {
+           "carrierCity":that.startCity,//起点城市
+           "carrierAddress3":that.startDistrict,//起点区
+           "c_city":that.endCity,//终点城市
+           "c_address3":that.endDistrict,//终点区
+        }
+        // 获取货源信息
+        that.httpRequest_ygy("queryGoods.do",AddressData,function(goodsSourceRes){
+
+          that.goodsSourcedata = goodsSourceRes.data;
+          if(that.goodsSourcedata.length){
+            that.noDataShow = false;
+            for( var i=0; i<goodsSourceRes.data.length; i++){
+              if(goodsSourceRes.data[i].publishTime.substring(0,10) == that.nowDate){
+                
+                goodsSourceRes.data[i].publishTime = goodsSourceRes.data[i].publishTime.substring(11,16);
+              }else{
+                goodsSourceRes.data[i].publishTime = goodsSourceRes.data[i].publishTime.substring(5,10);
+              }
+            }
+          }else{
+            that.noDataShow = true;
+          }
+        })
+      },
+
+      //周边资源
+      getAroundGoodsData(){
+        var that = this;
+        var AddressData = {
+           "longitude":this.longitude,//经度
+	       "latitude":this.latitude//纬度
+        }
+        // 获取门店信息
+        that.httpRequest_ygy("queryGoods.do",AddressData,function(goodsSourceRes){
+          that.goodsSourcedata = goodsSourceRes.data;
+          for( var i=0; i<goodsSourceRes.data.length; i++){
+            if(goodsSourceRes.data[i].publishTime.substring(0,10) == that.nowDate){
+              
+              goodsSourceRes.data[i].publishTime = goodsSourceRes.data[i].publishTime.substring(11,16);
+            }else{
+              goodsSourceRes.data[i].publishTime = goodsSourceRes.data[i].publishTime.substring(5,10);
+            }
+          }
+        })
+      },
+
+      // 跳转到 历史轨迹 页面
+	  tosourceDetail(){
+	  	console.log(11)
+	  	this.$router.push({
+  		  name:"sourceDetail",
+  		  query:{
+  		  }
+	  	})
+	  },
+
       //选择地区
       chooseAddress(){
         this.toAddress();
-        this.AddressShow = true;
-        // this.orderState = "";
-        // this.reqOrderListInfo();
+        this.AddressShow = false;
+        console.log(this.AddressShow)
+        this.getGoodsData();
       }, 
 
-      //选择地区
+      //选择周边资源
       chooseAround(){
         this.toAround();
-        this.AddressShow = false;
-        // this.orderState = "";
-        // this.reqOrderListInfo();
+        this.AddressShow = true;
+        // this.getAroundGoodsData();
       }, 
       toAddress(){
         $(".chooseAddress").css({"background-color":  "#fff",'color':'#5965D8'})
@@ -128,14 +293,11 @@ import $ from 'jquery'
 
         $(".chooseAddress").css({"background-color":  "#5965D8",'color':'#fff'})
         $(".aroundResources").css({"background-color":  "#fff",'color':'#5965D8'})
-
       },
       handleChange(value) {
         console.log(value);
       }
-      
     },
-
   }
 </script>
 <style lang="less" scoped>
@@ -150,7 +312,7 @@ import $ from 'jquery'
         line-height: 30/50rem;
         position: absolute;
         left: 20/50rem;
-         display: flex;
+        display: flex;
         .xiaoxi{
           font-size: 24/50rem;
           width: 60/50rem;
@@ -185,32 +347,128 @@ import $ from 'jquery'
              line-height: 46/50rem;
              float: left;
              border-right: 2/50rem solid  #fff;
-             background-color:  #fff;
-             color: #5965D8;
+             
           }
           .aroundResources{
             display:inline-block;
              width: 50%;
              line-height: 46/50rem;
              float: left;
-             
+             background-color:  #fff;
+             color: #5965D8;
           }
         }
       }
     }
 
+    .slectItem{
+      width: 100%;
+      height: 74/50rem;
+      border-bottom: 1/50rem solid  #ddd;
+      .choose{
+        overflow: hidden;
+        .AddressStart{
+          float: left;
 
-    .choose{
-      // width: 600/50rem;
-      .AddressStart{
-        width: 150/50rem;
+        }
+        .AddressEnd{
+          float: left;
+        }
+        .Sort{
+          float: left;
+        }
         float: left;
+      }
+      .Msg{
+        float: left; 
+        width: 520/50rem;
+        padding-left: 30/50rem;
+        color: #999; 
+        line-height: 70/50rem;
+        font-size: 26/50rem;
+       }
+      .Screen{
+        float: left;
+        position: absolute;
+        right: 10/50rem;
+      }
+    }
+    .dataItem{
+      padding:15/50rem;
+      height: 160/50rem;
+      border-bottom: 1/50rem solid  #ddd;
+      .userImage{
+        width: 80/50rem;
+        height: 150/50rem;
+        float: left;
+        margin-right: 10/50rem;
+         .userinfo-avatar{
+          width: 80/50rem;
+          height: 80/50rem;
+          display: block;
+          
+        }
+      }
+      .rightContent{
+        padding-left: 80/50rem;
+        .one{ 
+          font-size: 30/50rem;
+          font-weight: 550;
+          padding-bottom: 10/50rem;
+          .releaseTime{
+            font-size: 22/50rem;
+            padding-top: 8/50rem;
+            color: #999;
+            float: right;
+          }
+         }
+         .two{
+          .left{
+            width: 480/50rem;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+            float: left;
+          }
+          .distance{
+            font-size: 24/50rem;
+            color: #999;
+            float: right;
+          }
+         }
+         .three{
+          .left{
+            width: 560/50rem;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+            float: left;
+          }
+          .call{
+            float: right;
+            width: 50/50rem;
+            height: 50/50rem;
+            line-height: 50/50rem;
+            border: 1/50rem solid #5965D8;
+            color: #5965D8;
+            border-radius: 50%;
+            text-align: center;
+            margin-top:15/50rem;
+            font-size: 30/50rem;
+          }
+         }
+         .four{
+          .left{
+            float: left;
+            width: 560/50rem;
+          }
+
+         }
 
       }
-      .AddressEnd{
-         width: 180/50rem;
-        float: left;
-      }
-  }
+     
+
+    }
+    
 }
 </style>
