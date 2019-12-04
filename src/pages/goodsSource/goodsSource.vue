@@ -74,7 +74,7 @@
             <span v-if='dataItem.vehicleType'>{{dataItem.vehicleType}}</span>
             </div>
             <!-- <span>{{endCity}} </span><span> {{endDistrict}}</span> -->
-            <div class="distance">约{{distance}}装货</div>
+            <div class="distance">约{{dataItem.distance}}km装货</div>
           </div>
           <div class="three">
             <div class="left">
@@ -140,8 +140,8 @@ import $ from 'jquery'
         goods:'',//运输物品 化妆品
         // shipper:'',//货主 老王
         goodsSourcedata:{},
-        longitude:"",//经度
-		latitude:""//纬度
+        longitude:"114.046",//经度
+		latitude:"22.628571"//纬度
       }
     },
     components:{
@@ -164,7 +164,7 @@ import $ from 'jquery'
             that.optionsAddress = AddressRes.data.json2;
       });
 
-      this.getGoodsData();
+      this.getAroundGoodsData();
     },
     methods:{
       //点击消息
@@ -214,13 +214,15 @@ import $ from 'jquery'
 
         var that = this;
         var AddressData = {
+           "lon":this.longitude,//经度
+	       "lat":this.latitude,//纬度
            "carrierCity":that.startCity,//起点城市
            "carrierAddress3":that.startDistrict,//起点区
            "c_city":that.endCity,//终点城市
            "c_address3":that.endDistrict,//终点区
         }
         // 获取货源信息
-        that.httpRequest_ygy("queryGoods.do",AddressData,function(goodsSourceRes){
+        that.httpRequest_ygy("peripheralResourcesList.do",AddressData,function(goodsSourceRes){
 
           that.goodsSourcedata = goodsSourceRes.data;
           if(that.goodsSourcedata.length){
@@ -242,12 +244,20 @@ import $ from 'jquery'
       //周边资源
       getAroundGoodsData(){
         var that = this;
+
+        console.log(this.longitude)
+        console.log(this.latitude)
+        // return
         var AddressData = {
-           "longitude":this.longitude,//经度
-	       "latitude":this.latitude//纬度
+           "lon":this.longitude,//经度
+	       "lat":this.latitude,//纬度
+	       "carrierCity": "",//起点城市
+           "carrierAddress3":"",//起点区
+           "c_city":"",//终点城市
+           "c_address3":"",//终点区
         }
         // 获取门店信息
-        that.httpRequest_ygy("queryGoods.do",AddressData,function(goodsSourceRes){
+        that.httpRequest_ygy("peripheralResourcesList.do",AddressData,function(goodsSourceRes){
           that.goodsSourcedata = goodsSourceRes.data;
           for( var i=0; i<goodsSourceRes.data.length; i++){
             if(goodsSourceRes.data[i].publishTime.substring(0,10) == that.nowDate){
@@ -262,7 +272,6 @@ import $ from 'jquery'
 
       // 跳转到 历史轨迹 页面
 	  tosourceDetail(){
-	  	console.log(11)
 	  	this.$router.push({
   		  name:"sourceDetail",
   		  query:{
@@ -274,15 +283,14 @@ import $ from 'jquery'
       chooseAddress(){
         this.toAddress();
         this.AddressShow = false;
-        console.log(this.AddressShow)
-        this.getGoodsData();
+        this.getAroundGoodsData();
       }, 
 
       //选择周边资源
       chooseAround(){
         this.toAround();
         this.AddressShow = true;
-        // this.getAroundGoodsData();
+        this.getAroundGoodsData();
       }, 
       toAddress(){
         $(".chooseAddress").css({"background-color":  "#fff",'color':'#5965D8'})
@@ -424,7 +432,7 @@ import $ from 'jquery'
          }
          .two{
           .left{
-            width: 480/50rem;
+            width: 402/50rem;
             overflow: hidden;
             text-overflow:ellipsis;
             white-space: nowrap;
@@ -462,12 +470,8 @@ import $ from 'jquery'
             float: left;
             width: 560/50rem;
           }
-
          }
-
       }
-     
-
     }
     
 }

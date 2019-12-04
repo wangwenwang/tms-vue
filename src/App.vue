@@ -265,6 +265,12 @@ header>.icon-huabanfuben::before{
 }
 .goodsSource .el-select__caret .el-input__icon .el-icon-arrow-up{ width: 5/50rem; }
 
+.sourceDetail .el-input{ width: 45%;}
+.sourceDetail .el-button--primary{ 
+  background-color: #A1A9E7;
+  border-color: #A1A9E7;
+} 
+
 
 
 //选择弹框
