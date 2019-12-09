@@ -41,29 +41,14 @@ Vue.prototype.$prompt = MessageBox.prompt;
 
 Vue.config.productionTip = false;
 
-// Vue.prototype.HOST = "/api";
 
+Vue.prototype.HOST = "http://k56.kaidongyuan.com/tmsApp/"                       //正式
 
-// Vue.prototype.HOST = "http://120.237.87.102:8081/tmsApp/"   
-// Vue.prototype.HOST = "http://192.168.11.47:8880/cyscm/tmsApp/"
-// Vue.prototype.HOST = "http://cykjgstest.3322.org:8091/tmsApp/"  //测试  外网
+// Vue.prototype.HOST = "http://192.168.20.113:8880/cyscm/tmsApp/"              //许三晏
+// Vue.prototype.HOST = "http://192.168.20.131:8880/cyscm/tmsApp/"              //黄伟雄
 
-// Vue.prototype.HOST = "http://192.168.1.250:8091/tmsApp/"         //测试    内网
-
-// Vue.prototype.HOST = "http://zwlttest.3322.org:8090/tmsApp/"
-Vue.prototype.HOST = "http://k56.kaidongyuan.com/tmsApp/"    //正式   外网
-// Vue.prototype.HOST = "http://120.77.206.44:80/tmsApp/"    //正式
-// Vue.prototype.HOST = "http://120.77.206.44:8086/tmsApp/"    //测试
-
-// Vue.prototype.HOST = "http://zwlttest.3322.org:8081/tmsApp/"
-
-// Vue.prototype.HOST = "http://119.23.172.113:8086/tmsApp/"
-// Vue.prototype.HOST = "http://192.168.20.113:8880/cyscm/tmsApp/"    //许三晏电脑IP，本地调试
-// Vue.prototype.HOST = "http://192.168.20.131:8880/cyscm/tmsApp/"    //黄伟雄电脑IP，本地调试
-
-// Vue.prototype.HOST = "http://kdynnjk.3322.org:9998/cyscm/tmsApp/"    //袁功宜 配货易司机S
-// Vue.prototype.HOST_ygy = "http://kdynnjk.3322.org:9998/cyscm/"       //袁功宜 车货匹配
-
+// Vue.prototype.HOST = "http://kdynnjk.3322.org:9998/cyscm/tmsApp/"            //袁功谊 配货易司机S
+// Vue.prototype.HOST_ygy = "http://kdynnjk.3322.org:9998/cyscm/vehicleGoods/"  //袁功谊 车货匹配
 
 
 
@@ -181,7 +166,7 @@ Vue.prototype.httpRequest_ygy=function (url,params,success){
 
 	that.$emit('isLoading', true,"拼命加载中");
 
-	Axios.post(that.HOST_ygy+url,{"params": JSON.stringify(params)})
+	Axios.post(that.HOST_ygy+url,{"params": JSON.stringify(params), "appUserId":that.$store.state.userInfo.user_id})
 	.then(function(res){
 		console.log(res)
 
