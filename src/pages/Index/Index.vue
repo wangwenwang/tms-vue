@@ -60,6 +60,13 @@ import FooterIndex from '../../components/footer.vue'
 
 			var that = this;
 
+			if(this.$store.state.userInfo.userType == "owner"){
+				this.$router.push({
+				    name:"publishGoods"
+				})
+				return
+			}
+
 			this.loadData();
 
 		},

@@ -72,6 +72,13 @@ import goodsSource from "@/pages/goodsSource/goodsSource"
 import sourceDetail from "@/pages/goodsSource/sourceDetail"
 
 
+// ——————————————————————————————————————发货——————————————————————————————————————————
+
+// 发货
+import publishGoods from "@/pages/publishGoods/publishGoods"
+import pg_publish from "@/pages/publishGoods/pg_publish"
+import SendLnglat from "@/pages/publishGoods/SendLnglat"
+
 
 // ——————————————————————————————————————个人——————————————————————————————————————————
 
@@ -238,6 +245,24 @@ export default new Router({
       path: '/RePassword',
       name: 'RePassword',
       component: RePassword
+    },
+    // 发货
+    {
+      path: '/publishGoods',
+      name: 'publishGoods',
+      component: publishGoods
+    },
+    // 发货
+    {
+      path: '/pg_publish',
+      name: 'pg_publish',
+      component: pg_publish
+    },
+    // 发送位置
+    {
+      path: '/SendLnglat',
+      name: 'SendLnglat',
+      component: SendLnglat
     },
   ]
 })

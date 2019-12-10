@@ -1,0 +1,42 @@
+// 主题颜色
+// @PublicColor:#EC662C;
+@PublicColor:#1e8cf8;
+
+@PublicBorderColor:#dfdfdf;
+
+@BtnPacing:30/50rem;
+
+@GrayBackground:#f4f4f4;
+
+// 按钮
+.BtnComponent{
+  width:100%;
+  display: flex;
+  box-sizing: border-box;
+  height:70/50rem;
+  line-height: 70/50rem;
+  font-size: 29/50rem;
+  text-align: center;
+  margin-top: 90/50rem;
+  color: #fff;
+  &>div{
+  	flex-grow: 1;
+  	border:none;
+  	margin-left: @BtnPacing;
+  	background-color:@PublicColor;
+    border-radius:35/50rem;
+    outline: none;
+    &:first-child{
+    	margin-left: 0;
+    }
+    &.onlyBtn{
+      margin: 0 120/50rem;
+    }
+  }
+}
+.bottomBtn{
+  position:fixed;
+  padding:0 30/50rem;
+  bottom:35/50rem;
+  left: 0;
+}
