@@ -2,28 +2,39 @@
   <div class="sourceDetail">
     <header><i class="iconfont icon-xiangzuo1"  @click="goPrev"></i><span>货源详情</span></header>
     <div class="container">
-      <div class="sourceInfo"  >
+
+      <div class="sourceInfo" >
         <div class="routeInfo">
           <div class="route">
-            <span>{{carrierCity}} </span><span> {{carrierAddress3}}</span>
+            <span>{{sourceInfo.carrierCity}} </span><span> {{sourceInfo.carrierAddress3}}</span>
             <span> → </span>
-            <span>{{c_city}} </span><span> {{c_address3}}</span>
+            <span>{{sourceInfo.c_city}} </span><span> {{sourceInfo.c_address3}}</span>
           </div>
-          <div class="distance">最短里程约{{distance}}km</div>
+          <div class="distance">最短里程约{{sourceInfo.mileage}}km</div>
         </div>
         <div class="carInfo">
           <div class="title">车货信息</div>
-          <div><span>车辆</span><span>整车 12/13.5/17米 平板</span></div><!-- {}} {{}} {{}} -->
-          <div><span>货物</span><span>建材, 5吨</span></div><!-- {{}}，{{}} -->
-          <div><span>特殊要求</span><span>{{remark}}</span></div>
+          <div><span>车辆</span><span>{{sourceInfo.vehicleType}}</span></div>
+          <div><span>货物</span>
+              <span>{{sourceInfo.productName}},</span> 
+              <span v-if='!sourceInfo.weight'>{{sourceInfo.min_weight}}~{{sourceInfo.max_weight}}吨&nbsp;</span>
+              <span v-if='sourceInfo.weight'>{{sourceInfo.max_weight}}吨&nbsp;</span>
+              <span v-if='!sourceInfo.volume'>{{sourceInfo.min_volume}}~{{sourceInfo.max_volume}}方&nbsp;</span>
+              <span v-if='sourceInfo.volume'>{{sourceInfo.max_volume}}方&nbsp;</span></div>
+          <div class="mark">
+            <span>特殊要求</span>
+            <span class="markInfo" >{{sourceInfo.mark}}</span>
+          </div>
         </div>
       
-
         <div class="handlingInfo">
-          <div class="title"><span>装卸信息</span><span>一装一卸</span><span>距装货地70.4km</span></div>
-          <div  class="date"><i class="iconfont icon-yidongduanicon-"></i><span>今天 全天00：00-24：00可装</span></div><!-- {}} {{}} {{-->
-          <div class="address1"><span class="i">装</span><span>宏润工业园</span></div><!-- {{}}，{{}} -->
-          <div class="address2"><span class="i">卸</span><span>市话大厦</span></div>
+          <div class="title"><span>装卸信息</span><span>{{sourceInfo.loadUnloadType}}</span><span>距装货地{{sourceInfo.distance}}km</span></div>
+          <div class="date"><i class="iconfont icon-yidongduanicon-"></i><span>{{sourceInfo.loadingTime}} 全天00：00-24：00可装</span>
+          </div><!-- {}} {{}} {{-->
+          <div v-for='(dataItem,index) in AddressData' :id="index"  :key='index'>
+          <div class="address1"><span class="i">装</span><span>{{dataItem.carrierCity}} {{dataItem.carrierAddress3}}</span></div><!-- {{}}，{{}} -->
+          <div class="address2"><span class="i">卸</span><span>{{dataItem.c_city}} {{dataItem.c_address3}}</span></div>
+          </div>
         </div>
 
         <div class="driverInfo">
@@ -43,10 +54,19 @@
           </div>
         </div>
 
+        <div class="price">
+          <span v-if="sourceInfo.expectedCost">当前报价：</span>
+          <span v-if="shipmentMoney">我的竞价：</span>
+          <span v-if="sourceInfo.expectedCost">￥{{sourceInfo.expectedCost}}</span>
+          <span v-if="!is_None" class="none">暂无报价</span>
+          <span v-if="shipmentMoney">￥{{shipmentMoney}}</span>
+        </div>
+
+
         <div class="btnList">
-          <div class="call"><i class="iconfont icon-dianhua"></i>电话联系</div>
-          <div class="biddingPrice" v-if="orderstate"><i class="iconfont icon-xuanzhong"></i>确 认</div>
-          <div class="biddingPrice" v-if="ordertype" @click="DialogVisible = true">
+          <div class="call"  @click="callPhone(ownerPhone)"><i class="iconfont icon-dianhua"></i>电话联系</div>
+          <div class="biddingPrice" v-if="sourceInfo.expectedCost"><i class="iconfont icon-xuanzhong" @click="Submit()"></i>确 认</div>
+          <div class="biddingPrice" v-if="!sourceInfo.expectedCost"  @click="DialogVisible = true">
             <i class="iconfont icon-jingjia"></i>竞 价
           </div>
           <el-dialog title="竞 价" :visible.sync="DialogVisible"  width="80%" top="50%" center>
@@ -54,29 +74,31 @@
             <el-input v-model="shipmentMoney" auto-complete="off"></el-input>
             <span slot="footer" class="dialog-footer">
               <el-button @click="DialogVisible = false">取 消</el-button>
-              <el-button type="primary" @click="DialogVisible = false">确 定</el-button>
+              <el-button type="primary" @click="Confirm()">确 定</el-button>
             </span>
           </el-dialog>
-<!-- 
-          <el-button type="text" @click="centerDialogVisible = true">确 认</el-button>
+         <!--  <div class="biddingPrice" v-if="sourceInfo.shipPrice" style="background-color: #ddd; color: #6D6D6D"><i class="iconfont icon-xuanzhong" </i>已承接</div> -->
+      <!--<el-button type="text" @click="centerDialogVisible = true">确 认</el-button>
           <el-button type="text" @click="centerDialogVisible = true">确 认</el-button> -->
         </div>
-
-
-
       </div>
     </div>
-
 
       <!-- 页面数据为空时 -->
-      <div   v-if="is_NoData"   class="NoData" >
-        <div>
-          <i  class="iconfont icon-meiyouwuliuxinxi" ></i>
-          <div>{{is_NoData_text}}</div>
-        </div>
+    <div   v-if="is_NoData"   class="NoData" >
+      <div>
+        <i  class="iconfont icon-meiyouwuliuxinxi" ></i>
+        <div>{{is_NoData_text}}</div>
       </div>
     </div>
+    <div v-if="ifTips" class="msg_tips">
+        <div class="tips_content">
+          <i class="iconfont icon-chenggong1"></i>
+          <p>{{tips_Msg}}</p>
+        </div>
+      </div>
   </div>
+<!-- </div> -->
 </template>
 <script type="text/javascript">
   export default{
@@ -84,32 +106,48 @@
     data(){
       return{
         is_NoData:false,
-        is_NoData_text:"没有任务",
-        sourceData:[],//货源详情
-        carrierCity:"深圳",//起点城市
-        carrierAddress3:"宝安",//起点区域
-        c_city:"广州",//终点城市
-        c_address3:"白云",//终点区域
-        distance:"137.5",//运距
-        remark:"好装好卸,两个活动房！不怕雨,不用雨布,晚上卸货,明天装也行,其他(定金请优先通过平台支付)",//特殊要求
+        ifTips:false,//提示信息是否显示
+        is_None:false,//暂无报价
+
+        is_NoData_text:"没有信息",
         orderstate:'',
         ordertype:'asded',
         DialogVisible:false,
         shipmentMoney:'',
+        ownerPhone:'',//货主电话
+        sourceInfo:{},
+        AddressData:[],//装卸点详情
 
       }
     },
     created(){
 
+      if(this.$route.query.sourceInfo){
+
+        this.sourceInfo = this.$route.query.sourceInfo;//货源详情
+      }
+      if(this.sourceInfo.expectedCost){
+
+        this.is_None = false;
+      }else{
+        this.is_None =true;
+      }
+      if(this.shipmentMoney){
+
+        this.is_None = false;
+      }else{
+        this.is_None =true;
+      }
+
       var that = this;
 
       var postData = {
-          cellphone: that.$store.state.userInfo.cellphone,//手机号   15013418360
+          sourceNo: that.sourceInfo.sourceNo,//货源单号
         };
+      //查询装卸点
+      that.httpRequest_ygy("queryStartEndAddress.do",postData,function(res){
 
-      // this.httpRequest("queryTrajectoryData.do",postData,function(res){
-
-      //   that.TrackListData = res.data;
+        that.AddressData = res.data;
 
       //   if(!res.data.length){
 
@@ -117,12 +155,73 @@
 
       //     that.is_NoData = true;
       //   }
+      })
+      if(!that.sourceInfo.expectedCost){
+          //查询司机竞价
+          that.httpRequest_ygy("queryCompPrice.do",postData,function(res){
 
-
-      // })
-
+            that.shipmentMoney = res.data.compPrice;
+          })
+        }
     },
     methods:{
+      //司机确认按钮
+      Submit(){
+        var that = this;
+        var postData = {
+            sourceNo: that.sourceInfo.sourceNo,//货源单号
+            expectedCost:that.sourceInfo.expectedCost,//货主报价
+          };
+        //查询装卸点
+        that.httpRequest_ygy("confirmDriver.do",postData,function(res){
+          if(res.status == 1){
+              that.ifTips = true;
+              that.tips_Msg = "确认成功";
+              setTimeout(function(){
+                //竞价成功后刷新当前页面
+                that.$router.push({
+                    name:"goodsSource",
+                  })
+                },2000)
+            }else{
+              that.$alert('确认失败', '提示', {
+                confirmButtonText: '确定',
+              })
+             }
+        })
+
+      },
+
+      //竞价确定
+      Confirm(){
+        if(this.shipmentMoney){
+
+          var that = this;
+          var postData = {
+              // appUserId:that.$store.state.userInfo.user_id,//司机ID
+              sourceNo: that.sourceInfo.sourceNo,//货源单号
+              compPrice: that.shipmentMoney,//竞价
+            };
+          this.httpRequest_ygy("driverBidding.do",postData,function(res){
+            if(res.status == 1){
+              that.ifTips = true;
+              that.tips_Msg = "竞价成功";
+              setTimeout(function(){
+                //竞价成功后刷新当前页面
+                that.$router.push({
+                    name:"goodsSource",
+                  })
+                },2000)
+              // that.$store.state.StoreInfo = {};
+            }else{
+              that.$alert('竞价失败', '提示', {
+                confirmButtonText: '确定',
+              })
+             }
+          })
+        }
+        this.DialogVisible = false;
+      },
       // 返回上一页
       goPrev(){
 
@@ -143,17 +242,17 @@
       overflow: hidden;
       .sourceInfo{
         .routeInfo{
-        padding: 10/50rem  20/50rem;
-        border-bottom: 15/50rem solid #F4F4F4;
-          .route{
-            font-size: 35/50rem;
-            font-weight: 550;
-            line-height: 80/50rem;
-          }
+          padding: 10/50rem  20/50rem;
+          border-bottom: 15/50rem solid #F4F4F4;
+            .route{
+              font-size: 35/50rem;
+              font-weight: 550;
+              line-height: 80/50rem;
+            }
         }
 
         .carInfo{
-          padding: 5/50rem  20/50rem  25/50rem 20/50rem;
+          padding: 5/50rem  20/50rem  10/50rem 20/50rem;
           border-bottom: 15/50rem solid #F4F4F4;
           .title{
             font-weight: 600;
@@ -163,18 +262,14 @@
             line-height: 50/50rem;
             span:first-child{
               color: #999;
-              width: 20%;
-            }
-            span:nth-child(2){
-              display: block;
-              width: 80%;
-              float: right;
+              min-width: 20%;
+              float: left;
             }
           }
-          div:nth-child(4){
-            padding-bottom: 50/50rem;
-            span:nth-child(2){
-              display: block;
+          .mark{
+            .markInfo{
+              padding-top: 8/50rem;
+              display: flex;
               line-height: 40/50rem;
             }
           }
@@ -252,7 +347,6 @@
         .driverInfo{
           height: 180/50rem;
           padding: 5/50rem  40/50rem  25/50rem 20/50rem;
-          // padding: 5/50rem  20/50rem  25/50rem 20/50rem;
           border-bottom: 15/50rem solid #F4F4F4;
           .userImage{
             width: 80/50rem;
@@ -286,6 +380,16 @@
               font-size: 26/50rem;
               line-height: 65/50rem;
             }
+          }
+        }
+
+        .price{
+          padding: 10/50rem  20/50rem  ;
+          border-bottom: 15/50rem solid #F4F4F4;
+          line-height: 50/50rem;
+          .none{
+            color: #999;
+            font-weight: 550;
           }
         }
 

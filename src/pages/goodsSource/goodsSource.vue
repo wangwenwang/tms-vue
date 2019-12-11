@@ -57,7 +57,7 @@
 
       </div>
 
-      <div class="dataItem" v-for='(dataItem,index) in goodsSourcedata' :id="index"  :key='index'  @click="tosourceDetail">
+      <div class="dataItem" v-for='(dataItem,index) in goodsSourcedata' :id="index"  :key='index'  @click="tosourceDetail(index)" >
         <div class="userImage"><img  class="userinfo-avatar" :src="dataItem.pictures?dataItem.pictures:'../../assets/images/defaultHead.png'" alt="">
         </div>
         <div class="rightContent">
@@ -65,21 +65,30 @@
             <span>{{dataItem.carrierCity}} </span><span> {{dataItem.carrierAddress3}}</span>
             <span> → </span>
             <span>{{dataItem.c_city}} </span><span> {{dataItem.c_address3}}</span>
-            <span class="releaseTime">{{dataItem.publishTime}}</span>
+            <span class="publishTime">{{dataItem.publishTime}}</span>
           </div>
           <div class="two">
             <div class="left">
-            <span v-if='useType'>{{useType}}  </span>
-            <span v-if='conductor'>{{conductor}}  </span>
-            <span v-if='dataItem.vehicleType'>{{dataItem.vehicleType}}</span>
+            <!-- <span v-if='useType'>{{useType}}  </span>
+            <span v-if='conductor'>{{conductor}}  </span> -->
+            <span v-if='dataItem.vehicleType'>{{dataItem.vehicleType}}&nbsp;</span>
+            <span v-if='!dataItem.weight'>{{dataItem.min_weight}}~{{dataItem.max_weight}}吨&nbsp;</span>
+            <span v-if='dataItem.weight'>{{dataItem.max_weight}}吨&nbsp;</span>
+            <span v-if='!dataItem.volume'>{{dataItem.min_volume}}~{{dataItem.max_volume}}方&nbsp;</span>
+            <span v-if='dataItem.volume'>{{dataItem.max_volume}}方&nbsp;</span>
             </div>
             <!-- <span>{{endCity}} </span><span> {{endDistrict}}</span> -->
             <div class="distance">约{{dataItem.distance}}km装货</div>
           </div>
           <div class="three">
             <div class="left">
-            <span v-if='goods'>{{goods}} , </span>
-            <span > 木箱</span>
+            <span v-if='dataItem.cargoType'>{{dataItem.cargoType}} , </span>
+            <span v-if='dataItem.productName'>{{dataItem.productName}} , </span>
+            <span v-if='dataItem.loadingTime'>{{dataItem.loadingTime}}装货 , </span>
+
+            
+            <span v-if='dataItem.loadUnloadType'>{{dataItem.loadUnloadType}} </span>
+            
             </div>
             <div class="call"><i v-if='dataItem.ownerPhone' @click="callPhone(dataItem.ownerPhone)" class="iconfont icon-dianhua-copy"></i></div>
           </div>
@@ -132,16 +141,16 @@ import $ from 'jquery'
         startDistrict:'',//起点区 
         endCity:'',//终点城市 
         endDistrict:'',//终点区 
-        // releaseTime:'',//发布时间 15:30
-        useType:'',//用车类型 整车/零担 
-        conductor:'',//车长 13米
+        // useType:'',//装货类型 整车/零担 
+        // conductor:'',//车长 13米
         // vehicleType:'',//车型 箱式/冷藏
         distance:'',//距离 89km
         goods:'',//运输物品 化妆品
-        // shipper:'',//货主 老王
         goodsSourcedata:{},
         longitude:"114.046",//经度
-		latitude:"22.628571"//纬度
+		latitude:"22.628571",//纬度
+		weight:false,
+		volume:false,
       }
     },
     components:{
@@ -164,6 +173,7 @@ import $ from 'jquery'
             that.optionsAddress = AddressRes.data.json2;
       });
 
+      this.nowDate = this.getNowTime().substring(0,10);
       this.getAroundGoodsData();
     },
     methods:{
@@ -228,11 +238,21 @@ import $ from 'jquery'
           if(that.goodsSourcedata.length){
             that.noDataShow = false;
             for( var i=0; i<goodsSourceRes.data.length; i++){
+
               if(goodsSourceRes.data[i].publishTime.substring(0,10) == that.nowDate){
                 
                 goodsSourceRes.data[i].publishTime = goodsSourceRes.data[i].publishTime.substring(11,16);
               }else{
+
                 goodsSourceRes.data[i].publishTime = goodsSourceRes.data[i].publishTime.substring(5,10);
+              }
+              if(goodsSourceRes.data[i].min_weight == goodsSourceRes.data[i].max_weight){
+              	
+                goodsSourceRes.data[i].weight = true;
+              }
+               if(goodsSourceRes.data[i].min_volume == goodsSourceRes.data[i].max_volume){
+
+               	 goodsSourceRes.data[i].volume = true;
               }
             }
           }else{
@@ -244,10 +264,6 @@ import $ from 'jquery'
       //周边资源
       getAroundGoodsData(){
         var that = this;
-
-        console.log(this.longitude)
-        console.log(this.latitude)
-        // return
         var AddressData = {
            "lon":this.longitude,//经度
 	       "lat":this.latitude,//纬度
@@ -259,22 +275,34 @@ import $ from 'jquery'
         // 获取门店信息
         that.httpRequest_ygy("peripheralResourcesList.do",AddressData,function(goodsSourceRes){
           that.goodsSourcedata = goodsSourceRes.data;
-          for( var i=0; i<goodsSourceRes.data.length; i++){
+          for( var i=0; i<goodsSourceRes.data.length; i++){ 
+
             if(goodsSourceRes.data[i].publishTime.substring(0,10) == that.nowDate){
-              
+
               goodsSourceRes.data[i].publishTime = goodsSourceRes.data[i].publishTime.substring(11,16);
             }else{
+            	
               goodsSourceRes.data[i].publishTime = goodsSourceRes.data[i].publishTime.substring(5,10);
+            }
+            if(goodsSourceRes.data[i].min_weight == goodsSourceRes.data[i].max_weight){
+          	
+              goodsSourceRes.data[i].weight = true;
+            }
+            if(goodsSourceRes.data[i].min_volume == goodsSourceRes.data[i].max_volume){
+           	
+           	 goodsSourceRes.data[i].volume = true;
             }
           }
         })
       },
 
       // 跳转到 历史轨迹 页面
-	  tosourceDetail(){
+	  tosourceDetail(index){
+	  	var sourceInfo = this.goodsSourcedata[index];
 	  	this.$router.push({
   		  name:"sourceDetail",
   		  query:{
+  		  	sourceInfo:sourceInfo,
   		  }
 	  	})
 	  },
@@ -302,9 +330,6 @@ import $ from 'jquery'
         $(".chooseAddress").css({"background-color":  "#5965D8",'color':'#fff'})
         $(".aroundResources").css({"background-color":  "#fff",'color':'#5965D8'})
       },
-      handleChange(value) {
-        console.log(value);
-      }
     },
   }
 </script>
@@ -423,7 +448,7 @@ import $ from 'jquery'
           font-size: 30/50rem;
           font-weight: 550;
           padding-bottom: 10/50rem;
-          .releaseTime{
+          .publishTime{
             font-size: 22/50rem;
             padding-top: 8/50rem;
             color: #999;
