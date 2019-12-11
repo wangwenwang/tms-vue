@@ -14,6 +14,15 @@ const OpenBrowserPlugin = require('open-browser-webpack-plugin')
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
+const os = require('os')
+let localhost = ''
+try {
+  const network = os.networkInterfaces()
+  localhost = network[Object.keys(network)[0]][1].address
+} catch (e) {
+  localhost = 'localhost';
+}
+
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
@@ -65,8 +74,8 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         to: config.dev.assetsSubDirectory,
         ignore: ['.*']
       }
-    ])
-     ,new OpenBrowserPlugin({ url: 'http://localhost:8082'})
+    ]),
+    new OpenBrowserPlugin({ url: 'http://' + localhost + ':8082'})
   ]
 })
 
