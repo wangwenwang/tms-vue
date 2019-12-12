@@ -12,6 +12,7 @@
 			        <div class='userName'>{{cellphone}}</div>
 			    </div>
 		    	<div class="stripInfo">
+		    		<div  @click="toOdBid"><i class="iconfont icon-lishiguiji" ></i><span>我的订单</span><i class="iconfont icon-xiangshang" ></i></div>
 		    		<div  @click="toHistoricalTrack"><i class="iconfont icon-lishiguiji" ></i><span>历史轨迹</span><i class="iconfont icon-xiangshang" ></i></div>
 		    		<div  @click="toPersonalData"><i class="iconfont icon-gerenziliaoxiugai" ></i><span>个人资料</span><i class="iconfont icon-xiangshang" ></i></div>
 		    		<div  @click="toPassword"><i class="iconfont icon-xiugaimima" ></i><span>修改密码</span><i class="iconfont icon-xiangshang" ></i></div>
@@ -48,6 +49,15 @@ import FooterIndex from "../../components/footer"
 			this.VersionNum = this.VersionNum.replace("版本:","")
 		},
 		methods:{
+			// 跳转到 我的订单 页面
+			toOdBid(){
+
+				this.$router.push({
+					name:"od_bid",
+					query:{
+					}
+				})
+			},
 			// 跳转到 历史轨迹 页面
 			toHistoricalTrack(){
 

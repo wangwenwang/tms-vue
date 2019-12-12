@@ -87,6 +87,8 @@ import HomeIndex from '@/pages/home/home'  //个人中心首页
 import HistoricalTrack from '@/pages/home/HistoricalTrack'  //历史轨迹
 import PersonalData from '@/pages/home/PersonalData'  //个人资料
 import RePassword from '@/pages/home/RePassword'  //修改密码
+// 我的订单
+import od_bid from '@/pages/home/order/od_bid'  //竞价中
 
 
 Vue.use(Router)
@@ -245,6 +247,12 @@ export default new Router({
       path: '/RePassword',
       name: 'RePassword',
       component: RePassword
+    },
+    // 竞价中
+    {
+      path: '/od_bid',
+      name: 'od_bid',
+      component: od_bid
     },
     // 发货
     {
