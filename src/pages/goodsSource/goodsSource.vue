@@ -27,8 +27,8 @@
           </div>
           <div class="Sort">
             <template>
-              <el-select v-model="value" placeholder="智能排序">
-                <el-option v-for="item in optionsSort" :key="item.value" :label="item.label" :value="item.value"> 
+              <el-select v-model="that.distance" placeholder="智能排序">
+                <el-option v-for="item in optionsSort" :key="item.that.distance" :label="item.label" :value="item.value"> 
                 </el-option>
               </el-select>
             </template>
@@ -78,7 +78,7 @@
             <span v-if='dataItem.volume'>{{dataItem.max_volume}}方&nbsp;</span>
             </div>
             <!-- <span>{{endCity}} </span><span> {{endDistrict}}</span> -->
-            <div class="distance">约{{dataItem.distance}}km装货</div>
+            <div class="distance">约{{distance}}km装货</div>
           </div>
           <div class="three">
             <div class="left">
@@ -243,17 +243,21 @@ import $ from 'jquery'
                 
                 goodsSourceRes.data[i].publishTime = goodsSourceRes.data[i].publishTime.substring(11,16);
               }else{
-
                 goodsSourceRes.data[i].publishTime = goodsSourceRes.data[i].publishTime.substring(5,10);
               }
               if(goodsSourceRes.data[i].min_weight == goodsSourceRes.data[i].max_weight){
               	
                 goodsSourceRes.data[i].weight = true;
               }
-               if(goodsSourceRes.data[i].min_volume == goodsSourceRes.data[i].max_volume){
+              if(goodsSourceRes.data[i].min_volume == goodsSourceRes.data[i].max_volume){
 
-               	 goodsSourceRes.data[i].volume = true;
+               	goodsSourceRes.data[i].volume = true;
               }
+              that.distance = goodsSourceRes.data[i].distance/1000;
+	    	  if(that.distance < 1){
+	    	    let tempVal = parseFloat(that.distance).toFixed(2)
+	            that.distance = tempVal.substring(0, tempVal.length - 1)
+	    	  }
             }
           }else{
             that.noDataShow = true;
@@ -281,7 +285,6 @@ import $ from 'jquery'
 
               goodsSourceRes.data[i].publishTime = goodsSourceRes.data[i].publishTime.substring(11,16);
             }else{
-            	
               goodsSourceRes.data[i].publishTime = goodsSourceRes.data[i].publishTime.substring(5,10);
             }
             if(goodsSourceRes.data[i].min_weight == goodsSourceRes.data[i].max_weight){
@@ -290,8 +293,13 @@ import $ from 'jquery'
             }
             if(goodsSourceRes.data[i].min_volume == goodsSourceRes.data[i].max_volume){
            	
-           	 goodsSourceRes.data[i].volume = true;
+           	  goodsSourceRes.data[i].volume = true;
             }
+            that.distance = goodsSourceRes.data[i].distance/1000;
+    	    if(that.distance < 1){
+    	      let tempVal = parseFloat(that.distance).toFixed(2)
+              that.distance = tempVal.substring(0, tempVal.length - 1)
+    	    }
           }
         })
       },

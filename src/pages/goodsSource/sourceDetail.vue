@@ -28,7 +28,7 @@
         </div>
       
         <div class="handlingInfo">
-          <div class="title"><span>装卸信息</span><span>{{sourceInfo.loadUnloadType}}</span><span>距装货地{{sourceInfo.distance}}km</span></div>
+          <div class="title"><span>装卸信息</span><span>{{sourceInfo.loadUnloadType}}</span><span>距装货地{{distance}}km</span></div>
           <div class="date"><i class="iconfont icon-yidongduanicon-"></i><span>{{sourceInfo.loadingTime}} 全天00：00-24：00可装</span>
           </div><!-- {}} {{}} {{-->
           <div v-for='(dataItem,index) in AddressData' :id="index"  :key='index'>
@@ -117,6 +117,7 @@
         ownerPhone:'',//货主电话
         sourceInfo:{},
         AddressData:[],//装卸点详情
+        distance:'',//距离装货地
 
       }
     },
@@ -125,6 +126,12 @@
       if(this.$route.query.sourceInfo){
 
         this.sourceInfo = this.$route.query.sourceInfo;//货源详情
+
+        this.distance = this.sourceInfo.distance/1000;
+        if(this.distance < 1){
+          let tempVal = parseFloat(this.distance).toFixed(2)
+          this.distance = tempVal.substring(0, tempVal.length - 1)
+        }
       }
       if(this.sourceInfo.expectedCost){
 
