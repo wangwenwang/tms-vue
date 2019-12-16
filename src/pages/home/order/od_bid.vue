@@ -48,40 +48,7 @@
       })
       this.nowDate = this.getNowTime().substring(0,10);
 
-      var that = this
-      var postData = {}
-      // 获取门店信息
-      that.httpRequest_ygy("queryDriverPriceInfo.do",postData,function(res){
-
-        if(res.data.length){
-
-          that.orderArr = res.data;
-          that.noDataShow = false;
-
-          for( var i=0; i<that.orderArr.length; i++){
-
-            if(that.orderArr[i].publishTime.substring(0,10) == that.nowDate){
-              
-              that.orderArr[i].publishTime = that.orderArr[i].publishTime.substring(11,16);
-            }else{
-              that.orderArr[i].publishTime = that.orderArr[i].publishTime.substring(5,10);
-            }
-            if(that.orderArr[i].min_weight == that.orderArr[i].max_weight){
-              
-              that.orderArr[i].weight = true;
-            }
-            if(that.orderArr[i].min_volume == that.orderArr[i].max_volume){
-
-              that.orderArr[i].volume = true;
-            }
-            that.orderArr[i].distance = that.orderArr[i].distance/1000;
-            let tempVal = parseFloat(that.orderArr[i].distance).toFixed(2)
-            that.orderArr[i].distance = tempVal.substring(0, tempVal.length - 1)
-          }
-        }else{
-            that.noDataShow = true;
-        }
-      })
+      
     },
     methods:{
       // 返回上一页
@@ -92,42 +59,79 @@
           }
         })
       },
+      reqOrderList(){
+        var that = this
+        var postData = {
+          "status":that.orderState,
+        }
+        // 获取门店信息
+        that.httpRequest_ygy("queryStatusList.do",postData,function(res){
+          that.orderArr = []
+          if(res.data.length){
+            that.orderArr = res.data;
+            that.noDataShow = false;
+
+            for( var i=0; i<that.orderArr.length; i++){
+
+              if(that.orderArr[i].publishTime.substring(0,10) == that.nowDate){
+                
+                that.orderArr[i].publishTime = that.orderArr[i].publishTime.substring(11,16);
+              }else{
+                that.orderArr[i].publishTime = that.orderArr[i].publishTime.substring(5,10);
+              }
+              if(that.orderArr[i].min_weight == that.orderArr[i].max_weight){
+                
+                that.orderArr[i].weight = true;
+              }
+              if(that.orderArr[i].min_volume == that.orderArr[i].max_volume){
+
+                that.orderArr[i].volume = true;
+              }
+              that.orderArr[i].distance = that.orderArr[i].distance/1000;
+              let tempVal = parseFloat(that.orderArr[i].distance).toFixed(2)
+              that.orderArr[i].distance = tempVal.substring(0, tempVal.length - 1)
+            }
+          }else{
+              that.noDataShow = true;
+          }
+        })
+      },
 
       //全部
       choseAll(){
         this.toAll();
         this.orderState = "";
-        // this.reqOrderList();
+        this.reqOrderList();
       }, 
       //待确认
       choseToSure(){
         this.toSure();
         this.orderState = "NON-CONFIRM";
-        // this.reqOrderList();
+        this.reqOrderList();
       },
       //待装货
       choseToloading(){
         this.toloading();
         this.orderState = "NON-DELIVERY";
-        // this.reqOrderList();
+        this.reqOrderList();
       },
       //运输中
       choseTransit(){
         this.toTransit();
         this.orderState = "TRANSPORT";
-        // this.reqOrderList();
+        this.reqOrderList();
       },
       //待评价
       choseToEvaluate(){
         this.toEvaluate();
         this.orderState = "NON-RATE";
-        // this.reqOrderList();
+        this.reqOrderList();
       },
       //已取消
       choseCancel(){
         this.toCancel();
         this.orderState = "CANCEL";
-        // this.reqOrderList();
+        this.reqOrderList();
       },
        //全部样式
       toAll(){

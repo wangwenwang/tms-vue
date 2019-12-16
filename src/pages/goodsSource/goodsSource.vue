@@ -143,22 +143,19 @@ import $ from 'jquery'
     		latitude:"22.628571",//纬度
     		weight:false,
     		volume:false,
+        whoPush:"",
       }
     },
     components:{
-        FooterIndex,
+      FooterIndex,
     },
     mounted(){
-
-	  this.TelliOSORAndroidVueMounted("获取当前位置页面已加载");
-	  window.SetCurrAddress = this.SetCurrAddress;
-	},
+  	  this.TelliOSORAndroidVueMounted("获取当前位置页面已加载");
+  	  window.SetCurrAddress = this.SetCurrAddress;
+  	},
     created(){
       var that = this;
-      var AddressData = {
-      // "types":'PROVINCE',//地址类型(省、市区、街道)
-      // "city_master_id":that.AddressInfo.city_master_id,//上级地址id
-      }
+      var AddressData = {}
       // 获取门店信息
       that.httpRequest_ygy("queryCityAll.do",AddressData,function(AddressRes){
 
@@ -176,18 +173,17 @@ import $ from 'jquery'
       //获取当前位置经纬度
       SetCurrAddress:function(address, lng, lat) {
 
-		if(address == "") {
-
-		  this.$alert(msg, '定位失败', {
-    		confirmButtonText: '确定',
-    		callback: action => {
+    		if(address == "") {
+    		  this.$alert(msg, '定位失败', {
+        		confirmButtonText: '确定',
+        		callback: action => {
+        		}
+    		  })
+    		}else {
+    		  this.longitude = lng;
+    		  this.latitude = lat;
     		}
-		  })
-		}else {
-		  this.longitude = lng;
-		  this.latitude = lat;
-		}
-	  },
+  	  },
 
       //获取起点城市、区
       startChange(value) {
@@ -260,13 +256,13 @@ import $ from 'jquery'
         var that = this;
         var AddressData = {
            "lon":this.longitude,//经度
-	       "lat":this.latitude,//纬度
-	       "carrierCity": "",//起点城市
+	         "lat":this.latitude,//纬度
+	         "carrierCity": "",//起点城市
            "carrierAddress3":"",//起点区
            "c_city":"",//终点城市
            "c_address3":"",//终点区
         }
-        // 获取门店信息
+        // 获取货源列表信息
         that.httpRequest_ygy("peripheralResourcesList.do",AddressData,function(goodsSourceRes){
           that.goodsSourcedata = goodsSourceRes.data;
           for( var i=0; i<goodsSourceRes.data.length; i++){ 
@@ -292,16 +288,17 @@ import $ from 'jquery'
         })
       },
 
-      // 跳转到 历史轨迹 页面
-	  tosourceDetail(index){
-	  	var sourceInfo = this.goodsSourcedata[index];
-	  	this.$router.push({
-  		  name:"sourceDetail",
-  		  query:{
-  		  	sourceInfo:sourceInfo,
-  		  }
-	  	})
-	  },
+      // 跳转到 货源详情 页面
+  	  tosourceDetail(index){
+  	  	var sourceInfo = this.goodsSourcedata[index];
+  	  	this.$router.push({
+    		  name:"sourceDetail",
+    		  query:{
+    		  	sourceInfo:sourceInfo,
+            whoPush:"goodsSource",
+    		  }
+  	  	})
+  	  },
 
       //选择地区
       chooseAddress(){
@@ -315,14 +312,14 @@ import $ from 'jquery'
         this.toAround();
         this.AddressShow = true;
         this.getAroundGoodsData();
-      }, 
+      },
+
       toAddress(){
         $(".chooseAddress").css({"background-color":  "#fff",'color':'#5965D8'})
         $(".aroundResources").css({"background-color":  "#5965D8",'color':'#fff'})
-
       },
-      toAround(){
 
+      toAround(){
         $(".chooseAddress").css({"background-color":  "#5965D8",'color':'#fff'})
         $(".aroundResources").css({"background-color":  "#fff",'color':'#5965D8'})
       },
@@ -376,7 +373,6 @@ import $ from 'jquery'
              line-height: 46/50rem;
              float: left;
              border-right: 2/50rem solid  #fff;
-             
           }
           .aroundResources{
             display:inline-block;
@@ -398,7 +394,6 @@ import $ from 'jquery'
         overflow: hidden;
         .AddressStart{
           float: left;
-
         }
         .AddressEnd{
           float: left;
@@ -415,7 +410,7 @@ import $ from 'jquery'
         color: #999; 
         line-height: 70/50rem;
         font-size: 26/50rem;
-       }
+      }
       .Screen{
         float: left;
         position: absolute;
@@ -431,11 +426,10 @@ import $ from 'jquery'
         height: 150/50rem;
         float: left;
         margin-right: 10/50rem;
-         .userinfo-avatar{
+        .userinfo-avatar{
           width: 80/50rem;
           height: 80/50rem;
           display: block;
-          
         }
       }
       .rightContent{
@@ -450,8 +444,8 @@ import $ from 'jquery'
             color: #999;
             float: right;
           }
-         }
-         .two{
+        }
+        .two{
           .left{
             width: 402/50rem;
             overflow: hidden;
@@ -464,8 +458,8 @@ import $ from 'jquery'
             color: #999;
             float: right;
           }
-         }
-         .three{
+        }
+        .three{
           .left{
             width: 560/50rem;
             overflow: hidden;
@@ -485,15 +479,14 @@ import $ from 'jquery'
             margin-top:15/50rem;
             font-size: 30/50rem;
           }
-         }
-         .four{
+        }
+        .four{
           .left{
             float: left;
             width: 560/50rem;
           }
-         }
+        }
       }
-    }
-    
-}
+    } 
+  }
 </style>

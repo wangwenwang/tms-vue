@@ -2,8 +2,8 @@
   <div class="sourceDetail">
     <header><i class="iconfont icon-xiangzuo1"  @click="goPrev"></i><span>货源详情</span></header>
     <div class="container">
-
       <div class="sourceInfo" >
+        
         <div class="routeInfo">
           <div class="route">
             <span>{{sourceInfo.carrierCity}} </span><span> {{sourceInfo.carrierAddress3}}</span>
@@ -66,7 +66,6 @@
           <span v-if="shipmentMoney">￥{{shipmentMoney}}</span>
         </div>
 
-
         <div class="btnList">
           <div class="call"  @click="callPhone(ownerPhone)"><i class="iconfont icon-dianhua"></i>电话联系</div>
           <div class="biddingPrice" v-if="sourceInfo.expectedCost"><i class="iconfont icon-xuanzhong" @click="Submit()"></i>确 认</div>
@@ -82,6 +81,7 @@
             </span>
           </el-dialog>
         </div>
+
       </div>
     </div>
 
@@ -93,13 +93,13 @@
       </div>
     </div>
     <div v-if="ifTips" class="msg_tips">
-        <div class="tips_content">
-          <i class="iconfont icon-chenggong1"></i>
-          <p>{{tips_Msg}}</p>
-        </div>
+      <div class="tips_content">
+        <i class="iconfont icon-chenggong1"></i>
+        <p>{{tips_Msg}}</p>
       </div>
+    </div>
+
   </div>
-<!-- </div> -->
 </template>
 <script type="text/javascript">
   export default{
@@ -109,7 +109,6 @@
         is_NoData:false,
         ifTips:false,//提示信息是否显示
         is_None:false,//暂无报价
-
         is_NoData_text:"没有信息",
         orderstate:'',
         ordertype:'asded',
@@ -118,7 +117,7 @@
         ownerPhone:'',//货主电话
         sourceInfo:{},
         AddressData:[],//装卸点详情
-
+        whoPush:"",
       }
     },
     created(){
@@ -126,6 +125,10 @@
       if(this.$route.query.sourceInfo){
 
         this.sourceInfo = this.$route.query.sourceInfo;//货源详情
+      }
+      if(this.$route.query.whoPush){
+
+        this.whoPush = this.$route.query.whoPush;//货源详情
       }
       // if(this.sourceInfo.expectedCost ){
       //   this.is_None = false;
@@ -187,13 +190,12 @@
                     name:"goodsSource",
                   })
                 },2000)
-            }else{
-              that.$alert('确认失败', '提示', {
-                confirmButtonText: '确定',
-              })
-             }
+          }else{
+            that.$alert('确认失败', '提示', {
+              confirmButtonText: '确定',
+            })
+          }
         })
-
       },
 
       //竞价确定
@@ -221,7 +223,7 @@
               that.$alert('竞价失败', '提示', {
                 confirmButtonText: '确定',
               })
-             }
+            }
           })
         }
         this.DialogVisible = false;
@@ -230,7 +232,7 @@
       goPrev(){
 
         this.$router.push({
-          name:"goodsSource",
+          name:this.whoPush,
           query:{
           }
         })

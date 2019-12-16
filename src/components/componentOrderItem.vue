@@ -1,7 +1,7 @@
 <template>
   <div class="componentOrderItem">
     <div class="orderArrContent">
-      <div class='orderArr' v-for='(item, idx) in orderArr'  :id="idx"  :key='idx'>
+      <div class='orderArr' v-for='(item, idx) in orderArr'  :id="idx"  :key='idx'  @click="tosourceDetail(idx)">
         <div class="contentInFor">
 
           <div class="one">
@@ -47,6 +47,7 @@
   export default{
   	data(){
   	  return{
+        whoPush:"",
   	  }
   	},
   	props:{
@@ -58,6 +59,18 @@
   	  },
   	},
   	methods:{
+
+      // 跳转到 货源详情 页面
+      tosourceDetail(idx){
+        var sourceInfo = this.orderArr[idx];
+        this.$router.push({
+          name:"sourceDetail",
+          query:{
+            sourceInfo:sourceInfo,
+            whoPush:"od_bid",
+          }
+        })
+      },
   	}
   }
 </script>
