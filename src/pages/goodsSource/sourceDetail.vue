@@ -20,16 +20,20 @@
               <span v-if='!sourceInfo.weight'>{{sourceInfo.min_weight}}~{{sourceInfo.max_weight}}吨&nbsp;</span>
               <span v-if='sourceInfo.weight'>{{sourceInfo.max_weight}}吨&nbsp;</span>
               <span v-if='!sourceInfo.volume'>{{sourceInfo.min_volume}}~{{sourceInfo.max_volume}}方&nbsp;</span>
-              <span v-if='sourceInfo.volume'>{{sourceInfo.max_volume}}方&nbsp;</span></div>
-          <div class="mark">
+              <span v-if='sourceInfo.volume'>{{sourceInfo.max_volume}}方&nbsp;</span>
+          </div>
+          <div>
             <span>特殊要求</span>
-            <span class="markInfo" >{{sourceInfo.mark}}</span>
+            <span class="markInfo">{{sourceInfo.mark}}</span>
           </div>
         </div>
       
         <div class="handlingInfo">
-          <div class="title"><span>装卸信息</span><span>{{sourceInfo.loadUnloadType}}</span><span>距装货地{{distance}}km</span></div>
-          <div class="date"><i class="iconfont icon-yidongduanicon-"></i><span>{{sourceInfo.loadingTime}} 全天00：00-24：00可装</span>
+          <div class="title"><span>装卸信息</span><span>{{sourceInfo.loadUnloadType}}</span>
+            <span>距装货地{{sourceInfo.distance}}km</span>
+          </div>
+          <div class="date"><i class="iconfont icon-yidongduanicon-"></i>
+            <span>{{sourceInfo.loadingTime}} 全天00：00-24：00可装</span>
           </div><!-- {}} {{}} {{-->
           <div v-for='(dataItem,index) in AddressData' :id="index"  :key='index'>
           <div class="address1"><span class="i">装</span><span>{{dataItem.carrierCity}} {{dataItem.carrierAddress3}}</span></div><!-- {{}}，{{}} -->
@@ -55,10 +59,10 @@
         </div>
 
         <div class="price">
-          <span v-if="sourceInfo.expectedCost">当前报价：</span>
+          <span v-if="!shipmentMoney">当前报价：</span>
           <span v-if="shipmentMoney">我的竞价：</span>
           <span v-if="sourceInfo.expectedCost">￥{{sourceInfo.expectedCost}}</span>
-          <span v-if="!is_None" class="none">暂无报价</span>
+          <span v-if="is_None" class="none">暂无报价</span>
           <span v-if="shipmentMoney">￥{{shipmentMoney}}</span>
         </div>
 
@@ -77,9 +81,6 @@
               <el-button type="primary" @click="Confirm()">确 定</el-button>
             </span>
           </el-dialog>
-         <!--  <div class="biddingPrice" v-if="sourceInfo.shipPrice" style="background-color: #ddd; color: #6D6D6D"><i class="iconfont icon-xuanzhong" </i>已承接</div> -->
-      <!--<el-button type="text" @click="centerDialogVisible = true">确 认</el-button>
-          <el-button type="text" @click="centerDialogVisible = true">确 认</el-button> -->
         </div>
       </div>
     </div>
@@ -117,7 +118,6 @@
         ownerPhone:'',//货主电话
         sourceInfo:{},
         AddressData:[],//装卸点详情
-        distance:'',//距离装货地
 
       }
     },
@@ -126,25 +126,18 @@
       if(this.$route.query.sourceInfo){
 
         this.sourceInfo = this.$route.query.sourceInfo;//货源详情
-
-        this.distance = this.sourceInfo.distance/1000;
-        if(this.distance < 1){
-          let tempVal = parseFloat(this.distance).toFixed(2)
-          this.distance = tempVal.substring(0, tempVal.length - 1)
-        }
       }
-      if(this.sourceInfo.expectedCost){
+      // if(this.sourceInfo.expectedCost ){
+      //   this.is_None = false;
+      // }else{
+      //   this.is_None =true;
+      // }
+      // if(this.shipmentMoney){
 
-        this.is_None = false;
-      }else{
-        this.is_None =true;
-      }
-      if(this.shipmentMoney){
-
-        this.is_None = false;
-      }else{
-        this.is_None =true;
-      }
+      //   this.is_None = false;
+      // }else{
+      //   this.is_None =true;
+      // }
 
       var that = this;
 
@@ -164,12 +157,16 @@
       //   }
       })
       if(!that.sourceInfo.expectedCost){
-          //查询司机竞价
-          that.httpRequest_ygy("queryCompPrice.do",postData,function(res){
+        //查询司机竞价
+        that.httpRequest_ygy("queryCompPrice.do",postData,function(res){
 
+          if(res.data){
             that.shipmentMoney = res.data.compPrice;
-          })
-        }
+          }else{ 
+            that.is_None =true;
+          }
+        })
+      }
     },
     methods:{
       //司机确认按钮
@@ -259,6 +256,7 @@
         }
 
         .carInfo{
+          overflow: hidden;
           padding: 5/50rem  20/50rem  10/50rem 20/50rem;
           border-bottom: 15/50rem solid #F4F4F4;
           .title{
@@ -272,10 +270,8 @@
               min-width: 20%;
               float: left;
             }
-          }
-          .mark{
             .markInfo{
-              padding-top: 8/50rem;
+              padding-top: 5/50rem;
               display: flex;
               line-height: 40/50rem;
             }
@@ -303,10 +299,10 @@
             }
           }
           .date{ 
-              color: #999;
-              span{
-                font-size: 25/50rem;
-              }
+            color: #999;
+            span{
+              font-size: 25/50rem;
+            }
           }
           .address1{
             .i{
@@ -357,7 +353,6 @@
           border-bottom: 15/50rem solid #F4F4F4;
           .userImage{
             width: 80/50rem;
-            // height: 150/50rem;
             float: left;
             margin-right: 10/50rem;
           }
@@ -403,7 +398,6 @@
         .btnList{
           padding: 20/50rem  120/50rem  25/50rem 120/50rem;
           text-align: center;
-
           .call{
             i{
               color: #5965D8;

@@ -10,28 +10,78 @@
         <div class="toEvaluate" @click='choseToEvaluate'>待评价</div>
         <div class="cancel" @click='choseCancel'>取消</div>
       </div>
-	    fds
+      <div class="orderList">
+        <componentOrderItem :orderArr='orderArr'></componentOrderItem>
+      </div>
+
+       <!-- 页面数据为空时 -->
+      <div  class="NoData"  v-if="noDataShow">
+        <div>
+          <i  class="iconfont icon-meiyouwuliuxinxi"></i>
+          <div>没有数据</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script type="text/javascript">
   import $ from 'jquery'
+  import componentOrderItem from '@/components/componentOrderItem'
   export default{
     name:"od_bid",
     data(){
       return{
         orderState:'',//订单类型
-
+        orderArr:[],//订单列表
+        noDataShow:false,//没有数据
       }
+    },
+    components:{
+      componentOrderItem
     },
     created(){
       
       this.$nextTick(() => {
-          if(this.orderState == ""){
-            this.choseAll();
-          }
-        })
+        if(this.orderState == ""){
+          this.choseAll();
+        }
+      })
+      this.nowDate = this.getNowTime().substring(0,10);
 
+      var that = this
+      var postData = {}
+      // 获取门店信息
+      that.httpRequest_ygy("queryDriverPriceInfo.do",postData,function(res){
+
+        if(res.data.length){
+
+          that.orderArr = res.data;
+          that.noDataShow = false;
+
+          for( var i=0; i<that.orderArr.length; i++){
+
+            if(that.orderArr[i].publishTime.substring(0,10) == that.nowDate){
+              
+              that.orderArr[i].publishTime = that.orderArr[i].publishTime.substring(11,16);
+            }else{
+              that.orderArr[i].publishTime = that.orderArr[i].publishTime.substring(5,10);
+            }
+            if(that.orderArr[i].min_weight == that.orderArr[i].max_weight){
+              
+              that.orderArr[i].weight = true;
+            }
+            if(that.orderArr[i].min_volume == that.orderArr[i].max_volume){
+
+              that.orderArr[i].volume = true;
+            }
+            that.orderArr[i].distance = that.orderArr[i].distance/1000;
+            let tempVal = parseFloat(that.orderArr[i].distance).toFixed(2)
+            that.orderArr[i].distance = tempVal.substring(0, tempVal.length - 1)
+          }
+        }else{
+            that.noDataShow = true;
+        }
+      })
     },
     methods:{
       // 返回上一页
@@ -47,37 +97,37 @@
       choseAll(){
         this.toAll();
         this.orderState = "";
-        // this.reqOrderListInfo();
+        // this.reqOrderList();
       }, 
       //待确认
       choseToSure(){
         this.toSure();
         this.orderState = "NON-CONFIRM";
-        // this.reqOrderListInfo();
+        // this.reqOrderList();
       },
       //待装货
       choseToloading(){
         this.toloading();
         this.orderState = "NON-DELIVERY";
-        // this.reqOrderListInfo();
+        // this.reqOrderList();
       },
       //运输中
       choseTransit(){
         this.toTransit();
         this.orderState = "TRANSPORT";
-        // this.reqOrderListInfo();
+        // this.reqOrderList();
       },
       //待评价
       choseToEvaluate(){
         this.toEvaluate();
         this.orderState = "NON-RATE";
-        // this.reqOrderListInfo();
+        // this.reqOrderList();
       },
       //已取消
       choseCancel(){
         this.toCancel();
         this.orderState = "CANCEL";
-        // this.reqOrderListInfo();
+        // this.reqOrderList();
       },
        //全部样式
       toAll(){
@@ -142,30 +192,27 @@
   .od_bid{
     overflow: hidden;
     .container{
-      overflow: hidden;
+      height: 100%;
       .orderState{
+        height: 90/50rem;
         background-color:#fff;
         width: 100%;
         z-index: 50;
-        position:fixed;
         top: 89/50rem;
         left: 0;
         text-align: center;
-        padding-left: 2%;
-        // border-bottom: 3/50rem solid #999;
+        position:fixed;
         div{
           display: block;
-          width: 16%;
+          width: 125/50rem;
           line-height: 90/50rem;
           float: left;
-          // font-size: 26/50rem;
         }
-         // .all{
-         //    border-bottom: 4/50rem solid  #5965D8;
-         //    color: #5965D8;
-         //    font-size: 32/50rem;
-         //  }
-
+      }
+      .orderList{
+        width: 100%;
+        position: absolute;
+        top: 180/50rem;
       }
     }
   }

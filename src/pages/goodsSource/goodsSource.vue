@@ -9,11 +9,11 @@
         <div class="middle">
           <div class="aroundResources" @click="chooseAround">周边资源</div>
           <div class="chooseAddress" @click="chooseAddress">不限</div>
-          
         </div>
       </div>
     </header>
     <div class="container">
+
       <div class="slectItem">
       	<div class="Msg" v-if="AddressShow">以下是为您推荐的周边货源</div>
         <div class="choose" v-if="!AddressShow">
@@ -34,9 +34,6 @@
             </template>
           </div>
         </div>
-
-        
-
         <div class="Screen">
           <template>
             <el-select v-model="value7" placeholder="  筛选">
@@ -54,7 +51,6 @@
             </el-select>
           </template>
         </div>  
-
       </div>
 
       <div class="dataItem" v-for='(dataItem,index) in goodsSourcedata' :id="index"  :key='index'  @click="tosourceDetail(index)" >
@@ -78,7 +74,7 @@
             <span v-if='dataItem.volume'>{{dataItem.max_volume}}方&nbsp;</span>
             </div>
             <!-- <span>{{endCity}} </span><span> {{endDistrict}}</span> -->
-            <div class="distance">约{{distance}}km装货</div>
+            <div class="distance">约{{dataItem.distance}}km装货</div>
           </div>
           <div class="three">
             <div class="left">
@@ -141,16 +137,12 @@ import $ from 'jquery'
         startDistrict:'',//起点区 
         endCity:'',//终点城市 
         endDistrict:'',//终点区 
-        // useType:'',//装货类型 整车/零担 
-        // conductor:'',//车长 13米
-        // vehicleType:'',//车型 箱式/冷藏
-        distance:'',//距离 89km
         goods:'',//运输物品 化妆品
         goodsSourcedata:{},
         longitude:"114.046",//经度
-		latitude:"22.628571",//纬度
-		weight:false,
-		volume:false,
+    		latitude:"22.628571",//纬度
+    		weight:false,
+    		volume:false,
       }
     },
     components:{
@@ -170,7 +162,7 @@ import $ from 'jquery'
       // 获取门店信息
       that.httpRequest_ygy("queryCityAll.do",AddressData,function(AddressRes){
 
-            that.optionsAddress = AddressRes.data.json2;
+         that.optionsAddress = AddressRes.data.json2;
       });
 
       this.nowDate = this.getNowTime().substring(0,10);
@@ -224,12 +216,12 @@ import $ from 'jquery'
 
         var that = this;
         var AddressData = {
-           "lon":this.longitude,//经度
-	       "lat":this.latitude,//纬度
-           "carrierCity":that.startCity,//起点城市
-           "carrierAddress3":that.startDistrict,//起点区
-           "c_city":that.endCity,//终点城市
-           "c_address3":that.endDistrict,//终点区
+          "lon":this.longitude,//经度
+	        "lat":this.latitude,//纬度
+          "carrierCity":that.startCity,//起点城市
+          "carrierAddress3":that.startDistrict,//起点区
+          "c_city":that.endCity,//终点城市
+          "c_address3":that.endDistrict,//终点区
         }
         // 获取货源信息
         that.httpRequest_ygy("peripheralResourcesList.do",AddressData,function(goodsSourceRes){
@@ -253,11 +245,9 @@ import $ from 'jquery'
 
                	goodsSourceRes.data[i].volume = true;
               }
-              that.distance = goodsSourceRes.data[i].distance/1000;
-	    	  if(that.distance < 1){
-	    	    let tempVal = parseFloat(that.distance).toFixed(2)
-	            that.distance = tempVal.substring(0, tempVal.length - 1)
-	    	  }
+              that.goodsSourcedata[i].distance = goodsSourceRes.data[i].distance/1000;
+  	    	    let tempVal = parseFloat(that.goodsSourcedata[i].distance).toFixed(2)
+  	          that.goodsSourcedata[i].distance = tempVal.substring(0, tempVal.length - 1)
             }
           }else{
             that.noDataShow = true;
@@ -295,11 +285,9 @@ import $ from 'jquery'
            	
            	  goodsSourceRes.data[i].volume = true;
             }
-            that.distance = goodsSourceRes.data[i].distance/1000;
-    	    if(that.distance < 1){
-    	      let tempVal = parseFloat(that.distance).toFixed(2)
-              that.distance = tempVal.substring(0, tempVal.length - 1)
-    	    }
+            that.goodsSourcedata[i].distance = goodsSourceRes.data[i].distance/1000;
+            let tempVal = parseFloat(that.goodsSourcedata[i].distance).toFixed(2)
+            that.goodsSourcedata[i].distance = tempVal.substring(0, tempVal.length - 1)
           }
         })
       },
