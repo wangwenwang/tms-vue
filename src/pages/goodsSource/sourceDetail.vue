@@ -41,7 +41,7 @@
           </div>
         </div>
 
-        <div class="driverInfo">
+        <div v-if='$store.state.userInfo.userType == "driver"'  class="driverInfo">
           <div class="userImage"><img  class="userinfo-avatar"  alt=""></div>
           <div class="rightContent">
             <div class="one">
@@ -58,7 +58,17 @@
           </div>
         </div>
 
-        <div class="price">
+        <div v-if='$store.state.userInfo.userType == "owner"' class="bid_info">
+          <div class="title">竞价信息</div>
+          <div v-for='(item, index) in bid_list'  :id="index"  :key='index' class="v-f-bid">
+            <div>{{ item.compPrice }}</div>
+            <div>{{ item.userName }}</div>
+            <div class="call"><i v-if='item.cellphone' @click="callPhone(item.cellphone)" class="iconfont icon-dianhua-copy"></i></div>
+            <div>确认</div>
+          </div>
+        </div>
+
+        <div v-if='$store.state.userInfo.userType == "driver"' class="price">
           <span v-if="!shipmentMoney">当前报价：</span>
           <span v-if="shipmentMoney">我的竞价：</span>
           <span v-if="sourceInfo.expectedCost">￥{{sourceInfo.expectedCost}}</span>
@@ -66,7 +76,7 @@
           <span v-if="shipmentMoney">￥{{shipmentMoney}}</span>
         </div>
 
-        <div class="btnList">
+        <div v-if='$store.state.userInfo.userType == "driver"' class="btnList">
           <div class="call"  @click="callPhone(ownerPhone)"><i class="iconfont icon-dianhua"></i>电话联系</div>
           <div class="biddingPrice" v-if="sourceInfo.expectedCost"><i class="iconfont icon-xuanzhong" @click="Submit()"></i>确 认</div>
           <div class="biddingPrice" v-if="!sourceInfo.expectedCost"  @click="DialogVisible = true">
@@ -118,6 +128,7 @@
         sourceInfo:{},
         AddressData:[],//装卸点详情
         whoPush:"",
+        bid_list:[],//竞价列表
       }
     },
     created(){
@@ -167,6 +178,21 @@
             that.shipmentMoney = res.data.compPrice;
           }else{ 
             that.is_None =true;
+          }
+        })
+      }
+      if(that.$store.state.userInfo.userType == "owner"){
+
+        var postData = {
+          sourceNo: that.sourceInfo.sourceNo,
+        }
+        that.httpRequest_ygy("queryDriverPrice.do",postData,function(res){
+
+          that.bid_list = res.data
+          if(that.bid_list.length > 0){
+
+            that.bid_list.push(res.data[0])
+            that.bid_list.push(res.data[0])
           }
         })
       }
@@ -383,6 +409,53 @@
               font-weight: 550;
               font-size: 26/50rem;
               line-height: 65/50rem;
+            }
+          }
+        }
+
+        .bid_info{
+          overflow: hidden;
+          padding: 5/50rem  20/50rem  10/50rem 20/50rem;
+          border-bottom: 15/50rem solid #F4F4F4;
+          .title{
+            font-weight: 600;
+            line-height: 65/50rem;
+          }
+          .v-f-bid{
+            padding: 15/50rem;
+            overflow: hidden;
+            &>div{
+              float: left;
+              line-height: 50/50rem;
+              &:nth-child(1){
+
+              }
+              &:nth-child(2){
+                margin-left: 50/50rem;
+              }
+              &:nth-child(3){
+                margin-left: 90/50rem;
+              }
+              &:nth-child(4){
+                float: right;
+                margin-left: 90/50rem;
+                background-color: blue;
+                color: white;
+                font-size: 24/50rem;
+                padding: 0/50rem  20/50rem  0/50rem 20/50rem;
+                border-radius: 7/50rem;
+              }
+            }
+            .call{
+              float: left;
+              width: 50/50rem;
+              height: 50/50rem;
+              line-height: 50/50rem;
+              border: 1/50rem solid #5965D8;
+              color: #5965D8;
+              border-radius: 50%;
+              text-align: center;
+              font-size: 30/50rem;
             }
           }
         }
