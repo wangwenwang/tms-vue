@@ -166,7 +166,7 @@ Vue.prototype.httpRequest_ygy=function (url,params,success){
 
 	that.$emit('isLoading', true,"拼命加载中");
 
-	Axios.post(that.HOST_ygy+url,{"params": JSON.stringify(params), "appUserId":that.$store.state.userInfo.user_id})
+	Axios.post(that.HOST_ygy+url,{"params": JSON.stringify(params), "appUserId":that.$store.state.userInfo.user_id, "userType":that.$store.state.userInfo.userType})
 	.then(function(res){
 		console.log(res)
 

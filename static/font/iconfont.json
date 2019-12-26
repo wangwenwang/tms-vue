@@ -97,6 +97,13 @@
       "unicode_decimal": 58907
     },
     {
+      "icon_id": "908766",
+      "name": "车-b",
+      "font_class": "cheb",
+      "unicode": "e6b6",
+      "unicode_decimal": 59062
+    },
+    {
       "icon_id": "1315166",
       "name": "支付",
       "font_class": "zhifu-01",
@@ -382,6 +389,20 @@
       "font_class": "guanyu",
       "unicode": "e649",
       "unicode_decimal": 58953
+    },
+    {
+      "icon_id": "8875701",
+      "name": "全部订单",
+      "font_class": "quanbudingdan",
+      "unicode": "e668",
+      "unicode_decimal": 58984
+    },
+    {
+      "icon_id": "9656288",
+      "name": "历史记录",
+      "font_class": "lishijilu",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
     }
   ]
 }

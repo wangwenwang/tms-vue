@@ -114,6 +114,9 @@ header>.icon-xiangzuo1{
 header>.icon-huabanfuben{
   right: 25/50rem;
 }
+header>.icon-lishijilu{
+  right: 25/50rem;
+}
 header>.iconfont::before{
   font-size:40/50rem;
 }

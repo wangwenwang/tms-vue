@@ -89,6 +89,11 @@ import PersonalData from '@/pages/home/PersonalData'  //个人资料
 import RePassword from '@/pages/home/RePassword'  //修改密码
 // 我的订单
 import od_bid from '@/pages/home/order/od_bid'  //竞价中
+//我的发布 
+import MyPublish from '@/pages/home/MyPublish'  
+//车源列表
+import PublishList from '@/pages/home/PublishList'  
+
 
 
 Vue.use(Router)
@@ -247,6 +252,18 @@ export default new Router({
       path: '/RePassword',
       name: 'RePassword',
       component: RePassword
+    },
+     // 我的发布（车源）
+    {
+      path: '/MyPublish',
+      name: 'MyPublish',
+      component: MyPublish
+    },
+    // 车源列表
+    {
+      path: '/PublishList',
+      name: 'PublishList',
+      component: PublishList
     },
     // 竞价中
     {

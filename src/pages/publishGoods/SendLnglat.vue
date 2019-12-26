@@ -108,16 +108,26 @@
           this.$store.state.pg_publish.load_pointList[this.index].lng = this.lng;
           this.$store.state.pg_publish.load_pointList[this.index].lat = this.lat;
           this.$store.state.pg_publish.load_pointList[this.index].p_c_d = this.p_c_d;
-          console.log(this.$store.state.pg_publish.load_pointList[this.index].p_c_d)
         }else if(this.type == "卸货点"){
           this.$store.state.pg_publish.unload_pointList[this.index].detail = this.address + "附近";
           this.$store.state.pg_publish.unload_pointList[this.index].lng = this.lng;
           this.$store.state.pg_publish.unload_pointList[this.index].lat = this.lat;
           this.$store.state.pg_publish.unload_pointList[this.index].p_c_d = this.p_c_d;
         }
-        this.$router.push({
-          name:'pg_publish',
-        })
+
+        if(this.$store.state.userInfo.userType == "owner"){
+          this.$router.push({
+            name:'pg_publish',
+          })
+
+        }
+        if(this.$store.state.userInfo.userType == "driver"){
+          this.$router.push({
+            name:'MyPublish',
+          })
+          
+        }
+       
       },
       onComplete(data, map){
 

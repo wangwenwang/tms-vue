@@ -4,7 +4,7 @@
     <div class="container">
       <div class="orderState">
         <div class="all" @click='choseAll'>全部</div>
-        <div class="toSure" @click='choseToSure'>待确认</div>
+        <div class="toSure" @click='choseToSure'>竞价中</div>
         <div class="toloading" @click='choseToloading'>待装货</div>
         <div class="toTransit" @click='choseTransit'>运输中</div>
         <div class="toEvaluate" @click='choseToEvaluate'>待评价</div>
@@ -97,95 +97,71 @@
         })
       },
 
-      //全部
+       //全部
       choseAll(){
-        this.toAll();
-        this.orderState = "";
-        this.reqOrderList();
-      }, 
-      //待确认
-      choseToSure(){
-        this.toSure();
-        this.orderState = "NON-CONFIRM";
-        this.reqOrderList();
-      },
-      //待装货
-      choseToloading(){
-        this.toloading();
-        this.orderState = "NON-DELIVERY";
-        this.reqOrderList();
-      },
-      //运输中
-      choseTransit(){
-        this.toTransit();
-        this.orderState = "TRANSPORT";
-        this.reqOrderList();
-      },
-      //待评价
-      choseToEvaluate(){
-        this.toEvaluate();
-        this.orderState = "NON-RATE";
-        this.reqOrderList();
-      },
-      //已取消
-      choseCancel(){
-        this.toCancel();
-        this.orderState = "CANCEL";
-        this.reqOrderList();
-      },
-       //全部样式
-      toAll(){
         $(".all").css({'border-bottom':'2px solid #5965D8','color':'#5965D8','font-size':'17px'})
         $(".toSure").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".toloading").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".toTransit").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".toEvaluate").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".cancel").css({'border-bottom':'none','font-size':'14px','color':'#000'})
+        this.orderState = "";
+        this.reqOrderList();
       }, 
-      //待确认样式
-      toSure(){
+      //待确认
+      choseToSure(){
         $(".all").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".toSure").css({'border-bottom':'2px solid #5965D8','color':'#5965D8','font-size':'17px'})
         $(".toloading").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".toTransit").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".toEvaluate").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".cancel").css({'border-bottom':'none','font-size':'14px','color':'#000'})
+        this.orderState = "NON-CONFIRM";
+        this.reqOrderList();
       },
-      //待装货样式
-       toloading(){
+      //待装货
+      choseToloading(){
         $(".all").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".toSure").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".toloading").css({'border-bottom':'2px solid #5965D8','color':'#5965D8','font-size':'17px'})
         $(".toTransit").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".toEvaluate").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".cancel").css({'border-bottom':'none','font-size':'14px','color':'#000'})
+        this.orderState = "NON-DELIVERY";
+        this.reqOrderList();
       },
-      //运输中样式
-       toTransit(){
+      //运输中
+      choseTransit(){
         $(".all").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".toSure").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".toloading").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".toTransit").css({'border-bottom':'2px solid #5965D8','color':'#5965D8','font-size':'17px'})
         $(".toEvaluate").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".cancel").css({'border-bottom':'none','font-size':'14px','color':'#000'})
+        this.orderState = "TRANSPORT";
+        this.reqOrderList();
       },
-      //待评价样式
-       toEvaluate(){
+      //待评价
+      choseToEvaluate(){
         $(".all").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".toSure").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".toloading").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".toTransit").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".toEvaluate").css({'border-bottom':'2px solid #5965D8','color':'#5965D8','font-size':'17px'})
         $(".cancel").css({'border-bottom':'none','font-size':'14px','color':'#000'})
+        this.orderState = "NON-RATE";
+        this.reqOrderList();
       },
-      //已取消样式
-       toCancel(){
+      //已取消
+      choseCancel(){
         $(".all").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".toSure").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".toloading").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".toTransit").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".toEvaluate").css({'border-bottom':'none','font-size':'14px','color':'#000'})
         $(".cancel").css({'border-bottom':'2px solid #5965D8','color':'#5965D8','font-size':'17px'})
+        this.orderState = "CANCEL";
+        this.reqOrderList();
       },
 
 

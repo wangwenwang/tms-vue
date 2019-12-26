@@ -18,17 +18,17 @@
       	<div class="Msg" v-if="AddressShow">以下是为您推荐的周边货源</div>
         <div class="choose" v-if="!AddressShow">
           <div class="AddressStart">
-            <span class="demonstration"></span>
+            <!-- <span class="demonstration"></span> -->
             <el-cascader :options="optionsAddress" :show-all-levels="false"  :filterable="true"  :clearable="true" @change="startChange"></el-cascader> </el-cascader>
           </div>
           <div class="AddressEnd">
-            <span class="demonstration"></span>
+            <!-- <span class="demonstration"></span> -->
             <el-cascader :options="optionsAddress" :show-all-levels="false"  :filterable="true"  :clearable="true"   @change="endChange"> </el-cascader>
           </div>
           <div class="Sort">
             <template>
-              <el-select v-model="that.distance" placeholder="智能排序">
-                <el-option v-for="item in optionsSort" :key="item.that.distance" :label="item.label" :value="item.value"> 
+              <el-select v-model="value" placeholder="智能排序">
+                <el-option v-for="item in optionsSort" :key="item.value" :label="item.label" :value="item.value"> 
                 </el-option>
               </el-select>
             </template>
@@ -102,8 +102,8 @@
           <div>没有数据</div>
         </div>
       </div>
-    <FooterIndex/>
     </div>
+    <FooterIndex/>
   </div>
 </template>
 <script type="text/javascript">
@@ -340,7 +340,7 @@ import $ from 'jquery'
         left: 20/50rem;
         display: flex;
         .xiaoxi{
-          font-size: 24/50rem;
+          font-size: 26/50rem;
           width: 60/50rem;
           display:inline-block;
         }
@@ -349,7 +349,7 @@ import $ from 'jquery'
           line-height: 28/50rem;
           border: 1/50rem solid #fff;
           background-color: #fff;
-          font-size: 18/50rem;
+          font-size: 22/50rem;
           border-radius: 50%;
           color: #5965D8;
           display:inline-block;
@@ -386,107 +386,114 @@ import $ from 'jquery'
       }
     }
 
-    .slectItem{
-      width: 100%;
-      height: 74/50rem;
-      border-bottom: 1/50rem solid  #ddd;
-      .choose{
-        overflow: hidden;
-        .AddressStart{
+    .container{
+      height: 100%;
+      padding-top: 90/50rem;
+      margin-top: 0;
+      overflow: hidden;
+    
+      .slectItem{
+        width: 100%;
+        height: 74/50rem;
+        border-bottom: 1/50rem solid  #ddd;
+        .choose{
+          overflow: hidden;
+          .AddressStart{
+            float: left;
+          }
+          .AddressEnd{
+            float: left;
+          }
+          .Sort{
+            float: left;
+          }
           float: left;
         }
-        .AddressEnd{
-          float: left;
+        .Msg{
+          float: left; 
+          width: 520/50rem;
+          padding-left: 30/50rem;
+          color: #999; 
+          line-height: 70/50rem;
+          font-size: 26/50rem;
         }
-        .Sort{
+        .Screen{
           float: left;
+          position: absolute;
+          right: 10/50rem;
         }
-        float: left;
       }
-      .Msg{
-        float: left; 
-        width: 520/50rem;
-        padding-left: 30/50rem;
-        color: #999; 
-        line-height: 70/50rem;
-        font-size: 26/50rem;
-      }
-      .Screen{
-        float: left;
-        position: absolute;
-        right: 10/50rem;
-      }
-    }
-    .dataItem{
-      padding:15/50rem;
-      height: 160/50rem;
-      border-bottom: 1/50rem solid  #ddd;
-      .userImage{
-        width: 80/50rem;
-        height: 150/50rem;
-        float: left;
-        margin-right: 10/50rem;
-        .userinfo-avatar{
+      .dataItem{
+        padding:15/50rem;
+        height: 160/50rem;
+        border-bottom: 1/50rem solid  #ddd;
+        .userImage{
           width: 80/50rem;
-          height: 80/50rem;
-          display: block;
-        }
-      }
-      .rightContent{
-        padding-left: 80/50rem;
-        .one{ 
-          font-size: 30/50rem;
-          font-weight: 550;
-          padding-bottom: 10/50rem;
-          .publishTime{
-            font-size: 22/50rem;
-            padding-top: 8/50rem;
-            color: #999;
-            float: right;
+          height: 150/50rem;
+          float: left;
+          margin-right: 10/50rem;
+          .userinfo-avatar{
+            width: 80/50rem;
+            height: 80/50rem;
+            display: block;
           }
         }
-        .two{
-          .left{
-            width: 402/50rem;
-            overflow: hidden;
-            text-overflow:ellipsis;
-            white-space: nowrap;
-            float: left;
-          }
-          .distance{
-            font-size: 24/50rem;
-            color: #999;
-            float: right;
-          }
-        }
-        .three{
-          .left{
-            width: 560/50rem;
-            overflow: hidden;
-            text-overflow:ellipsis;
-            white-space: nowrap;
-            float: left;
-          }
-          .call{
-            float: right;
-            width: 50/50rem;
-            height: 50/50rem;
-            line-height: 50/50rem;
-            border: 1/50rem solid #5965D8;
-            color: #5965D8;
-            border-radius: 50%;
-            text-align: center;
-            margin-top:15/50rem;
+        .rightContent{
+          padding-left: 80/50rem;
+          .one{ 
             font-size: 30/50rem;
+            font-weight: 550;
+            padding-bottom: 10/50rem;
+            .publishTime{
+              font-size: 22/50rem;
+              padding-top: 8/50rem;
+              color: #999;
+              float: right;
+            }
+          }
+          .two{
+            .left{
+              width: 402/50rem;
+              overflow: hidden;
+              text-overflow:ellipsis;
+              white-space: nowrap;
+              float: left;
+            }
+            .distance{
+              font-size: 24/50rem;
+              color: #999;
+              float: right;
+            }
+          }
+          .three{
+            .left{
+              width: 560/50rem;
+              overflow: hidden;
+              text-overflow:ellipsis;
+              white-space: nowrap;
+              float: left;
+            }
+            .call{
+              float: right;
+              width: 50/50rem;
+              height: 50/50rem;
+              line-height: 50/50rem;
+              border: 1/50rem solid #5965D8;
+              color: #5965D8;
+              border-radius: 50%;
+              text-align: center;
+              margin-top:15/50rem;
+              font-size: 30/50rem;
+            }
+          }
+          .four{
+            .left{
+              float: left;
+              width: 560/50rem;
+            }
           }
         }
-        .four{
-          .left{
-            float: left;
-            width: 560/50rem;
-          }
-        }
-      }
-    } 
+      } 
+    }
   }
 </style>
