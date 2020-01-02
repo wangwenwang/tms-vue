@@ -153,7 +153,6 @@
       this.AddressEnd = [{"p_c_d":[],"detail":"","lng":0,"lat":0}]
       // 赋值
       if(this.$store.state.pg_publish.load_pointList.length){
-        console.log(111)
         this.AddressStart = this.$store.state.pg_publish.load_pointList
       }
       if(this.$store.state.pg_publish.unload_pointList.length){

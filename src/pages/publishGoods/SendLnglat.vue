@@ -154,7 +154,12 @@
           })
           positionPicker.on('success', function(positionResult) {
             console.log(positionResult)
-            that.p_c_d = [positionResult.regeocode.addressComponent.province, positionResult.regeocode.addressComponent.city, positionResult.regeocode.addressComponent.district]
+            // 四级标准地址库第三级没有区/县,取街道/镇
+            var district_or_township = positionResult.regeocode.addressComponent.district
+            if(district_or_township == ""){
+              district_or_township = positionResult.regeocode.addressComponent.township
+            }
+            that.p_c_d = [positionResult.regeocode.addressComponent.province, positionResult.regeocode.addressComponent.city, district_or_township]
             document.getElementById('lnglat').innerHTML = positionResult.position;
             document.getElementById('address').innerHTML = positionResult.address;
             // document.getElementById('nearestJunction').innerHTML = positionResult.nearestJunction;

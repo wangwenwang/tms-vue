@@ -72,6 +72,12 @@ import goodsSource from "@/pages/goodsSource/goodsSource"
 import sourceDetail from "@/pages/goodsSource/sourceDetail"
 
 
+// ——————————————————————————————————————车源——————————————————————————————————————————
+
+// 车源
+import carSourceList from "@/pages/carSource/carSourceList"
+
+
 // ——————————————————————————————————————发货——————————————————————————————————————————
 
 // 发货
@@ -223,6 +229,13 @@ export default new Router({
       name: 'sourceDetail',
       component: sourceDetail
     },
+     //车源
+    {
+      path: '/carSourceList',
+      name: 'carSourceList',
+      component: carSourceList
+    },
+
     // 历史任务
     {
       path: '/historyList',

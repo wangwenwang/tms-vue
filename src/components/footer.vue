@@ -62,6 +62,11 @@ export default {
               icon: "icon-woderenwu"
             },
             {
+              path: "carSourceList",
+              title: "车源",
+              icon: "icon-cheb"
+            },
+            {
               path: "HomeIndex",
               title: "我的",
               icon: "icon-gerenzhongxin"
