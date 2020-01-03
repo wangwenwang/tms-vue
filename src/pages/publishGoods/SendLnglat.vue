@@ -153,13 +153,28 @@
             map: map,
           })
           positionPicker.on('success', function(positionResult) {
+
             console.log(positionResult)
-            // 四级标准地址库第三级没有区/县,取街道/镇
+
+            // 四级标准地址，库第一级北京
+            var province = positionResult.regeocode.addressComponent.province
+            if(province == "北京市"){
+              province = "北京"
+            }
+
+            // 四级标准地址，库第二级北京
+            var city = positionResult.regeocode.addressComponent.city
+            if(province == "北京"){
+              city = "北京市"
+            }
+
+            // 四级标准地址，库第三级没有区/县，取街道/镇（例如：东莞市厚街镇）
             var district_or_township = positionResult.regeocode.addressComponent.district
             if(district_or_township == ""){
               district_or_township = positionResult.regeocode.addressComponent.township
             }
-            that.p_c_d = [positionResult.regeocode.addressComponent.province, positionResult.regeocode.addressComponent.city, district_or_township]
+            
+            that.p_c_d = [province, city, district_or_township]
             document.getElementById('lnglat').innerHTML = positionResult.position;
             document.getElementById('address').innerHTML = positionResult.address;
             // document.getElementById('nearestJunction').innerHTML = positionResult.nearestJunction;
