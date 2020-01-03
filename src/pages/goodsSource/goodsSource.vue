@@ -302,7 +302,7 @@ import $ from 'jquery'
       chooseAddress(){
         this.toAddress();
         this.AddressShow = false;
-        this.getAroundGoodsData();
+        this.getGoodsData();
       }, 
 
       //选择周边资源
@@ -418,7 +418,7 @@ import $ from 'jquery'
         .Screen{
           float: left;
           position: absolute;
-          right: 10/50rem;
+          right: 0/50rem;
         }
       }
       .dataItem{

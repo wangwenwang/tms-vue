@@ -168,11 +168,20 @@
               city = "北京市"
             }
 
-            // 四级标准地址，库第三级没有区/县，取街道/镇（例如：东莞市厚街镇）
+            // 四级标准地址库第三级没有区/县，取街道/镇（例如：东莞市厚街镇）
             var district_or_township = positionResult.regeocode.addressComponent.district
             if(district_or_township == ""){
               district_or_township = positionResult.regeocode.addressComponent.township
             }
+             // 四级标准地址库第三级光明新区
+            var district_or_township = positionResult.regeocode.addressComponent.district
+            if(district_or_township == "光明区"){
+              district_or_township = "光明新区"
+            }
+
+            
+
+
             
             that.p_c_d = [province, city, district_or_township]
             document.getElementById('lnglat').innerHTML = positionResult.position;

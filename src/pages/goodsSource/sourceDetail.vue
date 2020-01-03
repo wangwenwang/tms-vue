@@ -269,7 +269,6 @@
 <style lang="less" scoped>
   .sourceDetail{
     overflow: hidden;
-    // padding: 20/50rem;
     .container{
       overflow: hidden;
       .sourceInfo{

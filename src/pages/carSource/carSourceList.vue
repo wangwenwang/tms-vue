@@ -1,8 +1,36 @@
 
 <template>
   <div class="carSourceList">
-    <header><i class="iconfont icon-xiangzuo1"></i><span>车源列表</span></header>
+    <header>
+      <!-- <span>车源列表</span> -->
+      <div class="middle">
+        <div class="aroundResources" @click="chooseAround">周边资源</div>
+        <div class="chooseAddress" @click="chooseAddress">不限</div>
+      </div>
+    </header>
     <div class="container">
+
+    	<div class="slectItem">
+      	<div class="Msg" v-if="AddressShow">以下是为您推荐的周边货源</div>
+        <div class="choose" v-if="!AddressShow">
+          <div class="AddressStart">
+            <el-cascader :options="optionsAddress" :show-all-levels="false"  :filterable="true"  :clearable="true" @change="startChange"></el-cascader> </el-cascader>
+          </div>
+          <div class="AddressEnd">
+            <el-cascader :options="optionsAddress" :show-all-levels="false"  :filterable="true"  :clearable="true"   @change="endChange"> </el-cascader>
+          </div>
+        </div>
+        <div class="Sort">
+          <template>
+            <el-select v-model="value" placeholder="智能排序">
+              <el-option v-for="item in optionsSort" :key="item.value" :label="item.label" :value="item.value"> 
+              </el-option>
+            </el-select>
+          </template>
+        </div>
+      </div>
+
+
       <div class="dataItem" v-for='(dataItem,index) in carSourceListdata' :id="index"  :key='index'   >
         <div class="one">
           <span>{{dataItem.carrierCity}} </span><span> {{dataItem.carrierAddress3}}</span>
@@ -58,6 +86,19 @@
         endDistrict:'',//终点区 
         longitude:"114.046",//经度
     	latitude:"22.628571",//纬度
+    	 optionsAddress:[],//地址
+    	 AddressShow:true,//地址选择栏
+    	 optionsSort: [{
+          value: '选项1',
+          label: '智能排序'
+        }, {
+          value: '选项2',
+          label: '时间排序'
+        }, {
+          value: '选项3',
+          label: '距离排序'
+        }],
+        value: '',//排序选择
       }
     },
     components:{
@@ -65,28 +106,33 @@
       componentOrderItem
     },
     created(){
-      
-      // this.$nextTick(() => {
-      //   if(this.orderState == ""){
-      //     this.choseAll();
-      //   }
-      // })
       this.nowDate = this.getNowTime().substring(0,10);
-      var that = this;
-	  var postData = {
-        "lon":that.longitude,//经度
-        "lat":that.latitude,//纬度
-        "carrierCity":that.startCity,//起点城市
-        "carrierAddress3":that.startDistrict,//起点区
-        "c_city":that.endCity,//终点城市
-        "c_address3":that.endDistrict,//终点区
-	  }
-      // 获取发布车源信息
-      that.httpRequest_ygy("queryVehicles.do",postData,function(PublishRes){
+       var that = this;
+      var AddressData = {}
+      // 获取门店信息
+      that.httpRequest_ygy("queryCityAll.do",AddressData,function(AddressRes){
 
-          if(PublishRes.data.length){
+         that.optionsAddress = AddressRes.data.json2;
+      });
 
-            that.carSourceListdata = PublishRes.data;
+      this.nowDate = this.getNowTime().substring(0,10);
+      this.reqCarSourceList();
+    },
+    methods:{
+      reqCarSourceList(){
+        var that = this;
+		var postData = {
+	      "lon":that.longitude,//经度
+	      "lat":that.latitude,//纬度
+	      "carrierCity":that.startCity,//起点城市
+	      "carrierAddress3":that.startDistrict,//起点区
+	      "c_city":that.endCity,//终点城市
+	      "c_address3":that.endDistrict,//终点区
+		}
+        // 获取发布车源信息
+        that.httpRequest_ygy("queryVehicles.do",postData,function(PublishRes){
+          that.carSourceListdata = PublishRes.data;
+          if(that.carSourceListdata.length){
             that.noDataShow = false;
 
             for( var i=0; i<that.carSourceListdata.length; i++){
@@ -106,46 +152,55 @@
           }else{
             that.noDataShow = true;
           }
-      });
-    },
-    methods:{
-      reqOrderList(){
-        var that = this
-        var postData = {
-          "status":that.orderState,
+	    });
+      },
+
+      //选择地区
+      chooseAddress(){
+        $(".chooseAddress").css({"background-color":  "#fff",'color':'#5965D8'})
+        $(".aroundResources").css({"background-color":  "#5965D8",'color':'#fff'})
+        this.AddressShow = false;
+        this.startCity = "";
+        this.startDistrict = "";
+        this.endCity = "";
+        this.endDistrict = "";
+        this.reqCarSourceList();
+      }, 
+
+      //选择周边资源
+      chooseAround(){
+        $(".chooseAddress").css({"background-color":  "#5965D8",'color':'#fff'})
+        $(".aroundResources").css({"background-color":  "#fff",'color':'#5965D8'})
+        this.AddressShow = true;
+        this.startCity = "";
+        this.startDistrict = "";
+        this.endCity = "";
+        this.endDistrict = "";
+        this.reqCarSourceList();
+      },
+
+       //获取起点城市、区
+      startChange(value) {
+        if(value.length){
+          this.startCity = value[1];
+          this.startDistrict = value[2];
+        }else{
+          this.startCity = "";
+          this.startDistrict = "";
         }
-        // 获取门店信息
-        that.httpRequest_ygy("queryDriverInfo.do",postData,function(res){
-          that.carSourceListdata = []
-          if(res.data.length){
-            that.orderArr = res.data;
-            that.noDataShow = false;
-
-            for( var i=0; i<that.orderArr.length; i++){
-
-              if(that.orderArr[i].publishTime.substring(0,10) == that.nowDate){
-                
-                that.orderArr[i].publishTime = that.orderArr[i].publishTime.substring(11,16);
-              }else{
-                that.orderArr[i].publishTime = that.orderArr[i].publishTime.substring(5,10);
-              }
-              if(that.orderArr[i].min_weight == that.orderArr[i].max_weight){
-                
-                that.orderArr[i].weight = true;
-              }
-              if(that.orderArr[i].min_volume == that.orderArr[i].max_volume){
-
-                that.orderArr[i].volume = true;
-              }
-              that.orderArr[i].distance = that.orderArr[i].distance/1000;
-              let tempVal = parseFloat(that.orderArr[i].distance).toFixed(2)
-              that.orderArr[i].distance = tempVal.substring(0, tempVal.length - 1)
-              console.log(that.orderArr[i].distance)
-            }
-          }else{
-              that.noDataShow = true;
-          }
-        })
+        this.reqCarSourceList(); 
+      },
+      //获取终点城市、区
+      endChange(value) {
+        
+        if(value.length){
+          this.endCity = value[1];
+          this.endDistrict = value[2];
+        }else{
+          this.endCity = "";
+          this.endDistrict = "";
+        }
+        this.reqCarSourceList()
       },
     }
   }
@@ -155,11 +210,66 @@
     overflow: hidden;
     height: 100%;
     background-color: #E5E8FA;
+    header{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .middle{
+	    display: flex;
+	    width: 280/50rem; 
+	    height: 46/50rem;
+	    border:2/50rem solid  #fff; 
+	    font-size: 26/50rem;
+	    .chooseAddress{
+	      display:inline-block;
+	      width: 50%;
+	      line-height: 46/50rem;
+	      float: left;
+	      border-right: 2/50rem solid  #fff;
+	    }
+	    .aroundResources{
+	      display:inline-block;
+	      width: 50%;
+	      line-height: 46/50rem;
+	      float: left;
+	      background-color:  #fff;
+	      color: #5965D8;
+	    }
+	  }
+    }
     .container{
+      height: 100%;
+      overflow: hidden;
+      .slectItem{
+        width: 100%;
+        height: 74/50rem;
+        border-bottom: 1/50rem solid  #ddd;
+		.choose{
+		  overflow: hidden;
+		  .AddressStart{
+		    float: left;
+		  }
+		  .AddressEnd{
+		    float: left;
+		  }
+		  .Sort{
+		    float: left;
+		  }
+		   float: left;
+		}
+		.Msg{
+		  float: left; 
+		  width: 520/50rem;
+		  padding-left: 30/50rem;
+		  color: #999; 
+		  line-height: 70/50rem;
+		  font-size: 26/50rem;
+		}
+      }
       .dataItem{
         margin: 20/50rem;
         margin-top: 60/50rem;
-        padding:30/50rem 15/50rem 30/50rem 15/50rem;
+        padding:30/50rem 15/50rem 20/50rem 15/50rem;
         height: 180/50rem;
         background-color: #fff;
         border: 1/50rem solid  #ddd;
@@ -176,7 +286,6 @@
             float: right;
           }
         }
-
         .line{
           display: flex;
    		  justify-content: space-between;

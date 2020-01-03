@@ -199,7 +199,7 @@
                 &:nth-child(1){
                   float: left;
                   font-weight: bold;
-                  font-size: 35/50rem;
+                  font-size: 30/50rem;
                 }
                 &:nth-child(2){
                   float: right;

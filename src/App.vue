@@ -250,22 +250,25 @@ header>.icon-huabanfuben::before{
   }
 }
 //下拉框
-.goodsSource .AddressStart .el-input--suffix .el-input__inner , .goodsSource .AddressEnd .el-input--suffix .el-input__inner ,.goodsSource .Screen .el-input--suffix .el-input__inner  {
-  // height: 40/50rem;
-  // line-height: 40/50rem;
-  width: 183/50rem;
+.goodsSource .AddressStart .el-input--suffix .el-input__inner , .goodsSource .AddressEnd .el-input--suffix        .el-input__inner ,.goodsSource .Screen .el-input--suffix .el-input__innerr{
+  width: 188/50rem;
+  border-style: none;
+}
+.carSourceList .AddressStart .el-input--suffix .el-input__inner , .carSourceList .AddressEnd .el-input--suffix    .el-input__inner ,.carSourceList .Screen .el-input--suffix .el-input__inner{
+  width: 275/50rem;
   border-style: none;
 }
  .goodsSource .Sort .el-input--suffix .el-input__inner {
-  // height: 40/50rem;
-  // line-height: 40/50rem;
   width: 190/50rem;
   border-style: none;
 }
+.carSourceList .Sort .el-input--suffix .el-input__inner {
+  width: 200/50rem;
+  border-style: none;
+}
 
-.goodsSource .el-cascader__label, .goodsSource  .el-input__inner {
+.goodsSource .el-cascader__label, .goodsSource .el-input__inner {
   padding-left: 25/50rem;
-  padding-right: 0/50rem;
 }
 .goodsSource .el-select__caret .el-input__icon .el-icon-arrow-up{ width: 5/50rem; }
 
