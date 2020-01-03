@@ -34,6 +34,7 @@
         orderState:'',//订单类型
         orderArr:[],//订单列表
         noDataShow:false,//没有数据
+        whoPush:"",//push进来的界面
       }
     },
     components:{

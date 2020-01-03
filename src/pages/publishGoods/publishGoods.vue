@@ -14,7 +14,7 @@
           </div>
         </div>
       </div>
-  		<div class="publish"><div @click='pushlish'>发货</div></div>
+      <div class="publish"><div @click='pushlish'>发货</div></div>
     </div>
     <FooterIndex/>
   </div>
@@ -163,6 +163,7 @@
     background-color: #eee;
     .container{
       overflow: hidden;
+      height: 100%;
       .publish{
         width: 100%;
         height: 90/50rem;
@@ -181,10 +182,11 @@
         }
       }
       .v-for-ccontainer{
+        overflow: scroll;
+        height: calc(100% - 5rem);
         .v-f-content{
           background-color: white;
           padding:25/50rem;
-          // border-bottom: 15/50rem solid #ddd;
           margin-top: 15/50rem;
           margin-left: 20/50rem;
           margin-right: 20/50rem;
@@ -199,7 +201,7 @@
                 &:nth-child(1){
                   float: left;
                   font-weight: bold;
-                  font-size: 30/50rem;
+                  font-size: 35/50rem;
                 }
                 &:nth-child(2){
                   float: right;

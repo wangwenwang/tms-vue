@@ -64,7 +64,7 @@
             <div>{{ item.compPrice }}</div>
             <div>{{ item.userName }}</div>
             <div class="call"><i v-if='item.cellphone' @click="callPhone(item.cellphone)" class="iconfont icon-dianhua-copy"></i></div>
-            <div>确认</div>
+            <div @click="confirmDriver_click(item.compPrice)">确认</div>
           </div>
         </div>
 
@@ -189,17 +189,43 @@
         that.httpRequest_ygy("queryDriverPrice.do",postData,function(res){
 
           that.bid_list = res.data
-          if(that.bid_list.length > 0){
-
-            that.bid_list.push(res.data[0])
-            that.bid_list.push(res.data[0])
-          }
         })
       }
     },
     methods:{
+      // 竞价时，货主确认司机
+      confirmDriver_click(price){
+
+        var that = this;
+
+        var postData = {
+          sourceNo: that.sourceInfo.sourceNo,//货源单号
+          expectedCost: price,//司机竞价
+        }
+        that.httpRequest_ygy("confirmDriver.do",postData,function(res){
+
+          if(res.status == 1){
+
+            that.ifTips = true;
+            that.tips_Msg = "确认成功";
+
+            setTimeout(function(){
+              // 竞价成功后，跳转到待装货
+              that.$router.push({
+                name:"od_bid",
+              })
+            },2000)
+          }else{
+
+            that.$alert('确认失败', '提示', {
+              confirmButtonText: '确定',
+            })
+          }
+        })
+      },
       //司机确认按钮
       Submit(){
+        
         var that = this;
         var postData = {
             sourceNo: that.sourceInfo.sourceNo,//货源单号
@@ -269,6 +295,7 @@
 <style lang="less" scoped>
   .sourceDetail{
     overflow: hidden;
+    // padding: 20/50rem;
     .container{
       overflow: hidden;
       .sourceInfo{

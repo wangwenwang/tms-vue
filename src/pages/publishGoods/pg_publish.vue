@@ -11,10 +11,6 @@
                 <div>{{ item.icon }}</div>
               </div>
               <div class="oneTwo">
-                <!-- <div class="lineOne">
-                  <span v-if='addressList.s[idx].title.length'>{{ item.title }}</span>
-                  <span v-if='addressList.s[idx].title.length == 0' class="prompt_color">请填写装货地</span>
-                </div> -->
                 <div class="AddressStart" @click='load_ads_record(idx)'>
                   <el-cascader :options="optionsAddress" v-model="addressList.s[idx].p_c_d"   @change="load_ads"></el-cascader>
                 </div>
@@ -33,10 +29,6 @@
                 <div>{{ item.icon }}</div>
               </div>
               <div class="oneTwo">
-                <!-- <div class="lineOne">
-                  <span v-if='addressList.e[idx].title.length'>{{ item.title }}</span>
-                  <span v-if='addressList.e[idx].title.length == 0' class="prompt_color">请填写卸货地</span>
-                </div> -->
                 <div class="AddressStart" @click='unload_ads_record(idx)'>
                   <el-cascader :options="optionsAddress" v-model="addressList.e[idx].p_c_d"  :filterable="true"  :clearable="true"  @change="unload_ads"></el-cascader>
                 </div>
@@ -62,18 +54,20 @@
             <div>
               <div><span>重量</span></div>
               <div>
-                <input class="two_input_width"  v-on:input="input_change('min_weight')"  type="number"  placeholder='0~999'  v-model='min_weight'></input>
+                <input class="two_input_width"  v-on:input="input_change('min_weight')"  type="number"  placeholder='0~99'  v-model='min_weight'></input>
                 一
-                <input class="two_input_width"  v-on:input="input_change('max_weight')"  type="number"  placeholder='0~999'  v-model='max_weight'></input>
+                <input class="two_input_width"  v-on:input="input_change('max_weight')"  type="number"  placeholder='0~99'  v-model='max_weight'></input>
+                吨
               </div>
             </div>
 
             <div>
               <div><span>体积</span></div>
               <div>
-                <input class="two_input_width"  v-on:input="input_change('min_volume')"  type="number"  placeholder='0~999'  v-model='min_volume'></input>
+                <input class="two_input_width"  v-on:input="input_change('min_volume')"  type="number"  placeholder='0~99'  v-model='min_volume'></input>
                 一
-                <input class="two_input_width"  v-on:input="input_change('max_volume')"  type="number"  placeholder='0~999'  v-model='max_volume'></input>
+                <input class="two_input_width"  v-on:input="input_change('max_volume')"  type="number"  placeholder='0~99'  v-model='max_volume'></input>
+                方
               </div>
             </div>
 
@@ -409,7 +403,11 @@
         }
 
         // 货品
-        var CargoInfo = {"name":that.goods_name,"min_weight":that.min_weight,"max_weight":that.max_weight,"min_volume":that.min_volume,"max_volume":that.max_volume}
+        var CargoInfo = {"name":that.goods_name,
+        "min_weight":that.min_weight?that.min_weight:that.max_weight,
+        "max_weight":that.max_weight?that.max_weight:that.min_weight,
+        "min_volume":that.min_volume?that.min_volume:that.max_volume,
+        "max_volume":that.max_volume?that.max_volume:that.min_volume}
 
         if(LoadingPoint.length == 0 || UnloadPoint.length == 0){
           that.$alert('请输入卸货地址', '提示', {
@@ -452,7 +450,6 @@
     .container{
       height: 100%;
       padding-bottom: 80/50rem;
-      // overflow: scroll;
       overflow: hidden;
       .inv_goods{
         .infoContainer{
@@ -464,9 +461,6 @@
           margin-bottom: 20/50rem;
           margin-top: 70/50rem;
           .y_address{
-            // margin-top: 8/50rem;
-            // padding-top: 8/50rem;
-            // padding:20/50rem 0 10/50rem;
             overflow: hidden;
             .load_unload_v_for{
               overflow: hidden;
@@ -496,7 +490,6 @@
                   color: #a7a7a7;
                 }
                 .lineOne{
-                  // background-color: blue;
                   float: left;
                   height: 50%;
                   width: 100%;
@@ -512,7 +505,6 @@
                   font-weight: 600;
                 }
                 .lineTwo{
-                  // background-color: green;
                   float: left;
                   height: 50%;
                   width: 100%;
@@ -530,7 +522,6 @@
                   padding: 10/50rem;
                   padding-left: 20/50rem;
                   padding-right: 20/50rem;
-                  // background-color: red;
                   position: relative;
                   left: 50%;
                   top: 50%;
