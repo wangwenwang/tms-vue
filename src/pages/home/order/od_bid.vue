@@ -11,7 +11,7 @@
         <div class="cancel" @click='choseCancel'>取消</div>
       </div>
       <div class="orderList">
-        <componentOrderItem :orderArr='orderArr'></componentOrderItem>
+        <componentOrderItem :orderArr='orderArr' :orderState='orderState'></componentOrderItem>
         <div class="kong"></div>
       </div>
 
@@ -45,10 +45,25 @@
       componentOrderItem
     },
     created(){
+
+      if(this.$route.query.orderstate){ 
+        this.orderState = this.$route.query.orderstate;
+      }
       
       this.$nextTick(() => {
+
         if(this.orderState == ""){
           this.choseAll();
+        }else if(this.orderState == "NON-CONFIRM"){
+          this.choseToSure();
+        }else if(this.orderState == "NON-DELIVERY"){
+          this.choseToloading();
+        }else if(this.orderState == "TRANSPORT"){
+          this.choseTransit();
+        }else if(this.orderState == "NON-RATE"){
+          this.choseToEvaluate();
+        }else if(this.orderState == "CANCEL"){
+          this.toCancel();
         }
       })
       this.nowDate = this.getNowTime().substring(0,10);

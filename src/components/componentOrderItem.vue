@@ -51,6 +51,7 @@
   	  }
   	},
   	props:{
+      orderState:'',//订单状态
       orderArr:{
     		type:Array,
     	    default: () => {
@@ -68,6 +69,7 @@
           query:{
             sourceInfo:sourceInfo,
             whoPush:"od_bid",
+            orderState:this.orderState
           }
         })
       },

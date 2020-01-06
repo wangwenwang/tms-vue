@@ -141,6 +141,10 @@
 
         this.whoPush = this.$route.query.whoPush;//货源详情
       }
+      if(this.$route.query.orderState){
+
+        this.orderstate = this.$route.query.orderState;//订单类型
+      }
       // if(this.sourceInfo.expectedCost ){
       //   this.is_None = false;
       // }else{
@@ -286,6 +290,7 @@
         this.$router.push({
           name:this.whoPush,
           query:{
+            orderstate:this.orderstate
           }
         })
       }
