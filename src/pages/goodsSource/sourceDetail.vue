@@ -365,12 +365,10 @@
           }
           .address1{
             .i{
-              width: 10/50rem;
-              height: 10/50rem;
-              font-size: 14/50rem;
+              font-size: 26/50rem;
               border: 1/50rem solid  #FACE51;
-              border-radius: 20%;
-              padding: 3/50rem;
+              border-radius: 8/50rem;
+              padding: 8/50rem;
               background-color: #FACE51;
             }
             span{
@@ -380,12 +378,10 @@
           }
           .address2{
             .i{
-              width: 10/50rem;
-              height: 10/50rem;
-              font-size: 14/50rem;
+              font-size: 26/50rem;
               border: 1/50rem solid  #FD757F;
-              border-radius: 20%;
-              padding: 3/50rem;
+              border-radius: 8/50rem;
+              padding: 8/50rem;
               background-color: #FD757F;
             }
             span{
@@ -396,7 +392,7 @@
           &>div{
             line-height: 50/50rem;
             span:nth-child(2){
-              padding-left: 15/50rem;
+              padding-left: 20/50rem;
             }
 
             .address{

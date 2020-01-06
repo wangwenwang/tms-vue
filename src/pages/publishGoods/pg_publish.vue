@@ -26,7 +26,7 @@
 
             <div class="load_unload_v_for" v-for='(item, idx) in addressList.e'  :id="idx"  :key="'v-for-two-'+idx">
               <div class="load_unload_icon">
-                <div>{{ item.icon }}</div>
+                <div class="xie">{{ item.icon }}</div>
               </div>
               <div class="oneTwo">
                 <div class="AddressStart" @click='unload_ads_record(idx)'>
@@ -115,7 +115,7 @@
       </div>
     </div>
     <div class="BtnComponent bottomBtn">
-      <div @click='submit' class="onlyBtn">发货</div>
+      <div @click='submit' class="onlyBtn">发  货</div>
     </div>
     <componentSelectBox v-if="SelectBoxFlag" v-bind:SelectBoxList='SelectBoxList' @selectedItem='selectedItem' :BouncedName="BouncedName" @selectCancel="selectCancel"></componentSelectBox>
     <div v-if="ifTips" class="msg_tips">
@@ -446,10 +446,10 @@
 <style lang="less" scoped>
   .pg_publish{
     overflow: hidden;
-    background-color: #e2e2e2;
+    background-color: #E5E8FA;
     .container{
       height: 100%;
-      padding-bottom: 80/50rem;
+      padding-bottom: 120/50rem;
       overflow: hidden;
       .inv_goods{
         .infoContainer{
@@ -473,7 +473,7 @@
                 &>div{
                   float: left;
                   padding: 10/50rem;
-                  background-color: red;
+                  background-color: #FACE51;
                   position: relative;
                   left: 50%;
                   top: 50%;
@@ -481,6 +481,7 @@
                   -ms-transform: translate(-50%,-50%);
                   transform: translate(-50%,-50%)
                 }
+                .xie{background-color: #FD757F;}
               }
               .oneTwo{
                 height: 100%;

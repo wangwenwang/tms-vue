@@ -251,24 +251,41 @@ header>.icon-huabanfuben::before{
 }
 //下拉框
 .goodsSource .AddressStart .el-input--suffix .el-input__inner , .goodsSource .AddressEnd .el-input--suffix        .el-input__inner ,.goodsSource .Screen .el-input--suffix .el-input__innerr{
-  width: 188/50rem;
-  border-style: none;
-}
-.carSourceList .AddressStart .el-input--suffix .el-input__inner , .carSourceList .AddressEnd .el-input--suffix    .el-input__inner ,.carSourceList .Screen .el-input--suffix .el-input__inner{
-  width: 275/50rem;
-  border-style: none;
-}
- .goodsSource .Sort .el-input--suffix .el-input__inner {
-  width: 190/50rem;
-  border-style: none;
-}
-.carSourceList .Sort .el-input--suffix .el-input__inner {
   width: 200/50rem;
   border-style: none;
+  border-radius:0;
+  height:70/50rem;
+}
+.goodsSource .el-select .el-input--suffix .el-input__inner{
+  height:78/50rem;
+}
+.goodsSource .el-select .el-input--suffix{
+  height:85/50rem;
+}
+.carSourceList .AddressStart .el-input--suffix .el-input__inner , .carSourceList .AddressEnd .el-input--suffix    .el-input__inner ,.carSourceList .Screen .el-input--suffix .el-input__inner{
+  width: 270/50rem;
+  border-style: none;
+  border-radius:0;
+  // height:90/50rem;
+}
+ .goodsSource .Sort .el-input--suffix .el-input__inner {
+  width: 210/50rem;
+  border-style: none;
+  border-radius:0;
+  height:78/50rem;
+}
+.carSourceList .Sort .el-input--suffix .el-input__inner {
+  width: 210/50rem;
+  border-style: none;
+  border-radius:0;
+  height:80/50rem;
 }
 
 .goodsSource .el-cascader__label, .goodsSource .el-input__inner {
   padding-left: 25/50rem;
+  width: 160/50rem;
+  border-style: none;
+  border-radius:0;
 }
 .goodsSource .el-select__caret .el-input__icon .el-icon-arrow-up{ width: 5/50rem; }
 

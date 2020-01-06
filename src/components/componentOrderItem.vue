@@ -83,8 +83,8 @@
       box-sizing: border-box;
       .orderArr{
         height: 160/50rem;
-        padding:20/50rem 20/50rem 15/50rem 20/50rem;
-        border-bottom: 1/50rem solid  #ddd;
+        padding:25/50rem 20/50rem 35/50rem 20/50rem;
+        border-bottom: 1/50rem solid  #5965D8;
         .contentInFor{
           .one{ 
             font-size: 30/50rem;

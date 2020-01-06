@@ -12,7 +12,6 @@
       </div>
       <div class="orderList">
         <componentOrderItem :orderArr='orderArr' :orderState='orderState'></componentOrderItem>
-        <div class="kong"></div>
       </div>
 
        <!-- 页面数据为空时 -->
@@ -191,6 +190,7 @@
 <style lang="less" scoped>
   .od_bid{
     overflow: hidden;
+    height: 100%;
     .container{
       height: 100%;
       .orderState{
@@ -210,12 +210,10 @@
         }
       }
       .orderList{
+        overflow:scroll;
         width: 100%;
-        position: absolute;
-        top: 180/50rem;
-        .kong{
-          height: 111/50rem;
-        }
+        height: calc(100% - 5.82rem);
+        margin-top: 90/50rem;
       }
     }
   }

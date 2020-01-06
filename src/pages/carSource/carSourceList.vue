@@ -225,7 +225,6 @@
 	      width: 50%;
 	      line-height: 46/50rem;
 	      float: left;
-	      border-right: 2/50rem solid  #fff;
 	    }
 	    .aroundResources{
 	      display:inline-block;
@@ -242,33 +241,31 @@
       overflow: hidden;
       .slectItem{
         width: 100%;
-        height: 74/50rem;
+        height: 80/50rem;
         border-bottom: 1/50rem solid  #ddd;
-		.choose{
-		  overflow: hidden;
-		  .AddressStart{
-		    float: left;
-		  }
-		  .AddressEnd{
-		    float: left;
-		  }
-		  .Sort{
-		    float: left;
-		  }
-		   float: left;
-		}
-		.Msg{
-		  float: left; 
-		  width: 520/50rem;
-		  padding-left: 30/50rem;
-		  color: #999; 
-		  line-height: 70/50rem;
-		  font-size: 26/50rem;
-		}
+        display: flex;
+      	.choose{
+      	  overflow: hidden;
+          display: flex;
+      	  .AddressStart{
+      	  }
+      	  .AddressEnd{
+      	  }
+      	  .Sort{
+      	  }
+      	}
+      	.Msg{
+          flex-grow:2;
+      	  padding-left: 30/50rem;
+      	  color: #999; 
+      	  line-height: 80/50rem;
+      	  font-size: 26/50rem;
+      	  background-color: #fff;
+      	}
       }
       .dataItem{
         margin: 20/50rem;
-        margin-top: 60/50rem;
+        margin-top: 50/50rem;
         padding:30/50rem 15/50rem 20/50rem 15/50rem;
         height: 180/50rem;
         background-color: #fff;

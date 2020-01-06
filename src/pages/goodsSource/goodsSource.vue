@@ -392,33 +392,39 @@ import $ from 'jquery'
     
       .slectItem{
         width: 100%;
-        height: 74/50rem;
+        height: 80/50rem;
         border-bottom: 1/50rem solid  #ddd;
+        display: flex;
         .choose{
           overflow: hidden;
+          display: flex;
           .AddressStart{
-            float: left;
+            // float: left;
           }
           .AddressEnd{
-            float: left;
+            // float: left;
           }
           .Sort{
-            float: left;
+            // float: left;
           }
-          float: left;
+          // float: left;
         }
         .Msg{
-          float: left; 
-          width: 520/50rem;
+          // float: left; 
+          flex-grow: 3;
+          // width: 520/50rem;
           padding-left: 30/50rem;
           color: #999; 
           line-height: 70/50rem;
           font-size: 26/50rem;
         }
         .Screen{
-          float: left;
-          position: absolute;
-          right: 0/50rem;
+          height: 70/50rem;
+          // float: left;
+          // position: absolute;
+          // right: 0/50rem;
+          // width: 100/50rem;
+          // background-color: red;
         }
       }
       .dataItem{
