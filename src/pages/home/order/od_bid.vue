@@ -1,6 +1,6 @@
 <template>
   <div class="od_bid">
-    <header><i class="iconfont icon-xiangzuo1"   @click="goprev"></i><span>我的订单</span></header>
+    <header><i v-if='$store.state.userInfo.userType == "driver"' class="iconfont icon-xiangzuo1" @click="goprev"></i><span>我的订单</span></header>
     <div class="container">
       <div class="orderState">
         <div class="all" @click='choseAll'>全部</div>
@@ -12,6 +12,7 @@
       </div>
       <div class="orderList">
         <componentOrderItem :orderArr='orderArr'></componentOrderItem>
+        <div class="kong"></div>
       </div>
 
        <!-- 页面数据为空时 -->
@@ -22,10 +23,12 @@
         </div>
       </div>
     </div>
+    <FooterIndex v-if='$store.state.userInfo.userType == "owner"'/>
   </div>
 </template>
 <script type="text/javascript">
   import $ from 'jquery'
+  import FooterIndex from '../../../components/footer.vue'
   import componentOrderItem from '@/components/componentOrderItem'
   export default{
     name:"od_bid",
@@ -38,6 +41,7 @@
       }
     },
     components:{
+      FooterIndex,
       componentOrderItem
     },
     created(){
@@ -194,6 +198,9 @@
         width: 100%;
         position: absolute;
         top: 180/50rem;
+        .kong{
+          height: 111/50rem;
+        }
       }
     }
   }

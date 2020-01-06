@@ -57,7 +57,7 @@ export default {
               icon: "icon-shouye-blue"
             },
             {
-              path: "Waybill",
+              path: "od_bid",
               title: "订单",
               icon: "icon-woderenwu"
             },

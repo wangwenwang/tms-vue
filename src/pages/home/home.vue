@@ -12,8 +12,6 @@
   	      <div class='userName'>{{cellphone}}</div>
   	    </div>
   	   	<div class="stripInfo">
-  	   	  <div  @click="toOdBid" v-if='$store.state.userInfo.userType == "owner"'><i class="iconfont icon-quanbudingdan" ></i><span>我的订单</span>
-  	   	  	<i  class="iconfont icon-xiangshang" ></i></div>
   	   	  <div  @click="toMyPublish" v-if='$store.state.userInfo.userType == "driver"'><i class="iconfont icon-cheb" ></i><span>我的发布</span>
   	   	  	<i class= "iconfont icon-xiangshang" ></i></div>
   	   	  <div  @click="toHistoricalTrack"><i class="iconfont icon-lishiguiji" ></i><span>历史轨迹</span>  
