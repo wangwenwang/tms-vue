@@ -46,6 +46,8 @@ Vue.prototype.HOST = "http://k56.kaidongyuan.com/tmsApp/"                       
 
 // Vue.prototype.HOST = "http://192.168.20.113:8880/cyscm/tmsApp/"              //许三晏
 // Vue.prototype.HOST = "http://192.168.20.131:8880/cyscm/tmsApp/"              //黄伟雄
+// Vue.prototype.HOST = "http://192.168.20.98:8880/cyscm/tmsApp/"               //小邓
+// Vue.prototype.HOST = "http://192.168.20.164:8880/tmsApp/"                    //蔡晓宇
 
 // Vue.prototype.HOST = "http://kdynnjk.3322.org:9998/cyscm/tmsApp/"            //袁功谊 配货易司机S
 // Vue.prototype.HOST_ygy = "http://kdynnjk.3322.org:9998/cyscm/vehicleGoods/"  //袁功谊 车货匹配
