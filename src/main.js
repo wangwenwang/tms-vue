@@ -389,6 +389,55 @@ Vue.prototype.timeCompare=function (nowDate,productDate,AllowableTime){
 	    }
     }
 }
+// 简化日期 2020-01-06 11:05:13 变成 01-06 11:05
+Vue.prototype.dateFilter=function(time){
+	console.log(time)
+	var val = this.getTime(time) / 1000
+	console.log(val)
+    let oldTime = parseInt(val)
+    let nowTime = parseInt(new Date().getTime() / 1000) // 获取当前时间戳
+    let nowDate = new Date(nowTime * 1000) // 当前日期对象
+    let oldDate = new Date(oldTime * 1000) // 参数日期对象
+
+    let Y = oldDate.getFullYear()
+    let m = oldDate.getMonth() + 1
+    let d = oldDate.getDate()
+    let H = oldDate.getHours()
+    let i = oldDate.getMinutes()
+    function zeroize(num) {
+      return (String(num).length === 1 ? '0' : '') + num;
+    }
+    let timeDiff = nowTime - oldTime // 相差秒数
+    if (timeDiff < 60) {
+      return '刚刚'
+    } else if (timeDiff < 3600) { // 一小时前之内
+      return Math.floor(timeDiff / 60) + '分钟前';
+    } else if (nowDate.getFullYear() === Y && nowDate.getMonth() + 1 === m && nowDate.getDate() === d) {
+      return '今天' + zeroize(H) + ':' + zeroize(i);
+    } else {
+      let newDate = new Date((nowTime - 86400) * 1000); // 当前时间减一天（昨天）
+      if (newDate.getFullYear() === Y && newDate.getMonth() + 1 === m && newDate.getDate() === d) {
+        return '昨天' + zeroize(H) + ':' + zeroize(i);
+      } else if (nowDate.getFullYear() === Y) {
+        return zeroize(m) + '-' + zeroize(d) + ' ' + zeroize(H) + ':' + zeroize(i);
+      } else {
+        return Y + '年' + zeroize(m) + '-' + zeroize(d) + ' ' + zeroize(H) + ':' + zeroize(i);
+      }
+    }
+}
+// 把时间日期转成时间戳
+Vue.prototype.getTime=function(time){
+    var myDate = new Date(time);
+    var u = navigator.userAgent;
+    var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1;   //android终端
+    var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+    if(isiOS){
+      var t = new Date(time.replace(/-/g,'/')).getTime();
+    }else{
+      var t = myDate.getTime();
+    }
+    return t;    
+}
 // -----------------------------------------------------设置cookie （手机号，密码） 开始--------------------------------------------------------------
 
 //设置cookie
