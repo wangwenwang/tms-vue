@@ -30,30 +30,31 @@
         </div>
       </div>
 
-
-      <div class="dataItem" v-for='(dataItem,index) in carSourceListdata' :id="index"  :key='index'   >
-        <div class="one">
-          <span>{{dataItem.carrierCity}} </span><span> {{dataItem.carrierAddress3}}</span>
-          <span> → </span>
-          <span>{{dataItem.c_city}} </span><span> {{dataItem.c_address3}}</span>
-          <span class="publishTime">{{dataItem.publishTime}}</span>
-        </div>
-       
-        <div class="two">
-          <div class="line">
-	    	<div class="loadingTime" v-if='dataItem.loadingTime'> 出发日期： {{dataItem.loadingTime}}</div>
-	        <div class="distance">距离约<span>{{dataItem.distance}}</span>km</div>
+      <div class="DataList">   
+        <div class="dataItem" v-for='(dataItem,index) in carSourceListdata' :id="index"  :key='index'   >
+          <div class="one">
+            <span>{{dataItem.carrierCity}} </span><span> {{dataItem.carrierAddress3}}</span>
+            <span> → </span>
+            <span>{{dataItem.c_city}} </span><span> {{dataItem.c_address3}}</span>
+            <span class="publishTime">{{dataItem.publishTime}}</span>
           </div>
-          <div class="line">
-	        <div class="left">
-			  <span v-if='dataItem.vehicleType'>{{dataItem.vehicleType}}&nbsp;</span>
-			  <span v-if='dataItem.vehicleLoad'>载重：{{dataItem.vehicleLoad}}吨&nbsp;&nbsp;</span>
-			  <span v-if='dataItem.vehicleVolume'>体积：{{dataItem.vehicleVolume}}方&nbsp;</span>
-	        </div>
-	        <div class="call">
-	          <i v-if='dataItem.driverPhone' @click="callPhone(dataItem.driverPhone)" 
-	          class="iconfont icon-dianhua-copy"> </i>
-	        </div>
+         
+          <div class="two">
+            <div class="line">
+  	    	<div class="loadingTime" v-if='dataItem.loadingTime'> 出发日期： {{dataItem.loadingTime}}</div>
+  	        <div class="distance">距离约<span>{{dataItem.distance}}</span>km</div>
+            </div>
+            <div class="line">
+  	        <div class="left">
+  			  <span v-if='dataItem.vehicleType'>{{dataItem.vehicleType}}&nbsp;</span>
+  			  <span v-if='dataItem.vehicleLoad'>载重：{{dataItem.vehicleLoad}}吨&nbsp;&nbsp;</span>
+  			  <span v-if='dataItem.vehicleVolume'>体积：{{dataItem.vehicleVolume}}方&nbsp;</span>
+  	        </div>
+  	        <div class="call">
+  	          <i v-if='dataItem.driverPhone' @click="callPhone(dataItem.driverPhone)" 
+  	          class="iconfont icon-dianhua-copy"> </i>
+  	        </div>
+            </div>
           </div>
         </div>
       </div>
@@ -263,52 +264,56 @@
       	  background-color: #fff;
       	}
       }
-      .dataItem{
-        margin: 20/50rem;
-        margin-top: 50/50rem;
-        padding:30/50rem 15/50rem 20/50rem 15/50rem;
-        height: 180/50rem;
-        background-color: #fff;
-        border: 1/50rem solid  #ddd;
-        border-radius: 15/50rem;
-        div{ line-height: 50/50rem; }
-        .one{ 
-          font-size: 30/50rem;
-          font-weight: 550;
-          padding-bottom: 10/50rem;
-          .publishTime{
-            font-size: 22/50rem;
-            padding-top: 3/50rem;
+      .DataList{
+        overflow: scroll;
+        height: calc(100% - 5.6rem);
+        .dataItem{
+          margin: 20/50rem;
+          margin-top: 50/50rem;
+          padding:30/50rem 15/50rem 20/50rem 15/50rem;
+          height: 180/50rem;
+          background-color: #fff;
+          border: 1/50rem solid  #ddd;
+          border-radius: 15/50rem;
+          div{ line-height: 50/50rem; }
+          .one{ 
+            font-size: 30/50rem;
+            font-weight: 550;
+            padding-bottom: 10/50rem;
+            .publishTime{
+              font-size: 22/50rem;
+              padding-top: 3/50rem;
+              color: #999;
+              float: right;
+            }
+          }
+          .line{
+            display: flex;
+     		  justify-content: space-between;
+          }
+          .distance{
+            font-size: 24/50rem;
             color: #999;
-            float: right;
+            span{
+            	font-size:28/50rem;
+            }
           }
-        }
-        .line{
-          display: flex;
-   		  justify-content: space-between;
-        }
-        .distance{
-          font-size: 24/50rem;
-          color: #999;
-          span{
-          	font-size:28/50rem;
+          .left{
+            width: 602/50rem;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
           }
-        }
-        .left{
-          width: 602/50rem;
-          overflow: hidden;
-          text-overflow:ellipsis;
-          white-space: nowrap;
-        }
-        .call{
-          width: 50/50rem;
-          height: 50/50rem;
-          line-height: 50/50rem;
-          border: 1/50rem solid #5965D8;
-          color: #5965D8;
-          border-radius: 50%;
-          text-align: center;
-          font-size: 30/50rem;
+          .call{
+            width: 50/50rem;
+            height: 50/50rem;
+            line-height: 50/50rem;
+            border: 1/50rem solid #5965D8;
+            color: #5965D8;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 30/50rem;
+          }
         }
       }
     }
