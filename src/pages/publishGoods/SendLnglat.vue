@@ -156,25 +156,24 @@
 
             console.log(positionResult)
 
-            // 四级标准地址，库第一级北京
+            // 第一级北京
             var province = positionResult.regeocode.addressComponent.province
             if(province == "北京市"){
               province = "北京"
             }
 
-            // 四级标准地址，库第二级北京
+            // 第二级北京
             var city = positionResult.regeocode.addressComponent.city
             if(province == "北京"){
               city = "北京市"
             }
 
-            // 四级标准地址库第三级没有区/县，取街道/镇（例如：东莞市厚街镇）
+            // 第三级没有区/县，取街道/镇（例如：东莞市厚街镇）
             var district_or_township = positionResult.regeocode.addressComponent.district
             if(district_or_township == ""){
               district_or_township = positionResult.regeocode.addressComponent.township
             }
              // 四级标准地址库第三级光明新区
-            var district_or_township = positionResult.regeocode.addressComponent.district
             if(district_or_township == "光明区"){
               district_or_township = "光明新区"
             }
