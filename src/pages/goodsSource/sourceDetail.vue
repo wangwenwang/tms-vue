@@ -130,7 +130,7 @@
         whoPush:"",
         bid_list:[],//竞价列表
         owner_or_driver_userName:"",//货主/承运司机名称
-        driver_shipDriverID:"",//承运司机id
+        driver_shipDriverID:" ",//承运司机id
       }
     },
     created(){

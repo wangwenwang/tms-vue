@@ -1,10 +1,10 @@
 <template>
   <div class="goodsSource">
     <header>
-      <div class="news">
+     <!--  <div class="news">
         <div class="xiaoxi"  @click="Xiaoxi">消息</div>
         <div class="xiaoxiSum">{{xiaoxiSum}}</div>
-      </div>
+      </div> -->
       <div class="middleSuper">
         <div class="middle">
           <div class="aroundResources" @click="chooseAround">周边资源</div>
@@ -50,45 +50,48 @@
           </template>
         </div>  
       </div>
-
-      <div class="dataItem" v-for='(dataItem,index) in goodsSourcedata' :id="index"  :key='index'  @click="tosourceDetail(index)" >
-        <div class="userImage"><img  class="userinfo-avatar" :src="dataItem.pictures?dataItem.pictures:'../../assets/images/defaultHead.png'" alt="">
-        </div>
-        <div class="rightContent">
-          <div class="one">
-            <span>{{dataItem.carrierCity}} </span><span> {{dataItem.carrierAddress3}}</span>
-            <span> → </span>
-            <span>{{dataItem.c_city}} </span><span> {{dataItem.c_address3}}</span>
-            <span class="publishTime">{{dataItem.publishTime}}</span>
+      <div class="dataContent">
+        <div class="dataItem" v-for='(dataItem,index) in goodsSourcedata' :id="index"  :key='index'  @click="tosourceDetail(index)" >
+          <div class="userImage">
+            <img  v-if="dataItem.pictures"  class="userinfo-avatar" :src="dataItem.pictures" alt="">
+            <img  v-if="!dataItem.pictures"  class="userinfo-avatar"  src="../../assets/images/defaultHead.png" alt="">
           </div>
-          <div class="two">
-            <div class="left">
-            <!-- <span v-if='useType'>{{useType}}  </span>
-            <span v-if='conductor'>{{conductor}}  </span> -->
-            <span v-if='dataItem.vehicleType'>{{dataItem.vehicleType}}&nbsp;</span>
-            <span v-if='!dataItem.weight'>{{dataItem.min_weight}}~{{dataItem.max_weight}}吨&nbsp;</span>
-            <span v-if='dataItem.weight'>{{dataItem.max_weight}}吨&nbsp;</span>
-            <span v-if='!dataItem.volume'>{{dataItem.min_volume}}~{{dataItem.max_volume}}方&nbsp;</span>
-            <span v-if='dataItem.volume'>{{dataItem.max_volume}}方&nbsp;</span>
+          <div class="rightContent">
+            <div class="one">
+              <span>{{dataItem.carrierCity}} </span><span> {{dataItem.carrierAddress3}}</span>
+              <span> → </span>
+              <span>{{dataItem.c_city}} </span><span> {{dataItem.c_address3}}</span>
+              <span class="publishTime">{{dataItem.publishTime}}</span>
             </div>
-            <!-- <span>{{endCity}} </span><span> {{endDistrict}}</span> -->
-            <div class="distance">约{{dataItem.distance}}km装货</div>
-          </div>
-          <div class="three">
-            <div class="left">
-            <span v-if='dataItem.cargoType'>{{dataItem.cargoType}} , </span>
-            <span v-if='dataItem.productName'>{{dataItem.productName}} , </span>
-            <span v-if='dataItem.loadingTime'>{{dataItem.loadingTime}}装货 , </span>
-
-            
-            <span v-if='dataItem.loadUnloadType'>{{dataItem.loadUnloadType}} </span>
-            
+            <div class="two">
+              <div class="left">
+              <!-- <span v-if='useType'>{{useType}}  </span>
+              <span v-if='conductor'>{{conductor}}  </span> -->
+              <span v-if='dataItem.vehicleType'>{{dataItem.vehicleType}}&nbsp;</span>
+              <span v-if='!dataItem.weight'>{{dataItem.min_weight}}~{{dataItem.max_weight}}吨&nbsp;</span>
+              <span v-if='dataItem.weight'>{{dataItem.max_weight}}吨&nbsp;</span>
+              <span v-if='!dataItem.volume'>{{dataItem.min_volume}}~{{dataItem.max_volume}}方&nbsp;</span>
+              <span v-if='dataItem.volume'>{{dataItem.max_volume}}方&nbsp;</span>
+              </div>
+              <!-- <span>{{endCity}} </span><span> {{endDistrict}}</span> -->
+              <div class="distance">约{{dataItem.distance}}km装货</div>
             </div>
-            <div class="call"><i v-if='dataItem.ownerPhone' @click="callPhone(dataItem.ownerPhone)" class="iconfont icon-dianhua-copy"></i></div>
-          </div>
-          <div class="four">
-            <div class="left">
-            <span v-if='dataItem.ownerName'>{{dataItem.ownerName}}</span>
+            <div class="three">
+              <div class="left">
+              <span v-if='dataItem.cargoType'>{{dataItem.cargoType}} , </span>
+              <span v-if='dataItem.productName'>{{dataItem.productName}} , </span>
+              <span v-if='dataItem.loadingTime'>{{dataItem.loadingTime}}装货 , </span>
+
+              
+              <span v-if='dataItem.loadUnloadType'>{{dataItem.loadUnloadType}} </span>
+              
+              </div>
+              <div class="call"><i v-if='dataItem.ownerPhone' @click="callPhone(dataItem.ownerPhone)" class="iconfont icon-dianhua-copy"></i></div>
+            </div>
+            <div class="four">
+              <div class="left">
+              <span v-if='dataItem.ownerName'>{{dataItem.ownerName}}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -327,6 +330,7 @@ import $ from 'jquery'
 <style lang="less" scoped>
   .goodsSource{
     overflow: hidden;
+    height: 100%;
     header{
       display: flex;
       justify-content: center;
@@ -386,15 +390,17 @@ import $ from 'jquery'
 
     .container{
       height: 100%;
-      padding-top: 90/50rem;
-      margin-top: 0;
-      overflow: hidden;
-    
+      margin-top:80/50rem;
+      overflow: scroll;
       .slectItem{
         width: 100%;
         height: 80/50rem;
         border-bottom: 1/50rem solid  #ddd;
+        background-color: #fff;
         display: flex;
+        position:fixed;
+        top:90/50rem;
+        z-index: 50;
         .choose{
           overflow: hidden;
           display: flex;
@@ -426,6 +432,12 @@ import $ from 'jquery'
           // width: 100/50rem;
           // background-color: red;
         }
+      }
+      .dataContent{
+        overflow: scroll;
+        height: calc(100% - 5.8rem);
+        margin-top: 90/50rem;
+
       }
       .dataItem{
         padding:15/50rem;

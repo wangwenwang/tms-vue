@@ -57,8 +57,8 @@
         <div class='infoContainer'>
           <div class="y_goods">
 
-            <div>
-              <div><span>出发时间</span></div>
+            <div class="loadTime">
+              <div><span>出发日期</span></div>
               <div>
                 <el-date-picker
                   v-model="load_time" :editable='false' 
@@ -70,20 +70,31 @@
                 </el-date-picker>
               </div>
             </div>
+            <div class="endTime">
+              <div><span>结束日期</span></div>
+              <div>
+                <el-date-picker
+                  v-model="end_time" :editable='false' 
+                  type="date"
+                  placeholder="选择日期时间"
+                  align="right"
+                  :picker-options="pickerOptions"
+                  format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd">
+                </el-date-picker>
+              </div>
+            </div>
 
             <div>
               <div><span>备注</span></div>
-              <div><input  v-on:input="input_change('remark')"  placeholder='选填'  v-model='remark'></input></div>
+              <div><input  v-on:input="input_change('remark')"  placeholder='选填' v-model='remark'></input></div>
             </div>
-
           </div>
-        </div>
-        <div class="BtnComponent bottomBtn">
-          <div @click='submit' class="onlyBtn">发  布</div>
         </div>
       </div>
     </div>
-    
+    <div class="BtnComponent bottomBtn">
+      <div @click='submit' class="onlyBtn">发  布</div>
+    </div>
     <componentSelectBox v-if="SelectBoxFlag" v-bind:SelectBoxList='SelectBoxList' @selectedItem='selectedItem' :BouncedName="BouncedName" @selectCancel="selectCancel"></componentSelectBox>
     <div v-if="ifTips" class="msg_tips">
       <div class="tips_content">
@@ -109,6 +120,7 @@
         SelectBoxList:[],//弹出框选择数据列表
         BouncedName:"车型",
         load_time:"",//出发时间
+        end_time:"",//结束时间
         remark:"",//备注
         tips_Msg:"",//提示信息
         ifTips:false,
@@ -172,6 +184,9 @@
       }else{
         this.load_time = this.formatDate(new Date)
       }
+      if(this.$store.state.pg_publish.car_info.end_time.length){
+        this.end_time = this.$store.state.pg_publish.car_info.end_time
+      }
       if(this.$store.state.pg_publish.car_info.remark.length){
         this.remark = this.$store.state.pg_publish.car_info.remark
       }
@@ -217,7 +232,7 @@
         this.$store.state.pg_publish = {
           load_pointList:[],
           unload_pointList:[],
-          car_info:{vehicleLoad:"",vehicleVolume:"",vehicle_type:"",load_time:"",remark:""},
+          car_info:{vehicleLoad:"",vehicleVolume:"",vehicle_type:"",load_time:"",end_time:"",remark:""},
         }
         this.$router.push({
           name:"HomeIndex"
@@ -242,6 +257,7 @@
       load_address_detail(){
         this.$store.state.pg_publish.load_pointList = this.AddressStart
         this.$store.state.pg_publish.car_info.load_time = this.load_time
+        this.$store.state.pg_publish.car_info.end_time = this.end_time
         this.$router.push({
           name:"SendLnglat",
           query:{
@@ -253,6 +269,7 @@
       unload_address_detail(){
         this.$store.state.pg_publish.unload_pointList = this.AddressEnd
         this.$store.state.pg_publish.car_info.load_time = this.load_time
+        this.$store.state.pg_publish.car_info.end_time = this.end_time
         this.$router.push({
           name:"SendLnglat",
           query:{
@@ -266,7 +283,6 @@
 
       },
       submit(){
-
         var that = this;
 
         if(this.AddressStart[0].p_c_d.length == 0 || this.AddressStart[0].detail.length == 0){
@@ -299,6 +315,26 @@
           })
           return
         }
+        if(this.load_time == 0){
+          that.$alert('请选择出发日期', '提示', {
+            confirmButtonText: '确定'
+          })
+          return
+        }
+        if(this.end_time == 0){
+          that.$alert('请选择结束日期', '提示', {
+            confirmButtonText: '确定'
+          })
+          return
+        }
+        if(this.load_time > this.end_time ){
+          that.$alert('出发日期不能大于结束日期', '提示', {
+            confirmButtonText: '确定'
+          })
+          return
+        }
+
+
 
         // 装货点
         var LoadingPoint = []
@@ -327,7 +363,7 @@
         var postData = {
           driverName : that.$store.state.userInfo.userName,//货主名称
           driverPhone : that.$store.state.userInfo.cellphone,//货主电话
-          endTime : "2021-1-1 23:59:59",//报价截止时间
+          endTime : that.end_time,//截止时间
           loadingTime : that.load_time,
           vehicleType : that.vehicle_type,//车型
           mark : that.remark,//备注
@@ -349,7 +385,7 @@
           that.$store.state.pg_publish = {
             load_pointList:[],
             unload_pointList:[],
-            car_info:{vehicleLoad:"",vehicleVolume:"",vehicle_type:"",load_time:"",remark:""},
+            car_info:{vehicleLoad:"",vehicleVolume:"",vehicle_type:"",load_time:"",end_time:"",remark:""},
           }
         })
       },
@@ -359,12 +395,10 @@
 <style lang="less" scoped>
   .MyPublish{
     overflow: hidden;
-    height: 100%;
     background-color: #E5E8FA;
     .container{
       height: 100%;
-      padding-bottom: 80/50rem;
-      // overflow: scroll;
+      padding-bottom: 120/50rem;
       overflow: hidden;
       .inv_goods{
         .infoContainer{
