@@ -85,7 +85,7 @@
           </div>
           <el-dialog title="竞 价" :visible.sync="DialogVisible"  width="80%" top="50%" center>
             <span>请输入承运费用：</span>
-            <el-input v-model="shipmentMoney" auto-complete="off"></el-input>
+            <el-input v-model="v_shipmentMoney" auto-complete="off"></el-input>
             <span slot="footer" class="dialog-footer">
               <el-button @click="cancel()">取 消</el-button>
               <el-button type="primary" @click="Confirm()">确 定</el-button>
@@ -118,17 +118,18 @@
     data(){
       return{
         is_NoData:false,
-        ifTips:false,//提示信息是否显示
+        ifTips:false,      //提示信息是否显示
         is_NoData_text:"没有信息",
         orderstate:'',
         ordertype:'asded',
         DialogVisible:false,
-        shipmentMoney:'',
-        ownerPhone:'',//货主电话
+        v_shipmentMoney:'',//司机竞价
+        shipmentMoney:'',  //司机竞价，服务器返回值
+        ownerPhone:'',     //货主电话
         sourceInfo:{},
-        AddressData:[],//装卸点详情
+        AddressData:[],    //装卸点详情
         whoPush:"",
-        bid_list:[],//竞价列表
+        bid_list:[],       //竞价列表
         owner_or_driver_userName:"",//货主/承运司机名称
         driver_shipDriverID:" ",//承运司机id
       }
@@ -255,16 +256,16 @@
 
       //竞价确定
       Confirm(){
-        if(this.shipmentMoney){
+        if(this.v_shipmentMoney){
 
           var that = this;
           var postData = {
-              // appUserId:that.$store.state.userInfo.user_id,//司机ID
               sourceNo: that.sourceInfo.sourceNo,//货源单号
-              compPrice: that.shipmentMoney,//竞价
+              compPrice: that.v_shipmentMoney,//竞价
             };
           this.httpRequest_ygy("driverBidding.do",postData,function(res){
             if(res.status == 1){
+              that.shipmentMoney = that.v_shipmentMoney
               that.ifTips = true;
               that.tips_Msg = "竞价成功";
               setTimeout(function(){
@@ -273,7 +274,6 @@
                     name:"goodsSource",
                   })
                 },2000)
-              // that.$store.state.StoreInfo = {};
             }else{
               that.$alert('竞价失败', '提示', {
                 confirmButtonText: '确定',
@@ -285,7 +285,8 @@
       },
       // 取消竞价
       cancel(){
-        this.shipmentMoney = ""
+
+        this.v_shipmentMoney = ""
         this.DialogVisible = false;
       },
       // 返回上一页
@@ -304,10 +305,13 @@
 <style lang="less" scoped>
   .sourceDetail{
     overflow: hidden;
-    // padding: 20/50rem;
+    height: 100%;
     .container{
       overflow: hidden;
+       height: 100%;
       .sourceInfo{
+        height: calc(100% - 1.8rem);
+        overflow: scroll;
         .routeInfo{
           padding: 10/50rem  20/50rem;
           border-bottom: 15/50rem solid #F4F4F4;
@@ -347,6 +351,7 @@
           .title{
             font-weight: 600;
             line-height: 65/50rem;
+             position: relative;
             span:nth-child(2){
               width: 150/50rem;
               padding-left: 20/50rem;
@@ -358,7 +363,7 @@
               font-size: 27/50rem;
               font-weight: 500;
               position: absolute;
-              right: 20/50rem;
+              right: 0;
             }
           }
           .date{ 
@@ -452,6 +457,7 @@
           overflow: hidden;
           padding: 5/50rem  20/50rem  10/50rem 20/50rem;
           border-bottom: 15/50rem solid #F4F4F4;
+          margin-bottom: 60/50rem;
           .title{
             font-weight: 600;
             line-height: 65/50rem;
@@ -459,6 +465,7 @@
           .v-f-bid{
             padding: 15/50rem;
             overflow: hidden;
+            position: relative;
             &>div{
               float: left;
               line-height: 50/50rem;
@@ -467,7 +474,7 @@
               }
               &:nth-child(2){
                 position: absolute;
-                left: 150/50rem;
+                left: 130/50rem;
                 width: 120/50rem;
               }
               &:nth-child(3){
@@ -511,6 +518,7 @@
         .btnList{
           padding: 20/50rem  120/50rem  25/50rem 120/50rem;
           text-align: center;
+          margin-bottom: 100/50rem;
           .call{
             i{
               color: #5965D8;
