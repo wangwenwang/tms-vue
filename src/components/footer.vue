@@ -52,7 +52,7 @@ export default {
 
           this.footList = [ 
             {
-              path: "Index",
+              path: "publishGoods",
               title: "发货",
               icon: "icon-shouye-blue"
             },

@@ -85,6 +85,7 @@
             d[i].k_detail += "/￥" + d[i].expectedCost + "每趟"
           }
           d[i].k_time = that.dateFilter(d[i].publishTime)
+          d[i].distance = d[i].distance / 1000
         }
       })
     },
