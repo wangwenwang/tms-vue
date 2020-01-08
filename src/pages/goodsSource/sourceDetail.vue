@@ -34,23 +34,24 @@
           </div>
           <div class="date"><i class="iconfont icon-yidongduanicon-"></i>
             <span>{{sourceInfo.loadingTime}} 全天00：00-24：00可装</span>
-          </div><!-- {}} {{}} {{-->
-          <div v-for='(dataItem,index) in AddressData' :id="index"  :key='index'>
-          <div class="address1"><span class="i">装</span><span>{{dataItem.carrierCity}} {{dataItem.carrierAddress3}}</span></div><!-- {{}}，{{}} -->
+          </div>
+          <div v-for='(dataItem,index) in AddressData' :id="index"  :key='index'> 
+          <div class="address1"><span class="i">装</span><span>{{dataItem.carrierCity}} {{dataItem.carrierAddress3}}</span></div>
           <div class="address2"><span class="i">卸</span><span>{{dataItem.c_city}} {{dataItem.c_address3}}</span></div>
           </div>
         </div>
 
-        <div v-if='$store.state.userInfo.userType == "driver"'  class="driverInfo">
-          <div class="userImage"><img  class="userinfo-avatar"  alt=""></div>
+        <div v-if='($store.state.userInfo.userType == "driver") || ($store.state.userInfo.userType == "owner" && driver_shipDriverID != "")'  class="driverInfo">
+          <div class="userImage"><img src="../../assets/images/defaultHead.png" class="userinfo-avatar"  alt=""></div>
           <div class="rightContent">
             <div class="one">
-              <span> 老王</span>
+              <span>{{ owner_or_driver_userName }}</span>
               <span class="todriverInfo">查看资料></span>
             </div>
             <div class="two">
               <span>交易999  </span>
-              <span>发货数1234 </span>
+              <span v-if='$store.state.userInfo.userType == "driver"'>发货数1234 </span>
+              <span v-if='$store.state.userInfo.userType == "owner"'>接单数1234 </span>
             </div>
             <div class="three">
               <span>深圳市凯东源现代物流股份有限公司</span>
@@ -58,13 +59,13 @@
           </div>
         </div>
 
-        <div v-if='$store.state.userInfo.userType == "owner"' class="bid_info">
+        <div v-if='$store.state.userInfo.userType == "owner" && driver_shipDriverID == ""' class="bid_info">
           <div class="title">竞价信息</div>
           <div v-for='(item, index) in bid_list'  :id="index"  :key='index' class="v-f-bid">
             <div>{{ item.compPrice }}</div>
             <div>{{ item.userName }}</div>
             <div class="call"><i v-if='item.cellphone' @click="callPhone(item.cellphone)" class="iconfont icon-dianhua-copy"></i></div>
-            <div @click="confirmDriver_click(item.compPrice)">确认</div>
+            <div @click="confirmDriver_click(index, item.compPrice)">确认</div>
           </div>
         </div>
 
@@ -72,7 +73,7 @@
           <span v-if="!shipmentMoney">当前报价：</span>
           <span v-if="shipmentMoney">我的竞价：</span>
           <span v-if="sourceInfo.expectedCost">￥{{sourceInfo.expectedCost}}</span>
-          <span v-if="is_None" class="none">暂无报价</span>
+          <span v-if="shipmentMoney == '' && sourceInfo.expectedCost == ''" class="none">暂无报价</span>
           <span v-if="shipmentMoney">￥{{shipmentMoney}}</span>
         </div>
 
@@ -86,7 +87,7 @@
             <span>请输入承运费用：</span>
             <el-input v-model="shipmentMoney" auto-complete="off"></el-input>
             <span slot="footer" class="dialog-footer">
-              <el-button @click="DialogVisible = false">取 消</el-button>
+              <el-button @click="cancel()">取 消</el-button>
               <el-button type="primary" @click="Confirm()">确 定</el-button>
             </span>
           </el-dialog>
@@ -118,7 +119,6 @@
       return{
         is_NoData:false,
         ifTips:false,//提示信息是否显示
-        is_None:false,//暂无报价
         is_NoData_text:"没有信息",
         orderstate:'',
         ordertype:'asded',
@@ -129,6 +129,8 @@
         AddressData:[],//装卸点详情
         whoPush:"",
         bid_list:[],//竞价列表
+        owner_or_driver_userName:"",//货主/承运司机名称
+        driver_shipDriverID:"",//承运司机id
       }
     },
     created(){
@@ -145,17 +147,6 @@
 
         this.orderstate = this.$route.query.orderState;//订单类型
       }
-      // if(this.sourceInfo.expectedCost ){
-      //   this.is_None = false;
-      // }else{
-      //   this.is_None =true;
-      // }
-      // if(this.shipmentMoney){
-
-      //   this.is_None = false;
-      // }else{
-      //   this.is_None =true;
-      // }
 
       var that = this;
 
@@ -167,21 +158,19 @@
 
         that.AddressData = res.data;
 
-      //   if(!res.data.length){
+        if(that.AddressData.length > 0){
 
-      //     that.is_NoData_text = "没有结果"
-
-      //     that.is_NoData = true;
-      //   }
+          that.driver_shipDriverID = that.AddressData[0].shipDriverID
+          that.owner_or_driver_userName = that.AddressData[0].userName
+        }
       })
       if(!that.sourceInfo.expectedCost){
         //查询司机竞价
         that.httpRequest_ygy("queryCompPrice.do",postData,function(res){
 
           if(res.data){
+
             that.shipmentMoney = res.data.compPrice;
-          }else{ 
-            that.is_None =true;
           }
         })
       }
@@ -195,15 +184,25 @@
           that.bid_list = res.data
         })
       }
+      if(that.$store.state.userInfo.userType == "driver"){
+        var postData = {
+          sourceNo: that.sourceInfo.sourceNo,
+        }
+        that.httpRequest_ygy("queryInfo.do",postData,function(res){
+          that.owner_or_driver_userName = res.data.userName
+          that.ownerPhone = res.data.cellPhone
+        })
+      }
     },
     methods:{
       // 竞价时，货主确认司机
-      confirmDriver_click(price){
+      confirmDriver_click(index, price){
 
         var that = this;
 
         var postData = {
           sourceNo: that.sourceInfo.sourceNo,//货源单号
+          shipDriverId: that.bid_list[index].appUsersId,//司机id
           expectedCost: price,//司机竞价
         }
         that.httpRequest_ygy("confirmDriver.do",postData,function(res){
@@ -282,6 +281,11 @@
             }
           })
         }
+        this.DialogVisible = false;
+      },
+      // 取消竞价
+      cancel(){
+        this.shipmentMoney = ""
         this.DialogVisible = false;
       },
       // 返回上一页
@@ -408,8 +412,12 @@
           border-bottom: 15/50rem solid #F4F4F4;
           .userImage{
             width: 80/50rem;
+            height: 100%;
             float: left;
             margin-right: 10/50rem;
+            img{
+              width: 80/50rem;
+            }
           }
           .rightContent{
             padding-left: 80/50rem;
@@ -458,10 +466,13 @@
 
               }
               &:nth-child(2){
-                margin-left: 50/50rem;
+                position: absolute;
+                left: 150/50rem;
+                width: 120/50rem;
               }
               &:nth-child(3){
-                margin-left: 90/50rem;
+                position: absolute;
+                left: 350/50rem;
               }
               &:nth-child(4){
                 float: right;

@@ -391,9 +391,7 @@ Vue.prototype.timeCompare=function (nowDate,productDate,AllowableTime){
 }
 // 简化日期 2020-01-06 11:05:13 变成 01-06 11:05
 Vue.prototype.dateFilter=function(time){
-	console.log(time)
 	var val = this.getTime(time) / 1000
-	console.log(val)
     let oldTime = parseInt(val)
     let nowTime = parseInt(new Date().getTime() / 1000) // 获取当前时间戳
     let nowDate = new Date(nowTime * 1000) // 当前日期对象
@@ -425,7 +423,7 @@ Vue.prototype.dateFilter=function(time){
       }
     }
 }
-// 把时间日期转成时间戳
+// 把时间日期转成时间戳 2020-01-06 11:05:13 变成 1578279913
 Vue.prototype.getTime=function(time){
     var myDate = new Date(time);
     var u = navigator.userAgent;
