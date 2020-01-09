@@ -41,7 +41,7 @@
           </div>
         </div>
 
-        <div v-if='($store.state.userInfo.userType == "driver") || ($store.state.userInfo.userType == "owner" && driver_shipDriverID != "")'  class="driverInfo">
+        <div v-if='($store.state.userInfo.userType == "driver" && owner_or_driver_userName != "") || ($store.state.userInfo.userType == "owner" && owner_or_driver_userName != "")'  class="driverInfo">
           <div class="userImage"><img src="../../assets/images/defaultHead.png" class="userinfo-avatar"  alt=""></div>
           <div class="rightContent">
             <div class="one">
@@ -65,7 +65,7 @@
             <div>{{ item.compPrice }}</div>
             <div>{{ item.userName }}</div>
             <div class="call"><i v-if='item.cellphone' @click="callPhone(item.cellphone)" class="iconfont icon-dianhua-copy"></i></div>
-            <div @click="confirmDriver_click(index, item.compPrice)">确认</div>
+            <div @click="owner_confirm_driver(index, item.compPrice)">确认</div>
           </div>
         </div>
 
@@ -77,18 +77,17 @@
           <span v-if="shipmentMoney">￥{{shipmentMoney}}</span>
         </div>
 
-        <div v-if='$store.state.userInfo.userType == "driver"' class="btnList">
+        <!-- 司机端，货源未被承运 -->
+        <div v-if='$store.state.userInfo.userType == "driver" && driver_shipDriverID == ""' class="btnList">
           <div class="call"  @click="callPhone(ownerPhone)"><i class="iconfont icon-dianhua"></i>电话联系</div>
-          <div class="biddingPrice" v-if="sourceInfo.expectedCost"><i class="iconfont icon-xuanzhong" @click="Submit()"></i>确 认</div>
-          <div class="biddingPrice" v-if="!sourceInfo.expectedCost"  @click="DialogVisible = true">
-            <i class="iconfont icon-jingjia"></i>竞 价
-          </div>
+          <div class="biddingPrice" v-if="sourceInfo.expectedCost"><i class="iconfont icon-xuanzhong" @click="driver_confirm_owner()"></i>确 认</div>
+          <div class="biddingPrice" v-if="!sourceInfo.expectedCost" @click="DialogVisible = true"><i class="iconfont icon-jingjia"></i>竞 价</div>
           <el-dialog title="竞 价" :visible.sync="DialogVisible"  width="80%" top="50%" center>
             <span>请输入承运费用：</span>
             <el-input v-model="v_shipmentMoney" auto-complete="off"></el-input>
             <span slot="footer" class="dialog-footer">
-              <el-button @click="cancel()">取 消</el-button>
-              <el-button type="primary" @click="Confirm()">确 定</el-button>
+              <el-button @click="cancel_bid()">取 消</el-button>
+              <el-button type="primary" @click="confirm_bid()">确 定</el-button>
             </span>
           </el-dialog>
         </div>
@@ -97,9 +96,9 @@
     </div>
 
       <!-- 页面数据为空时 -->
-    <div   v-if="is_NoData"   class="NoData" >
+    <div v-if="is_NoData" class="NoData" >
       <div>
-        <i  class="iconfont icon-meiyouwuliuxinxi" ></i>
+        <i class="iconfont icon-meiyouwuliuxinxi" ></i>
         <div>{{is_NoData_text}}</div>
       </div>
     </div>
@@ -153,7 +152,7 @@
 
       var postData = {
           sourceNo: that.sourceInfo.sourceNo,//货源单号
-        };
+      }
       //查询装卸点
       that.httpRequest_ygy("queryStartEndAddress.do",postData,function(res){
 
@@ -199,7 +198,7 @@
     },
     methods:{
       // 竞价时，货主确认司机
-      confirmDriver_click(index, price){
+      owner_confirm_driver(index, price){
 
         var that = this;
 
@@ -208,7 +207,7 @@
           shipDriverId: that.bid_list[index].appUsersId,//司机id
           expectedCost: price,//司机竞价
         }
-        that.httpRequest_ygy("confirmDriver.do",postData,function(res){
+        that.httpRequest_ygy("toTms.do",postData,function(res){
 
           if(res.status == 1){
 
@@ -229,25 +228,25 @@
           }
         })
       },
-      //司机确认按钮
-      Submit(){
+      // 司机确认货主
+      driver_confirm_owner(){
         
-        var that = this;
+        var that = this
         var postData = {
-            sourceNo: that.sourceInfo.sourceNo,//货源单号
-            expectedCost:that.sourceInfo.expectedCost,//货主报价
-          };
-        //查询装卸点
-        that.httpRequest_ygy("confirmDriver.do",postData,function(res){
+          sourceNo: that.sourceInfo.sourceNo,//货源单号
+          shipDriverId: that.$store.state.userInfo.user_id,//司机id
+          expectedCost: that.sourceInfo.expectedCost,//货主报价
+        }
+        //货主提供报价，司机确定接单
+        that.httpRequest_ygy("toTms.do",postData,function(res){
           if(res.status == 1){
-              that.ifTips = true;
-              that.tips_Msg = "确认成功";
-              setTimeout(function(){
-                //竞价成功后刷新当前页面
-                that.$router.push({
-                    name:"goodsSource",
-                  })
-                },2000)
+            that.ifTips = true;
+            that.tips_Msg = "确认成功";
+            setTimeout(function(){
+              that.$router.push({
+                name:"goodsSource",
+              })
+            },2000)
           }else{
             that.$alert('确认失败', '提示', {
               confirmButtonText: '确定',
@@ -256,15 +255,15 @@
         })
       },
 
-      //竞价确定
-      Confirm(){
+      // 确定竞价
+      confirm_bid(){
         if(this.v_shipmentMoney){
 
-          var that = this;
+          var that = this
           var postData = {
-              sourceNo: that.sourceInfo.sourceNo,//货源单号
-              compPrice: that.v_shipmentMoney,//竞价
-            };
+            sourceNo: that.sourceInfo.sourceNo,//货源单号
+            compPrice: that.v_shipmentMoney,//竞价
+          }
           this.httpRequest_ygy("driverBidding.do",postData,function(res){
             if(res.status == 1){
               that.shipmentMoney = that.v_shipmentMoney
@@ -286,10 +285,10 @@
         this.DialogVisible = false;
       },
       // 取消竞价
-      cancel(){
+      cancel_bid(){
 
         this.v_shipmentMoney = ""
-        this.DialogVisible = false;
+        this.DialogVisible = false
       },
       // 返回上一页
       goPrev(){
@@ -486,7 +485,7 @@
               &:nth-child(4){
                 float: right;
                 margin-left: 90/50rem;
-                background-color: blue;
+                background-color: #5965D8;
                 color: white;
                 font-size: 24/50rem;
                 padding: 0/50rem  20/50rem  0/50rem 20/50rem;
@@ -517,10 +516,10 @@
           }
         }
 
-        .btnList{
-          padding: 20/50rem  120/50rem  25/50rem 120/50rem;
+        .btnList{ 
+          padding: 20/50rem  120/50rem  0/50rem 120/50rem;
           text-align: center;
-          margin-bottom: 100/50rem;
+          height: 130/50rem;
           .call{
             i{
               color: #5965D8;
