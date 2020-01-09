@@ -29,7 +29,8 @@
               <span v-if='item.loadingTime'>{{item.loadingTime}}装货 , </span>
               <span v-if='item.loadUnloadType'>{{item.loadUnloadType}} </span>
             </div>
-            <div class="call"><i v-if='item.ownerPhone' @click="callPhone(item.ownerPhone)" class="iconfont icon-dianhua-copy"></i></div>
+            <div class="call" v-if='orderState'><i v-if='item.ownerPhone' @click="callPhone(item.ownerPhone)" class="iconfont icon-dianhua-copy"></i></div>
+            <div class='status' v-if='!orderState' :style='{background:item.STATUS_color}'>{{item.STATUS_text}}</div>
           </div>
 
           <div class="four">
@@ -130,6 +131,19 @@
               text-align: center;
               margin-top:15/50rem;
               font-size: 30/50rem;
+            }
+            .status{
+              float: right;
+              width: 110/50rem;
+              height: 50/50rem;
+              line-height: 50/50rem;
+              // border: 1/50rem solid #F28695;
+              text-align: right;
+              margin-top:15/50rem;
+              border-radius: 25/50rem  0%  0%   25/50rem ;
+              color: #fff;
+              // background-color: #F28695;
+
             }
           }
           .four{

@@ -78,17 +78,18 @@
         })
       },
       reqOrderList(){
+        
         var that = this
         var postData = {
           "status":that.orderState,
         }
+      
         // 获取门店信息
         that.httpRequest_ygy("queryStatusList.do",postData,function(res){
           that.orderArr = []
           if(res.data.length){
             that.orderArr = res.data;
             that.noDataShow = false;
-
             for( var i=0; i<that.orderArr.length; i++){
 
               if(that.orderArr[i].publishTime.substring(0,10) == that.nowDate){
@@ -104,6 +105,33 @@
               if(that.orderArr[i].min_volume == that.orderArr[i].max_volume){
 
                 that.orderArr[i].volume = true;
+              }
+              if(that.orderState ==  ""){
+                if(that.orderArr[i].status == 'NON-CONFIRM'){//待确认 F28695
+
+                  that.orderArr[i].STATUS_color = '#F28695';
+                  that.orderArr[i].STATUS_text = '  待确认';
+
+                }else if(that.orderArr[i].status == 'NON-DELIVERY'){//待装货
+
+                  that.orderArr[i].STATUS_color = '#83C1F2';
+                  that.orderArr[i].STATUS_text = '待装货';
+
+                }else if(that.orderArr[i].status == 'TRANSPORT'){//运输中
+
+                  that.orderArr[i].STATUS_color = '#FACE51';
+                  that.orderArr[i].STATUS_text = '运输中';
+
+                }else if(that.orderArr[i].status == 'NON-RATE'){//待评价
+
+                  that.orderArr[i].STATUS_color = '#89CE8B';
+                  that.orderArr[i].STATUS_text = '待评价';
+
+                }else if(that.orderArr[i].status == 'CANCEL'){//已取消
+
+                  that.orderArr[i].STATUS_color = '#999';
+                  that.orderArr[i].STATUS_text = '已取消';
+                }
               }
               that.orderArr[i].distance = that.orderArr[i].distance/1000;
               let tempVal = parseFloat(that.orderArr[i].distance).toFixed(2)
