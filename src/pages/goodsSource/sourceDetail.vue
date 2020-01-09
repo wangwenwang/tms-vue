@@ -164,6 +164,17 @@
           that.driver_shipDriverID = that.AddressData[0].shipDriverID
           that.owner_or_driver_userName = that.AddressData[0].userName
         }
+        // 此货源未被承接，请求货主信息
+        if(that.owner_or_driver_userName == "" && that.$store.state.userInfo.userType == "driver"){
+          
+          var postData = {
+            sourceNo: that.sourceInfo.sourceNo,
+          }
+          that.httpRequest_ygy("queryInfo.do",postData,function(res){
+            that.owner_or_driver_userName = res.data.userName
+            that.ownerPhone = res.data.cellPhone
+          })
+        }
       })
       if(!that.sourceInfo.expectedCost){
         //查询司机竞价
@@ -183,15 +194,6 @@
         that.httpRequest_ygy("queryDriverPrice.do",postData,function(res){
 
           that.bid_list = res.data
-        })
-      }
-      if(that.$store.state.userInfo.userType == "driver"){
-        var postData = {
-          sourceNo: that.sourceInfo.sourceNo,
-        }
-        that.httpRequest_ygy("queryInfo.do",postData,function(res){
-          that.owner_or_driver_userName = res.data.userName
-          that.ownerPhone = res.data.cellPhone
         })
       }
     },
