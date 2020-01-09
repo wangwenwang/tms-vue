@@ -28,7 +28,7 @@
             <i  class="iconfont icon-xiangshang" ></i></div>
   	   	  <div  @click="toMyPublish" v-if='$store.state.userInfo.userType == "driver"'><i class="iconfont icon-cheb" ></i><span>我的发布</span>
   	   	  	<i class= "iconfont icon-xiangshang" ></i></div>
-  	   	  <div  @click="toHistoricalTrack"><i class="iconfont icon-lishiguiji" ></i><span>历史轨迹</span>  
+  	   	  <div  @click="toHistoricalTrack" v-if='$store.state.userInfo.userType == "driver"'><i class="iconfont icon-lishiguiji" ></i><span>历史轨迹</span>  
   	   	  	<i  class="iconfont icon-xiangshang" ></i></div>
   	   	  <div  @click="toPersonalData"><i class="iconfont icon-gerenziliaoxiugai" ></i><span>个人资料</span>
   	   	  	<i class="iconfont icon-xiangshang" ></i></div>
