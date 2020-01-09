@@ -3,12 +3,13 @@
     <header><i v-if='$store.state.userInfo.userType == "driver"' class="iconfont icon-xiangzuo1" @click="goprev"></i><span>我的订单</span></header>
     <div class="container">
       <div class="orderState">
-        <div class="all menu_item_width" @click='choseAll'>全部</div>
-        <div class="toSure menu_item_width" @click='choseToSure'>竞价中</div>
-        <div class="toloading menu_item_width" @click='choseToloading'>待装货</div>
-        <div class="toTransit menu_item_width" @click='choseTransit'>运输中</div>
-        <div class="toEvaluate menu_item_width" @click='choseToEvaluate'>待评价</div>
-        <div class="cancel menu_item_width" @click='choseCancel'>取消</div>
+        <div class="all" @click='choseAll'>全部</div>
+        <div v-if='$store.state.userInfo.userType == "owner"' class="toSure" @click='choseToSure'>待确认</div>
+        <div v-if='$store.state.userInfo.userType == "driver"'  class="toSure" @click='choseToSure'>竞价中</div>
+        <div class="toloading" @click='choseToloading'>待装货</div>
+        <div class="toTransit" @click='choseTransit'>运输中</div>
+        <div class="toEvaluate" @click='choseToEvaluate'>待评价</div>
+        <div class="cancel" @click='choseCancel'>取消</div>
       </div>
       <div class="orderList">
         <componentOrderItem :orderArr='orderArr' :orderState='orderState'></componentOrderItem>
@@ -64,16 +65,8 @@
         }else if(this.orderState == "CANCEL"){
           this.toCancel();
         }
-
-        if(this.$store.state.userInfo.userType == "owner"){
-          
-          $(".toSure").css({'display':'none'})
-          $(".menu_item_width").css({'width':'3rem'})
-        }
       })
       this.nowDate = this.getNowTime().substring(0,10);
-
-      
     },
     methods:{
       // 返回上一页
