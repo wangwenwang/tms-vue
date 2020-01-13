@@ -238,14 +238,15 @@
 		           	})
 
 		           	return;
-				}else if(this.longitude == "" || this.longitude.indexOf('E') != -1 || this.CurrentLocation == ""){
-
-					that.$alert('未获取当前坐标，请打开GPS，退出APP重新打开', '提示', {
-			            confirmButtonText: '确定'
-		           	})
-
-		           	return;
 				}
+				// else if(this.longitude == "" || this.longitude.indexOf('E') != -1 || this.CurrentLocation == ""){
+
+				// 	that.$alert('未获取当前坐标，请打开GPS，退出APP重新打开', '提示', {
+			 //            confirmButtonText: '确定'
+		  //          	})
+
+		  //          	return;
+				// }
 
 				var XHQty = $(".Upload>div.uploadImg:eq(0) ul>li").length;
 				var HZQty = $(".Upload>div.uploadImg:eq(1) ul>li").length;

@@ -16,7 +16,7 @@
       </div>
 
        <!-- 页面数据为空时 -->
-      <div  class="NoData"  v-if="noDataShow">
+      <div  class="NoData"  v-if="noDataShow"> 
         <div>
           <i  class="iconfont icon-meiyouwuliuxinxi"></i>
           <div>没有数据</div>
@@ -110,7 +110,7 @@
                 if(that.orderArr[i].status == 'NON-CONFIRM'){//待确认 F28695
 
                   that.orderArr[i].STATUS_color = '#F28695';
-                  that.orderArr[i].STATUS_text = '  待确认';
+                  that.orderArr[i].STATUS_text = '待确认';
 
                 }else if(that.orderArr[i].status == 'NON-DELIVERY'){//待装货
 
@@ -133,9 +133,20 @@
                   that.orderArr[i].STATUS_text = '已取消';
                 }
               }
-              that.orderArr[i].distance = that.orderArr[i].distance/1000;
-              let tempVal = parseFloat(that.orderArr[i].distance).toFixed(2)
-              that.orderArr[i].distance = tempVal.substring(0, tempVal.length - 1)
+              if(that.$store.state.userInfo.userType == "owner"){
+
+                that.orderArr[i].distanceShow = false;
+              }else{
+                if(that.orderArr[i].status == 'NON-CONFIRM'|| that.orderArr[i].status == 'NON-DELIVERY'){
+
+                  that.orderArr[i].distanceShow = true;
+                  that.orderArr[i].distance = that.orderArr[i].distance/1000;
+                  let tempVal = parseFloat(that.orderArr[i].distance).toFixed(2)
+                  that.orderArr[i].distance = tempVal.substring(0, tempVal.length - 1)
+                }else{
+                  that.orderArr[i].distanceShow = false;
+                }
+              }
             }
           }else{
               that.noDataShow = true;

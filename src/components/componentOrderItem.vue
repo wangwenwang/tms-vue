@@ -19,7 +19,7 @@
               <span v-if='!item.volume'>{{item.min_volume}}~{{item.max_volume}}方&nbsp;</span>
               <span v-if='item.volume'>{{item.max_volume}}方&nbsp;</span>
             </div>
-            <div class="distance">约{{item.distance}}km装货</div>
+            <div class="distance" v-if='item.distanceShow'>约{{item.distance}}km装货</div>
           </div>
 
           <div class="three">
@@ -137,12 +137,11 @@
               width: 110/50rem;
               height: 50/50rem;
               line-height: 50/50rem;
-              // border: 1/50rem solid #F28695;
               text-align: right;
               margin-top:15/50rem;
-              border-radius: 25/50rem  0%  0%   25/50rem ;
+              border-radius: 25/50rem  0%  0%  25/50rem ;
               color: #fff;
-              // background-color: #F28695;
+              padding-right: 10/50rem;
 
             }
           }
