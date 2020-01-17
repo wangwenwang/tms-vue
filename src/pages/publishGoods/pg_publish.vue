@@ -433,6 +433,11 @@
 
           that.ifTips = true;
           that.tips_Msg = "操作成功";
+          that.$store.state.pg_publish = {
+            load_pointList:[],
+            unload_pointList:[],
+            other_info:{goods_name:"", min_weight:"",max_weight:"",min_volume:"",max_volume:"",vehicle_type:"",load_time:"",remark:"",expected_cost:""},
+          }
           setTimeout(function(){
             that.$router.push({
               name:"publishGoods",
@@ -540,6 +545,7 @@
             &>div{
               width: 100%;
               height: 80/50rem;
+              input{width: 330/50rem;}
               &>div{
                 line-height: 80/50rem;
                 &:nth-child(1){
