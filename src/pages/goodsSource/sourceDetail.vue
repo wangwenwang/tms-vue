@@ -16,11 +16,11 @@
           <div class="title">车货信息</div>
           <div><span>车辆</span><span>{{sourceInfo.vehicleType}}</span></div>
           <div><span>货物</span>
-              <span>{{sourceInfo.productName}},</span> 
-              <span v-if='!sourceInfo.weight'>{{sourceInfo.min_weight}}~{{sourceInfo.max_weight}}吨&nbsp;</span>
-              <span v-if='sourceInfo.weight'>{{sourceInfo.max_weight}}吨&nbsp;</span>
-              <span v-if='!sourceInfo.volume'>{{sourceInfo.min_volume}}~{{sourceInfo.max_volume}}方&nbsp;</span>
-              <span v-if='sourceInfo.volume'>{{sourceInfo.max_volume}}方&nbsp;</span>
+            <span>{{sourceInfo.productName}} ,</span> 
+            <span v-if='!sourceInfo.weight'>{{sourceInfo.min_weight}}~{{sourceInfo.max_weight}}吨&nbsp;</span>
+            <span v-if='sourceInfo.weight'>{{sourceInfo.max_weight}}吨&nbsp;</span>
+            <span v-if='!sourceInfo.volume'>{{sourceInfo.min_volume}}~{{sourceInfo.max_volume}}方&nbsp;</span>
+            <span v-if='sourceInfo.volume'>{{sourceInfo.max_volume}}方&nbsp;</span>
           </div>
           <div>
             <span>特殊要求</span>
@@ -30,23 +30,29 @@
       
         <div class="handlingInfo">
           <div class="title"><span>装卸信息</span><span>{{sourceInfo.loadUnloadType}}</span>
-            <span>距装货地{{sourceInfo.distance}}km</span>
+            <span v-if='$store.state.userInfo.userType == "driver"'>距装货地{{sourceInfo.distance}}km</span>
           </div>
           <div class="date"><i class="iconfont icon-yidongduanicon-"></i>
             <span>{{sourceInfo.loadingTime}} 全天00：00-24：00可装</span>
           </div>
-          <div v-for='(dataItem,index) in AddressData' :id="index"  :key='index'> 
-          <div class="address1"><span class="i">装</span><span>{{dataItem.carrierCity}} {{dataItem.carrierAddress3}}</span></div>
-          <div class="address2"><span class="i">卸</span><span>{{dataItem.c_city}} {{dataItem.c_address3}}</span></div>
+          <div class="address1" v-for='(dataItem,index) in start_AddressData' :id="index"  :key="'info1-' + index">
+            <span class="i">装</span><span>{{dataItem.s_city}} {{dataItem.s_district}}</span>
+            <div class="AddressDetail"> {{dataItem.s_address}}</div>
+          </div>
+          <div class="address2" v-for='(dataItem,index) in end_AddressData' :id="index"  :key="'info2-' + index">
+            <span class="i">卸</span><span>{{dataItem.e_city}} {{dataItem.e_district}}</span>
+            <div class="AddressDetail"> {{dataItem.e_address}}</div>
           </div>
         </div>
 
-        <div v-if='($store.state.userInfo.userType == "driver" && owner_or_driver_userName != "") || ($store.state.userInfo.userType == "owner" && owner_or_driver_userName != "")'  class="driverInfo">
+        <div v-if='owner_or_driver_userName != ""'  class="driverInfo">
+          <!-- <div v-if='$store.state.userInfo.userType == "owner"'>承运司机信息</div> -->
           <div class="userImage"><img src="../../assets/images/defaultHead.png" class="userinfo-avatar"  alt=""></div>
           <div class="rightContent">
             <div class="one">
-              <span>{{ owner_or_driver_userName }}</span>
-              <span class="todriverInfo">查看资料></span>
+              <div>{{ owner_or_driver_userName }}</div>
+              <div class="call"><i v-if='driverInfo.driver_tel' @click="callPhone(driverInfo.driver_tel)" class="iconfont icon-dianhua-copy"></i></div>
+              <div class="todriverInfo">查看资料></div>
             </div>
             <div class="two">
               <span>交易999  </span>
@@ -59,26 +65,26 @@
           </div>
         </div>
 
-        <div v-if='$store.state.userInfo.userType == "owner" && driver_shipDriverID == ""' class="bid_info">
+        <div v-if='$store.state.userInfo.userType == "owner" && bid_list.length > 0 && driverInfo.driver_id == ""' class="bid_info">
           <div class="title">竞价信息</div>
-          <div v-for='(item, index) in bid_list'  :id="index"  :key='index' class="v-f-bid">
-            <div>{{ item.compPrice }}</div>
-            <div>{{ item.userName }}</div>
-            <div class="call"><i v-if='item.cellphone' @click="callPhone(item.cellphone)" class="iconfont icon-dianhua-copy"></i></div>
-            <div @click="owner_confirm_driver(index, item.compPrice)">确认</div>
+          <div v-for='(item, index) in bid_list'  :id="index"  :key="'info3-' + index"  class="v-f-bid">
+            <div>￥{{ item.bid_price }} </div>
+            <div> {{ item.bid_name }}</div>
+            <div class="call"><i v-if='item.bid_tel' @click="callPhone(item.bid_tel)" class="iconfont icon-dianhua-copy"></i></div>
+            <div @click="owner_confirm_driver(index, item.bid_price)">确认</div>
           </div>
         </div>
 
-        <div v-if='$store.state.userInfo.userType == "driver"' class="price">
+        <div v-if='$store.state.userInfo.userType == "driver" && driverInfo.driver_price == ""' class="price">
           <span v-if="!shipmentMoney">当前报价：</span>
           <span v-if="shipmentMoney">我的竞价：</span>
           <span v-if="sourceInfo.expectedCost">￥{{sourceInfo.expectedCost}}</span>
           <span v-if="shipmentMoney == '' && sourceInfo.expectedCost == ''" class="none">暂无报价</span>
-          <span v-if="shipmentMoney">￥{{shipmentMoney}}</span>
+          <span v-if="shipmentMoney != '' && sourceInfo.expectedCost == '' ">￥{{shipmentMoney}}</span>
         </div>
 
         <!-- 司机端，货源未被承运 -->
-        <div v-if='$store.state.userInfo.userType == "driver" && driver_shipDriverID == ""' class="btnList">
+        <div v-if='$store.state.userInfo.userType == "driver" && shipDriverID == ""' class="btnList">
           <div class="call"  @click="callPhone(ownerPhone)"><i class="iconfont icon-dianhua"></i>电话联系</div>
           <div class="biddingPrice" v-if="sourceInfo.expectedCost"><i class="iconfont icon-xuanzhong" @click="driver_confirm_owner()"></i>确 认</div>
           <div class="biddingPrice" v-if="!sourceInfo.expectedCost" @click="DialogVisible = true"><i class="iconfont icon-jingjia"></i>竞 价</div>
@@ -91,6 +97,8 @@
             </span>
           </el-dialog>
         </div>
+
+        <div v-if='driverInfo.driver_price' class="ShippingInfo">承运价格：￥{{driverInfo.driver_price}} </div>
 
       </div>
     </div>
@@ -120,17 +128,19 @@
         ifTips:false,      //提示信息是否显示
         is_NoData_text:"没有信息",
         orderstate:'',
-        ordertype:'asded',
         DialogVisible:false,
         v_shipmentMoney:'',//司机竞价
         shipmentMoney:'',  //司机竞价，服务器返回值
         ownerPhone:'',     //货主电话
         sourceInfo:{},
-        AddressData:[],    //装卸点详情
+        start_AddressData:[],  //装点详情
+        end_AddressData:[],    //卸点详情
         whoPush:"",
-        bid_list:[],       //竞价列表
+        bid_list:[],     //竞价列表
+        driverInfo:[],   //承运司机信息
+        shipDriverID:"", //承运司机id
+        ownerInfo:[],    //货主信息
         owner_or_driver_userName:"",//货主/承运司机名称
-        driver_shipDriverID:" ",//承运司机id
       }
     },
     created(){
@@ -149,62 +159,45 @@
       }
 
       var that = this;
-
       var postData = {
+          appUserId: that.$store.state.userInfo.user_id,//用户ID
           sourceNo: that.sourceInfo.sourceNo,//货源单号
+          userType: that.$store.state.userInfo.userType,//用户身份
+          shipDriverID: that.sourceInfo.shipDriverID,//承运司机ID
       }
-      //查询装卸点
-      that.httpRequest_ygy("queryStartEndAddress.do",postData,function(res){
-
-        that.AddressData = res.data;
-
-        if(that.AddressData.length > 0){
-
-          that.driver_shipDriverID = that.AddressData[0].shipDriverID
-          that.owner_or_driver_userName = that.AddressData[0].userName
-        }
-        // 此货源未被承接，请求货主信息
-        if(that.owner_or_driver_userName == "" && that.$store.state.userInfo.userType == "driver"){
-          
-          var postData = {
-            sourceNo: that.sourceInfo.sourceNo,
+      //查询装卸点、承运司机信息
+      that.httpRequest_ygy("cargoDetail.do",postData,function(res){
+        that.start_AddressData = res.data.start;
+        that.end_AddressData = res.data.end;
+        that.driverInfo = res.data.driverInfo;
+        that.ownerInfo = res.data.ownerInfo;
+        that.bid_list = res.data.bid; 
+        that.shipDriverID = res.data.driverInfo.driver_id;
+        
+        if(that.$store.state.userInfo.userType == "driver"){
+          that.owner_or_driver_userName = res.data.ownerInfo.owner_name;
+          that.ownerPhone = res.data.ownerInfo.owner_tel;
+          //获取司机自己的竞价
+          for (var i = res.data.bid.length - 1; i >= 0; i--) {
+            if(res.data.bid[i].bid_driver_id == that.$store.state.userInfo.user_id){
+              that.bid_list = res.data.bid[i];
+              that.shipmentMoney = that.bid_list.bid_price
+            }
           }
-          that.httpRequest_ygy("queryInfo.do",postData,function(res){
-            that.owner_or_driver_userName = res.data.userName
-            that.ownerPhone = res.data.cellPhone
-          })
+        }
+        if(that.$store.state.userInfo.userType == "owner"){
+          that.owner_or_driver_userName = res.data.driverInfo.driver_name;
         }
       })
-      if(!that.sourceInfo.expectedCost){
-        //查询司机竞价
-        that.httpRequest_ygy("queryCompPrice.do",postData,function(res){
-
-          if(res.data){
-
-            that.shipmentMoney = res.data.compPrice;
-          }
-        })
-      }
-      if(that.$store.state.userInfo.userType == "owner"){
-
-        var postData = {
-          sourceNo: that.sourceInfo.sourceNo,
-        }
-        that.httpRequest_ygy("queryDriverPrice.do",postData,function(res){
-
-          that.bid_list = res.data
-        })
-      }
     },
     methods:{
       // 竞价时，货主确认司机
       owner_confirm_driver(index, price){
 
         var that = this;
-
         var postData = {
           sourceNo: that.sourceInfo.sourceNo,//货源单号
-          shipDriverId: that.bid_list[index].appUsersId,//司机id
+          shipDriverId: that.bid_list[index].bid_driver_id,//司机id
           expectedCost: price,//司机竞价
         }
         that.httpRequest_ygy("toTms.do",postData,function(res){
@@ -243,8 +236,9 @@
             that.ifTips = true;
             that.tips_Msg = "确认成功";
             setTimeout(function(){
+              that.$store.state.Waybill_needRefresh = true
               that.$router.push({
-                name:"goodsSource",
+                name:"Waybill",
               })
             },2000)
           }else{
@@ -272,9 +266,9 @@
               setTimeout(function(){
                 //竞价成功后刷新当前页面
                 that.$router.push({
-                    name:"goodsSource",
-                  })
-                },2000)
+                  name:"goodsSource",
+                })
+              },2000)
             }else{
               that.$alert('竞价失败', '提示', {
                 confirmButtonText: '确定',
@@ -292,7 +286,6 @@
       },
       // 返回上一页
       goPrev(){
-
         this.$router.push({
           name:this.whoPush,
           query:{
@@ -309,23 +302,23 @@
     height: 100%;
     .container{
       overflow: hidden;
-       height: 100%;
+      height: 100%;
       .sourceInfo{
         height: calc(100% - 1.8rem);
         overflow: scroll;
         .routeInfo{
           padding: 10/50rem  20/50rem;
           border-bottom: 15/50rem solid #F4F4F4;
-            .route{
-              font-size: 35/50rem;
-              font-weight: 550;
-              line-height: 80/50rem;
-            }
+          .route{
+            font-size: 35/50rem;
+            font-weight: 550;
+            line-height: 80/50rem;
+          }
         }
 
         .carInfo{
           overflow: hidden;
-          padding: 5/50rem  20/50rem  10/50rem 20/50rem;
+          padding: 15/50rem  20/50rem  10/50rem 20/50rem;
           border-bottom: 15/50rem solid #F4F4F4;
           .title{
             font-weight: 600;
@@ -334,7 +327,7 @@
           &>div{
             line-height: 50/50rem;
             span:first-child{
-              color: #999;
+              color: #757575;
               min-width: 20%;
               float: left;
             }
@@ -347,18 +340,18 @@
         }
 
         .handlingInfo{
-          padding: 5/50rem  20/50rem  25/50rem 20/50rem;
+          padding: 15/50rem  20/50rem  10/50rem 20/50rem;
           border-bottom: 15/50rem solid #F4F4F4;
           .title{
             font-weight: 600;
             line-height: 65/50rem;
-             position: relative;
+            position: relative;
             span:nth-child(2){
               width: 150/50rem;
               padding-left: 20/50rem;
               font-size: 25/50rem;
               font-weight: 500;
-              color: #999;
+              color: #757575;
             }
             span:nth-child(3){
               font-size: 27/50rem;
@@ -368,12 +361,13 @@
             }
           }
           .date{ 
-            color: #999;
+            color: #757575;
             span{
               font-size: 25/50rem;
             }
           }
-          .address1{
+          .address1,.address2{
+            margin-bottom: 20/50rem;
             .i{
               font-size: 26/50rem;
               border: 1/50rem solid  #FACE51;
@@ -385,18 +379,17 @@
               font-size:30/50rem;
               line-height: 60/50rem;
             }
+            .AddressDetail{
+              font-size:26/50rem;
+              line-height: 40/50rem;
+              color: #757575;
+              padding-left: 64/50rem;
+            }
           }
           .address2{
             .i{
-              font-size: 26/50rem;
               border: 1/50rem solid  #FD757F;
-              border-radius: 8/50rem;
-              padding: 8/50rem;
               background-color: #FD757F;
-            }
-            span{
-              font-size:30/50rem;
-              line-height: 60/50rem;
             }
           }
           &>div{
@@ -414,7 +407,7 @@
 
         .driverInfo{
           height: 180/50rem;
-          padding: 5/50rem  40/50rem  25/50rem 20/50rem;
+          padding: 20/50rem  40/50rem  25/50rem 20/50rem;
           border-bottom: 15/50rem solid #F4F4F4;
           .userImage{
             width: 80/50rem;
@@ -431,22 +424,31 @@
               font-size: 30/50rem;
               font-weight:600;
               line-height: 65/50rem;
+              display: flex;
+              justify-content: space-between;
+              .call{
+                margin-right: 280/50rem;
+                line-height: 65/50rem;
+                color: #5965D8;
+                text-align: center;
+                font-size: 30/50rem;
+              }
               .todriverInfo{
                 font-size: 22/50rem;
                 padding-top: 8/50rem;
-                color: #999;
-                float: right;
+                color: #757575;
               }
+              
             }
             .two{
               float: left;
-              color: #999;
+              color: #757575;
               font-size: 26/50rem;
               line-height: 65/50rem;
             }
             .three{
               float: left;
-              color: #999;
+              color: #757575;
               font-weight: 550;
               font-size: 26/50rem;
               line-height: 65/50rem;
@@ -470,13 +472,11 @@
             &>div{
               float: left;
               line-height: 50/50rem;
-              &:nth-child(1){
-
-              }
               &:nth-child(2){
                 position: absolute;
                 left: 130/50rem;
-                width: 120/50rem;
+                width: 120/50rem; 
+                margin-left: 30/50rem;
               }
               &:nth-child(3){
                 position: absolute;
@@ -511,7 +511,7 @@
           border-bottom: 15/50rem solid #F4F4F4;
           line-height: 50/50rem;
           .none{
-            color: #999;
+            color: #757575;
             font-weight: 550;
           }
         }
@@ -543,6 +543,10 @@
             border-radius: 8%;
             background-color: #C4CAEF;
           }
+        }
+        .ShippingInfo{
+          padding: 20/50rem  40/50rem  25/50rem 20/50rem;
+          border-bottom: 15/50rem solid #F4F4F4;
         }
       }
     }

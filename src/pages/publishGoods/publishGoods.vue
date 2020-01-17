@@ -47,10 +47,12 @@
           if(d[i].carrierCity.length > 0){
 
             d[i].k_title = d[i].carrierCity.substring(0, d[i].carrierCity.length - 1)
+            console.log(d[i].carrierCity)
           }
           if(d[i].carrierAddress3.length > 0){
 
             d[i].k_title += " " +  d[i].carrierAddress3
+            console.log(d[i].carrierAddress3)
           }
           if(d[i].c_city.length > 0){
 

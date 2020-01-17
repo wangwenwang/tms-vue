@@ -41,14 +41,14 @@
             <div>
               <div><span>运载重量</span></div>
               <div>
-                <input class="two_input_width"  v-on:input="input_change('vehicleLoad')"  type="number"  placeholder='0~999'  v-model='vehicleLoad'></input>
+                <input class="two_input_width"  v-on:input="input_change('vehicleLoad')"  type="number"  placeholder='0~99'  v-model='vehicleLoad'></input> 吨
               </div>
             </div>
 
             <div>
               <div><span>运载体积</span></div>
               <div>
-                <input class="two_input_width"  v-on:input="input_change('vehicleVolume')"  type="number"  placeholder='0~999'  v-model='vehicleVolume'></input>
+                <input class="two_input_width"  v-on:input="input_change('vehicleVolume')"  type="number"  placeholder='0~99'  v-model='vehicleVolume'></input> 方
               </div>
             </div>
           </div>

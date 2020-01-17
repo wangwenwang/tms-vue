@@ -313,6 +313,10 @@ import $ from 'jquery'
         this.toAround();
         this.AddressShow = true;
         this.getAroundGoodsData();
+        this.startCity = "";//起点城市
+        this.startDistrict  = "";//起点区
+        this.endCity = "";//终点城市
+        this.endDistrict  = "";//终点区
       },
 
       toAddress(){

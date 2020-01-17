@@ -11,10 +11,10 @@
 		    <p  class="car"><img src="../../assets/images/car.png"><span>车辆信息</span></p>
 		    <div><span>车牌号</span><input   placeholder='必填' ref="vicheNo" v-model='vicheNo'></input><i v-if="vicheNo" @click="clearInput('vicheNo')" class="iconfont icon-iconfontcuowu"></i></div>
 		    <div @click='TypeOfCar'><span>车辆车型</span><div ><span>{{vehicleType}}</span><i class="iconfont icon-xiangshang"></i></div></div>
-		    <div><span>车长</span><input  placeholder='车长' type="number"   ref="vehicleLength" v-model='vehicleLength'></input><i v-if="vehicleLength" @click="clearInput('vehicleLength')" class="iconfont icon-iconfontcuowu"></i></div>
-		    <div><span>车宽</span><input   placeholder='车宽' type="number"   ref="vehicleWide" v-model='vehicleWide'></input><i v-if="vehicleWide" @click="clearInput('vehicleWide')" class="iconfont icon-iconfontcuowu"></i></div>
-		    <div><span>车高</span><input  placeholder='车高' type="number"   ref="vehicleHeight" v-model='vehicleHeight'></input><i v-if="vehicleHeight" @click="clearInput('vehicleHeight')" class="iconfont icon-iconfontcuowu"></i></div>
-		    <div><span>载重吨</span><input placeholder='必填'   ref="maxLoadWeight"   @keyup.enter="getFocus('maxLoadVolumn')"  type="number"   v-model='maxLoadWeight'></input><i v-if="maxLoadWeight" @click="clearInput('maxLoadWeight')" class="iconfont icon-iconfontcuowu"></i></div>
+		    <div><span>车长/米</span><input  placeholder='车长' type="number"   ref="vehicleLength" v-model='vehicleLength'></input><i v-if="vehicleLength" @click="clearInput('vehicleLength')" class="iconfont icon-iconfontcuowu"></i></div>
+		    <div><span>车宽/米</span><input   placeholder='车宽' type="number"   ref="vehicleWide" v-model='vehicleWide'></input><i v-if="vehicleWide" @click="clearInput('vehicleWide')" class="iconfont icon-iconfontcuowu"></i></div>
+		    <div><span>车高/米</span><input  placeholder='车高' type="number"   ref="vehicleHeight" v-model='vehicleHeight'></input><i v-if="vehicleHeight" @click="clearInput('vehicleHeight')" class="iconfont icon-iconfontcuowu"></i></div>
+		    <div><span>载重/吨</span><input placeholder='必填'   ref="maxLoadWeight"   @keyup.enter="getFocus('maxLoadVolumn')"  type="number"   v-model='maxLoadWeight'></input><i v-if="maxLoadWeight" @click="clearInput('maxLoadWeight')" class="iconfont icon-iconfontcuowu"></i></div>
 		    <div><span>载重体积</span><input placeholder='必填' type="number"    ref="maxLoadVolumn"   @keyup.enter="regBtn"    v-model='maxLoadVolumn'></input><i v-if="maxLoadVolumn" @click="clearInput('maxLoadVolumn')" class="iconfont icon-iconfontcuowu"></i></div>
 
 		    <p  class="upload"><img src="../../assets/images/upload.png"><span>上传资料</span></p>

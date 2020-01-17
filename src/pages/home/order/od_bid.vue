@@ -46,6 +46,12 @@
     },
     created(){
 
+      if(this.$store.state.userInfo.userType == "driver"){
+        this.$nextTick(() => {
+          $('.orderList').css('height','calc(100% - 3.6rem)')
+        })
+      }
+
       if(this.$route.query.orderstate){ 
         this.orderState = this.$route.query.orderstate;
       }
@@ -107,7 +113,12 @@
                 that.orderArr[i].volume = true;
               }
               if(that.orderState ==  ""){
-                if(that.orderArr[i].status == 'NON-CONFIRM'){//待确认 F28695
+                if(that.orderArr[i].status == 'NEW'){//待装货
+
+                  that.orderArr[i].STATUS_color = '#85BE9F';
+                  that.orderArr[i].STATUS_text = '新 建 ';
+
+                }else if(that.orderArr[i].status == 'NON-CONFIRM'){//待确认 F28695
 
                   that.orderArr[i].STATUS_color = '#F28695';
                   that.orderArr[i].STATUS_text = '待确认';
