@@ -457,7 +457,7 @@
 
           that.ifTips = true;
           that.tips_Msg = "操作成功"
-          this.deleteVeux()
+          that.deleteVeux()
           setTimeout(function(){
             that.$router.push({
               name:"publishGoods",

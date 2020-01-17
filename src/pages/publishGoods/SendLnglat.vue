@@ -170,9 +170,6 @@
             that.p_c_d = [province, city, district_or_township]
             document.getElementById('lnglat').innerHTML = positionResult.position;
             document.getElementById('address').innerHTML = positionResult.address;
-            // document.getElementById('nearestJunction').innerHTML = positionResult.nearestJunction;
-            // document.getElementById('nearestRoad').innerHTML = positionResult.nearestRoad;
-            // document.getElementById('nearestPOI').innerHTML = positionResult.nearestPOI;
             that.lng = positionResult.position.lng
             that.lat = positionResult.position.lat
             that.address = positionResult.address
@@ -298,9 +295,11 @@
           float: left;
         }
         .e{
-          width: calc(100% - 3rem);
+          width: calc(100% - 3.24rem);
           height: 75/50rem;
           float: left;
+          border: 1/50rem solid #ccc;
+          padding: 10/50rem;
         }
       }
     }
