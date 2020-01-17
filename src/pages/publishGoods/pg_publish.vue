@@ -10,11 +10,11 @@
               <div class="load_unload_icon">
                 <div>{{ item.icon }}</div>
               </div>
-              <div class="oneTwo">
+              <div class="oneTwo" @click='load_address_detail(idx)'>
                 <div class="AddressStart" @click='load_ads_record(idx)'>
-                  <el-cascader :options="optionsAddress" v-model="addressList.s[idx].p_c_d"   @change="load_ads"></el-cascader>
+                  <el-cascader :options="optionsAddress" v-model="addressList.s[idx].p_c_d" @change="load_ads"></el-cascader>
                 </div>
-                <div class="lineTwo" @click='load_address_detail(idx)'>
+                <div class="lineTwo">
                   <span v-if='addressList.s[idx].detail.length'>{{ item.detail }}</span>
                   <span v-if='addressList.s[idx].detail.length == 0' class="prompt_color">请输入详情地址</span>
                 </div>
@@ -28,11 +28,11 @@
               <div class="load_unload_icon">
                 <div class="xie">{{ item.icon }}</div>
               </div>
-              <div class="oneTwo">
+              <div class="oneTwo" @click='unload_address_detail(idx)'>
                 <div class="AddressStart" @click='unload_ads_record(idx)'>
-                  <el-cascader :options="optionsAddress" v-model="addressList.e[idx].p_c_d"  :filterable="true"  :clearable="true"  @change="unload_ads"></el-cascader>
+                  <el-cascader :options="optionsAddress" v-model="addressList.e[idx].p_c_d" @change="unload_ads"></el-cascader>
                 </div>
-                <div class="lineTwo" @click='unload_address_detail(idx)'>
+                <div class="lineTwo">
                   <span v-if='addressList.e[idx].detail.length'>{{ item.detail }}</span>
                   <span v-if='addressList.e[idx].detail.length == 0' class="prompt_color">请输入详情地址</span>
                 </div>
@@ -128,6 +128,7 @@
 </template>
 <script type="text/javascript">
   import componentSelectBox from '@/components/componentSelectBox'
+  import $ from 'jquery'
   export default{
     name:"pg_publish",
     data(){
@@ -239,6 +240,11 @@
     },
     methods:{
 
+      fds(){
+
+        console.log(44)
+      },
+
       // 记住用户输入，存到vuex；数字精确2位小数
       input_change(v){
         if(v == "min_weight" || v == "max_weight" || v == "min_volume" || v == "max_volume" || v == "expected_cost"){
@@ -267,19 +273,26 @@
       },
       // 返回上一页
       goPrev(){
-        this.$store.state.pg_publish = {
-          load_pointList:[],
-          unload_pointList:[],
-          other_info:{goods_name:"", min_weight:"",max_weight:"",min_volume:"",max_volume:"",vehicle_type:"",load_time:"",remark:"",expected_cost:""},
-        }
+        
+        this.deleteVeux()
         this.$router.push({
           name:"publishGoods"
         })
       },
+      deleteVeux(){
+
+        this.$store.state.pg_publish = {
+          load_pointList:[],
+          unload_pointList:[],
+          other_info:{goods_name:"",min_weight:"",max_weight:"",min_volume:"",max_volume:"",vehicle_type:"",load_time:"",remark:"",expected_cost:""}
+        }
+      },
       load_ads_record(idx){
+
         this.ads_index = idx
       },
       unload_ads_record(idx){
+
         this.ads_index = idx
       },
       load_ads(value){
@@ -335,8 +348,8 @@
         this.load_unload_type_method()
       },
       vehicle_type_click(){
-        this.SelectBoxFlag = true;
 
+        this.SelectBoxFlag = true;
       },
       load_unload_type_method(){
         // 一装一卸
@@ -344,6 +357,17 @@
         loadUnloadType = loadUnloadType.replace(new RegExp('1','g'),"一")
         loadUnloadType = loadUnloadType.replace(new RegExp('2','g'),"两")
         this.load_unload_type = loadUnloadType
+        // 清空placeholder
+        this.$nextTick(() => {
+          $(".el-cascader .el-input--suffix .el-input__inner").each(function(index, item) {
+            item.placeholder = ""
+          })
+          var iii = $(".amap-mcode")
+          console.log(iii)
+          // $(".amap-mcode").each(function(index, item) {
+          //   item.placeholder = ""
+          // })
+        })
       },
       submit(){
 
@@ -432,12 +456,8 @@
         this.httpRequest_ygy("addGoods.do",postData,function(res){
 
           that.ifTips = true;
-          that.tips_Msg = "操作成功";
-          that.$store.state.pg_publish = {
-            load_pointList:[],
-            unload_pointList:[],
-            other_info:{goods_name:"", min_weight:"",max_weight:"",min_volume:"",max_volume:"",vehicle_type:"",load_time:"",remark:"",expected_cost:""},
-          }
+          that.tips_Msg = "操作成功"
+          this.deleteVeux()
           setTimeout(function(){
             that.$router.push({
               name:"publishGoods",
@@ -509,6 +529,10 @@
                   width: 100%;
                   border-bottom:1.5/50rem solid #eee;
                   font-weight: 600;
+                  pointer-events: none;
+                  .el-cascader{
+                    width: 100%;
+                  }
                 }
                 .lineTwo{
                   float: left;

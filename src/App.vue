@@ -660,4 +660,30 @@ header>.icon-huabanfuben::before{
   display: none;
 }
 
+// 高德发送位置
+.amap-ui-poi-picker-sugg{
+  font-size: 30/50rem;
+}
+// 去除高德地图logo
+.amap-logo{
+  visibility: hidden;
+  display: none;
+}
+.amap-mcode{
+  visibility: hidden;
+  display: none;
+}
+
+// 发货界面
+.pg_publish .el-cascader__label{
+  padding-left: 0;
+}
+.pg_publish .el-cascader .el-input__icon.el-icon-arrow-down{
+  display: none;
+}
+.pg_publish .el-cascader .el-input__inner{
+  padding-left: 0;
+
+}
+
 </style>

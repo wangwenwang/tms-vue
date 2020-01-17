@@ -1,54 +1,42 @@
 <template>
-  <div class="ChooseAddress">
+  <div class="SendLnglat">
     <header><i class="iconfont icon-xiangzuo1"  @click="goPrev"></i><span class="title_text">位置</span><span class="submit" @click='submit()'>确定&nbsp</span></header>
 
     <div class="container" id="container"></div>
 
-    <div id="pickerBox">
+    <div class="pickerBox">
       <input id="pickerInput" placeholder="输入关键字选取地点" />
-      <div id="poiInfo"></div>
     </div>
 
-    <div class="titleView">
-      <div class='title'>选址结果</div>
+    <div class="resultView">
+      <div class='resultTitle'>选址结果</div>
       <div class="line">
-        <div class='c'>经纬度:</div>
+        <div class='c'>经纬度：</div>
         <div id='lnglat' class='d'></div>
       </div>
       <div class="line">
-        <div class='c'>地址:</div>
-        <div id='address' class='d'></div>
+        <div class='c'>地址：</div>
+        <textarea id='address' class='e' v-model='address'></textarea>
       </div>
-<!--       <div class="line">
-        <div class='c'>最近的路口:</div>
-        <div id='nearestJunction' class='d'></div>
-      </div>
-      <div class="line">
-        <div class='c'>最近的路:</div>
-        <div id='nearestRoad' class='d'></div>
-      </div>
-      <div class="line">
-        <div class='c'>最近的POI:</div>
-        <div id='nearestPOI' class='d'></div>
-      </div> -->
     </div>
 
   </div>
 </template>
 <script type="text/javascript">
+  import $ from 'jquery'
   export default{
     data(){
       return{
-        headerText:"位置", //页面标题
-        TextContent:'确定', //确定位置
-        IfTextShow:false,  //是否显示确定按钮
-        lng:0, //经度
-        lat:0, //纬度
-        address:"", //地址
+        headerText:'位置',   //页面标题
+        TextContent:'确定',  //确定位置
+        IfTextShow:false,   //是否显示确定按钮
+        lng:0,              //经度
+        lat:0,              //纬度
+        address:"",         //地址
         whoPush:"",
-        type:"", //装货还是卸货  load   unload
-        index:0, // 下标 列表里第几个地址
-        p_c_d:[], // ["广东省","深圳市","龙华区"]
+        type:"",            //装货还是卸货  load   unload
+        index:0,            //下标 列表里第几个地址
+        p_c_d:[],           //["广东省","深圳市","龙华区"]
       }
     },
     created(){
@@ -59,6 +47,10 @@
       if(this.$route.query.index){
         this.index = this.$route.query.index;
       }
+      // 去除高德地图logo
+      this.$nextTick(() => {
+        $(".amap-copyright").css("visibility","hidden")
+      })
     },
     mounted(){
 
@@ -73,9 +65,9 @@
         var geolocation = new AMap.Geolocation({
           enableHighAccuracy: true,//是否使用高精度定位，默认:true
           timeout: 10000,          //超过10秒后停止定位，默认：5s
-          buttonPosition:'RB',    //定位按钮的停靠位置
+          buttonPosition:'RB',     //定位按钮的停靠位置
           buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)、
-          zoomToAccuracy: true,   //定位成功后是否自动调整地图视野到定位点
+          zoomToAccuracy: true,    //定位成功后是否自动调整地图视野到定位点
         })
         map.addControl(geolocation)
         geolocation.getCurrentPosition(function(status,result){
@@ -90,29 +82,27 @@
     methods:{
       // 返回上一页
       goPrev(){
-        this.$router.go(-1);
+
+        this.$router.go(-1)
       },
       submit(){
-
-        // this.$store.state.StoreInfo.longitude = this.lng;//经度
-        // this.$store.state.StoreInfo.latitude = this.lat;//纬度
 
         if(this.address == ""){
           this.$alert('未获取到地址', '提示', {
             confirmButtonText: '确定'
           })
-          return;
+          return
         }
         if(this.type == "装货点"){
-          this.$store.state.pg_publish.load_pointList[this.index].detail = this.address + "附近";
-          this.$store.state.pg_publish.load_pointList[this.index].lng = this.lng;
-          this.$store.state.pg_publish.load_pointList[this.index].lat = this.lat;
-          this.$store.state.pg_publish.load_pointList[this.index].p_c_d = this.p_c_d;
+          this.$store.state.pg_publish.load_pointList[this.index].detail = this.address
+          this.$store.state.pg_publish.load_pointList[this.index].lng = this.lng
+          this.$store.state.pg_publish.load_pointList[this.index].lat = this.lat
+          this.$store.state.pg_publish.load_pointList[this.index].p_c_d = this.p_c_d
         }else if(this.type == "卸货点"){
-          this.$store.state.pg_publish.unload_pointList[this.index].detail = this.address + "附近";
-          this.$store.state.pg_publish.unload_pointList[this.index].lng = this.lng;
-          this.$store.state.pg_publish.unload_pointList[this.index].lat = this.lat;
-          this.$store.state.pg_publish.unload_pointList[this.index].p_c_d = this.p_c_d;
+          this.$store.state.pg_publish.unload_pointList[this.index].detail = this.address
+          this.$store.state.pg_publish.unload_pointList[this.index].lng = this.lng
+          this.$store.state.pg_publish.unload_pointList[this.index].lat = this.lat
+          this.$store.state.pg_publish.unload_pointList[this.index].p_c_d = this.p_c_d
         }
 
         if(this.$store.state.userInfo.userType == "owner"){
@@ -127,7 +117,6 @@
           })
           
         }
-       
       },
       onComplete(data, map){
 
@@ -178,10 +167,6 @@
               district_or_township = "光明新区"
             }
 
-            
-
-
-            
             that.p_c_d = [province, city, district_or_township]
             document.getElementById('lnglat').innerHTML = positionResult.position;
             document.getElementById('address').innerHTML = positionResult.address;
@@ -197,9 +182,6 @@
             console.log(positionResult)
             document.getElementById('lnglat').innerHTML = ' '
             document.getElementById('address').innerHTML = ' '
-            // document.getElementById('nearestJunction').innerHTML = ' '
-            // document.getElementById('nearestRoad').innerHTML = ' '
-            // document.getElementById('nearestPOI').innerHTML = ' '
             that.lng = 0
             that.lat = 0
             that.address = ""
@@ -257,60 +239,69 @@
   }
 </script>
 <style lang="less" scoped>
-  .ChooseAddress{
+  .SendLnglat{
     width: 100%; 
     height: 100%;
+    overflow: hidden;
+    header{
+      .title_text{
+        float: left;
+        position: relative;
+        left: 50%;
+        top: 50%;
+        -webkit-transform: translate(-50%,-50%);
+        -ms-transform: translate(-50%,-50%);
+        transform: translate(-50%,-50%)
+      }
+      .submit{
+        float: right;
+        margin-right: 15/50rem;
+      }
+    }
     .container{
       width: 100%; 
-      height: 60%;
+      height: 70%;
     }
-    .titleView{
-      font-size: 27/50rem;
-    }
-    .title{
-      width: 100%;
-      background-color: #dadada
-    }
-    .title_text{
-      float: left;
-      position: relative;
-      left: 50%;
-      top: 50%;
-      -webkit-transform: translate(-50%,-50%);
-      -ms-transform: translate(-50%,-50%);
-      transform: translate(-50%,-50%)
-    }
-    .submit{
-      float: right;
-      margin-right: 15/50rem;
-    }
-    #pickerBox {
+    .pickerBox{
       position: absolute;
       z-index: 9999;
       top: 50px;
       right: 30px;
       width: 300px;
-    }
-    
-    #pickerInput {
-      width: 200px;
-      padding: 5px 5px;
-    }
-    
-    #poiInfo {
-      background: #fff;
-    }
-    .line{
-        height: 50/50rem;
-        margin-top: 12/50rem;
-      .c{
-        font-weight: 600;
-        margin-left: 15/50rem;
-        float: left;
+      #pickerInput {
+        width: 200px;
+        padding: 5px 5px;
       }
-      .d{
-        margin-left: 8/50rem;
-        float: left;
+    }
+
+    .resultView{
+      height: calc(30% - 1.8rem);
+      font-size: 27/50rem;
+      .resultTitle{
+        width: 100%;
+        background-color: #dadada;
+        padding: 12/50rem;
+      }
+      .line{
+        height: 70/50rem;
+        line-height: 70/50rem;
+        .c{
+          font-weight: bold;
+          padding-left: 15/50rem;
+          width: 110/50rem;
+          text-align: right;
+          float: left;
+        }
+        .d{
+          width: calc(100% - 3rem);
+          height: 75/50rem;
+          float: left;
+        }
+        .e{
+          width: calc(100% - 3rem);
+          height: 75/50rem;
+          float: left;
+        }
       }
     }
   }
