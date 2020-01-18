@@ -16,11 +16,9 @@
           <div class="title">车货信息</div>
           <div><span>车辆</span><span>{{sourceInfo.vehicleType}}</span></div>
           <div><span>货物</span>
-            <span>{{sourceInfo.productName}} ,</span> 
-            <span v-if='!sourceInfo.weight'>{{sourceInfo.min_weight}}~{{sourceInfo.max_weight}}吨&nbsp;</span>
-            <span v-if='sourceInfo.weight'>{{sourceInfo.max_weight}}吨&nbsp;</span>
-            <span v-if='!sourceInfo.volume'>{{sourceInfo.min_volume}}~{{sourceInfo.max_volume}}方&nbsp;</span>
-            <span v-if='sourceInfo.volume'>{{sourceInfo.max_volume}}方&nbsp;</span>
+            <span>{{sourceInfo.productName}} ,</span>
+            <span v-if='sourceInfo.weight'>{{sourceInfo.weight}}吨&nbsp;</span>
+            <span v-if='sourceInfo.volume'>{{sourceInfo.volume}}方&nbsp;</span>
           </div>
           <div>
             <span>特殊要求</span>
@@ -35,23 +33,22 @@
           <div class="date"><i class="iconfont icon-yidongduanicon-"></i>
             <span>{{sourceInfo.loadingTime}} 全天00：00-24：00可装</span>
           </div>
-          <div class="address1" v-for='(dataItem,index) in start_AddressData' :id="index"  :key="'info1-' + index">
+          <div class="address1" v-for='(dataItem,index) in data.start' :id="index" :key="'info1-' + index">
             <span class="i">装</span><span>{{dataItem.s_city}} {{dataItem.s_district}}</span>
             <div class="AddressDetail"> {{dataItem.s_address}}</div>
           </div>
-          <div class="address2" v-for='(dataItem,index) in end_AddressData' :id="index"  :key="'info2-' + index">
+          <div class="address2" v-for='(dataItem,index) in data.end' :id="index"  :key="'info2-' + index">
             <span class="i">卸</span><span>{{dataItem.e_city}} {{dataItem.e_district}}</span>
             <div class="AddressDetail"> {{dataItem.e_address}}</div>
           </div>
         </div>
 
-        <div v-if='owner_or_driver_userName != ""'  class="driverInfo">
-          <!-- <div v-if='$store.state.userInfo.userType == "owner"'>承运司机信息</div> -->
-          <div class="userImage"><img src="../../assets/images/defaultHead.png" class="userinfo-avatar"  alt=""></div>
+        <div v-if='owner_or_driver_userName != undefined' class="owner-driver-Info">
+          <div class="userImage"><img src="../../assets/images/defaultHead.png" class="userinfo-avatar" alt=""></div>
           <div class="rightContent">
             <div class="one">
               <div>{{ owner_or_driver_userName }}</div>
-              <div class="call"><i v-if='driverInfo.driver_tel' @click="callPhone(driverInfo.driver_tel)" class="iconfont icon-dianhua-copy"></i></div>
+              <div class="call"><i v-if='owner_or_driver_tel' @click="callPhone(owner_or_driver_tel)" class="iconfont icon-dianhua-copy"></i></div>
               <div class="todriverInfo">查看资料></div>
             </div>
             <div class="two">
@@ -65,27 +62,27 @@
           </div>
         </div>
 
-        <div v-if='$store.state.userInfo.userType == "owner" && bid_list.length > 0 && driverInfo.driver_id == ""' class="bid_info">
+        <div v-if='$store.state.userInfo.userType == "owner" && data.bid.length > 0 && data.driverInfo.driver_id == undefined' class="bid_info">
           <div class="title">竞价信息</div>
-          <div v-for='(item, index) in bid_list'  :id="index"  :key="'info3-' + index"  class="v-f-bid">
-            <div>￥{{ item.bid_price }} </div>
-            <div> {{ item.bid_name }}</div>
+          <div v-for='(item, index) in data.bid' :id="index" :key="'info3-' + index" class="v-f-bid">
+            <div>￥{{ item.bid_price }}</div>
+            <div>{{ item.bid_name }}</div>
             <div class="call"><i v-if='item.bid_tel' @click="callPhone(item.bid_tel)" class="iconfont icon-dianhua-copy"></i></div>
             <div @click="owner_confirm_driver(index, item.bid_price)">确认</div>
           </div>
         </div>
 
-        <div v-if='$store.state.userInfo.userType == "driver" && driverInfo.driver_price == ""' class="price">
+        <div v-if='$store.state.userInfo.userType == "driver" && data.driverInfo.driver_id == undefined' class="price">
           <span v-if="!shipmentMoney">当前报价：</span>
           <span v-if="shipmentMoney">我的竞价：</span>
-          <span v-if="sourceInfo.expectedCost">￥{{sourceInfo.expectedCost}}</span>
+          <span v-if="sourceInfo.expectedCost">￥{{ sourceInfo.expectedCost }}</span>
           <span v-if="shipmentMoney == '' && sourceInfo.expectedCost == ''" class="none">暂无报价</span>
-          <span v-if="shipmentMoney != '' && sourceInfo.expectedCost == '' ">￥{{shipmentMoney}}</span>
+          <span v-if="shipmentMoney != '' && sourceInfo.expectedCost == ''">￥{{shipmentMoney}}</span>
         </div>
 
         <!-- 司机端，货源未被承运 -->
-        <div v-if='$store.state.userInfo.userType == "driver" && shipDriverID == ""' class="btnList">
-          <div class="call"  @click="callPhone(ownerPhone)"><i class="iconfont icon-dianhua"></i>电话联系</div>
+        <div v-if='$store.state.userInfo.userType == "driver" && data.driverInfo.driver_id == undefined' class="btnList">
+          <div class="call" @click="callPhone(data.ownerInfo.owner_tel)"><i class="iconfont icon-dianhua"></i>电话联系</div>
           <div class="biddingPrice" v-if="sourceInfo.expectedCost"><i class="iconfont icon-xuanzhong" @click="driver_confirm_owner()"></i>确 认</div>
           <div class="biddingPrice" v-if="!sourceInfo.expectedCost" @click="DialogVisible = true"><i class="iconfont icon-jingjia"></i>竞 价</div>
           <el-dialog title="竞 价" :visible.sync="DialogVisible"  width="80%" top="50%" center>
@@ -98,7 +95,7 @@
           </el-dialog>
         </div>
 
-        <div v-if='driverInfo.driver_price' class="ShippingInfo">承运价格：￥{{driverInfo.driver_price}} </div>
+        <div v-if='data.driverInfo.driver_price' class="ShippingInfo">承运价格：￥{{ data.driverInfo.driver_price }} </div>
 
       </div>
     </div>
@@ -106,7 +103,7 @@
       <!-- 页面数据为空时 -->
     <div v-if="is_NoData" class="NoData" >
       <div>
-        <i class="iconfont icon-meiyouwuliuxinxi" ></i>
+        <i class="iconfont icon-meiyouwuliuxinxi"></i>
         <div>{{is_NoData_text}}</div>
       </div>
     </div>
@@ -131,23 +128,30 @@
         DialogVisible:false,
         v_shipmentMoney:'',//司机竞价
         shipmentMoney:'',  //司机竞价，服务器返回值
-        ownerPhone:'',     //货主电话
         sourceInfo:{},
-        start_AddressData:[],  //装点详情
-        end_AddressData:[],    //卸点详情
         whoPush:"",
-        bid_list:[],     //竞价列表
-        driverInfo:[],   //承运司机信息
-        shipDriverID:"", //承运司机id
-        ownerInfo:[],    //货主信息
         owner_or_driver_userName:"",//货主/承运司机名称
+        owner_or_driver_tel:"",//货主/承运司机电话
+        data:{"driverInfo":{"driver_price":""},"bid":[]},
       }
     },
     created(){
 
-      if(this.$route.query.sourceInfo){
+      var that = this
 
+      if(this.$route.query.sourceInfo){
+        
         this.sourceInfo = this.$route.query.sourceInfo;//货源详情
+        if(this.sourceInfo.min_weight == this.sourceInfo.max_weight){
+          this.sourceInfo.weight = this.sourceInfo.min_weight
+        }else{
+          this.sourceInfo.weight = this.sourceInfo.min_weight + "~" + this.sourceInfo.max_weight
+        }
+        if(this.sourceInfo.min_volume == this.sourceInfo.max_volume){
+          this.sourceInfo.volume = this.sourceInfo.min_volume
+        }else{
+          this.sourceInfo.volume = this.sourceInfo.min_volume + "~" + this.sourceInfo.max_volume
+        }
       }
       if(this.$route.query.whoPush){
 
@@ -158,35 +162,31 @@
         this.orderstate = this.$route.query.orderState;//订单类型
       }
 
-      var that = this;
       var postData = {
           appUserId: that.$store.state.userInfo.user_id,//用户ID
           sourceNo: that.sourceInfo.sourceNo,//货源单号
           userType: that.$store.state.userInfo.userType,//用户身份
           shipDriverID: that.sourceInfo.shipDriverID,//承运司机ID
       }
-      //查询装卸点、承运司机信息
+      // 查询装卸点、承运司机信息
       that.httpRequest_ygy("cargoDetail.do",postData,function(res){
-        that.start_AddressData = res.data.start;
-        that.end_AddressData = res.data.end;
-        that.driverInfo = res.data.driverInfo;
-        that.ownerInfo = res.data.ownerInfo;
-        that.bid_list = res.data.bid; 
-        that.shipDriverID = res.data.driverInfo.driver_id;
+
+        that.data = res.data
         
         if(that.$store.state.userInfo.userType == "driver"){
-          that.owner_or_driver_userName = res.data.ownerInfo.owner_name;
-          that.ownerPhone = res.data.ownerInfo.owner_tel;
-          //获取司机自己的竞价
-          for (var i = res.data.bid.length - 1; i >= 0; i--) {
-            if(res.data.bid[i].bid_driver_id == that.$store.state.userInfo.user_id){
-              that.bid_list = res.data.bid[i];
-              that.shipmentMoney = that.bid_list.bid_price
+          that.owner_or_driver_userName = that.data.ownerInfo.owner_name;
+          that.owner_or_driver_tel = that.data.ownerInfo.owner_tel;
+          // 获取司机自己的竞价
+          for (var i = that.data.bid.length - 1; i >= 0; i--) {
+            if(that.data.bid[i].bid_driver_id == that.$store.state.userInfo.user_id){
+              that.shipmentMoney = that.data.bid[i].bid_price
+              console.log(that.data.bid[i].bid_price)
             }
           }
         }
         if(that.$store.state.userInfo.userType == "owner"){
-          that.owner_or_driver_userName = res.data.driverInfo.driver_name;
+          that.owner_or_driver_userName = that.data.driverInfo.driver_name
+          that.owner_or_driver_tel = that.data.driverInfo.driver_name
         }
       })
     },
@@ -197,7 +197,7 @@
         var that = this;
         var postData = {
           sourceNo: that.sourceInfo.sourceNo,//货源单号
-          shipDriverId: that.bid_list[index].bid_driver_id,//司机id
+          shipDriverId: that.data.bid[index].bid_driver_id,//司机id
           expectedCost: price,//司机竞价
         }
         that.httpRequest_ygy("toTms.do",postData,function(res){
@@ -230,7 +230,7 @@
           shipDriverId: that.$store.state.userInfo.user_id,//司机id
           expectedCost: that.sourceInfo.expectedCost,//货主报价
         }
-        //货主提供报价，司机确定接单
+        // 货主提供报价，司机确定接单
         that.httpRequest_ygy("toTms.do",postData,function(res){
           if(res.status == 1){
             that.ifTips = true;
@@ -255,8 +255,8 @@
 
           var that = this
           var postData = {
-            sourceNo: that.sourceInfo.sourceNo,//货源单号
-            compPrice: that.v_shipmentMoney,//竞价
+            sourceNo: that.sourceInfo.sourceNo, //货源单号
+            compPrice: that.v_shipmentMoney,    //竞价
           }
           this.httpRequest_ygy("driverBidding.do",postData,function(res){
             if(res.status == 1){
@@ -264,7 +264,7 @@
               that.ifTips = true;
               that.tips_Msg = "竞价成功";
               setTimeout(function(){
-                //竞价成功后刷新当前页面
+                // 竞价成功后刷新当前页面
                 that.$router.push({
                   name:"goodsSource",
                 })
@@ -405,7 +405,7 @@
           }
         }
 
-        .driverInfo{
+        .owner-driver-Info{
           height: 180/50rem;
           padding: 20/50rem  40/50rem  25/50rem 20/50rem;
           border-bottom: 15/50rem solid #F4F4F4;
