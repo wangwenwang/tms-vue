@@ -48,7 +48,8 @@
 
             <div>
               <div><span>货物名称</span></div>
-              <div><input   placeholder='输入货物名称'  v-on:input="input_change('goods_name')"  v-model='goods_name'></input></div>
+              <div @click='goods_name_click'><span>{{goods_name}}</span>
+              </div>
             </div>
 
             <div>
@@ -145,7 +146,9 @@
         load_unload_type:"",//几装几卸
         SelectBoxFlag:false,//弹出选择框是否显示
         SelectBoxList:[],//弹出框选择数据列表
-        BouncedName:"车型",
+        vehicleList:[],//弹框车型列表
+        goodsList:[],//弹框货物列表
+        BouncedName:"",
         load_time:"",//装货时间
         remark:"",//备注
         expected_cost:"",//期望金额
@@ -235,15 +238,20 @@
         for(var i = 0; i < res.data.length; i++){
           res.data[i].name = res.data[i].vehicleType
         }
-        that.SelectBoxList = res.data
+
+        that.vehicleList = res.data
       })
+
+      this.httpRequest_ygy("queryProdcutName.do","",function(Prodcutres){
+
+        for(var i = 0; i < Prodcutres.data.length; i++){
+          Prodcutres.data[i].name = Prodcutres.data[i].productName
+        }
+        that.goodsList = Prodcutres.data
+      })
+
     },
     methods:{
-
-      fds(){
-
-        console.log(44)
-      },
 
       // 记住用户输入，存到vuex；数字精确2位小数
       input_change(v){
@@ -261,16 +269,7 @@
         d = d < 10 ? ('0' + d) : d
         return y + '-' + m + '-' + d
       },
-      // 选中某个车型
-      selectedItem(index){
-        this.vehicle_type = this.SelectBoxList[index].name
-        this.$store.state.pg_publish.other_info.vehicle_type = this.vehicle_type
-        this.SelectBoxFlag = false
-      },
-      // 取消按钮 弹出选择框
-      selectCancel(){
-        this.SelectBoxFlag = false
-      },
+
       // 返回上一页
       goPrev(){
         
@@ -347,8 +346,30 @@
         }
         this.load_unload_type_method()
       },
+      // 选中弹框中的某个值
+      selectedItem(index){
+        if(this.BouncedName == "车型"){
+          this.vehicle_type = this.SelectBoxList[index].name
+          this.$store.state.pg_publish.other_info.vehicle_type = this.vehicle_type
+        }
+        if(this.BouncedName == "货物"){
+          this.goods_name = this.SelectBoxList[index].name
+          this.$store.state.pg_publish.other_info.goods_name = this.goods_name
+        }
+        this.SelectBoxFlag = false
+      },
+      // 取消按钮 弹出选择框
+      selectCancel(){
+        this.SelectBoxFlag = false
+      },
       vehicle_type_click(){
-
+        this.BouncedName = "车型";
+        this.SelectBoxList = this.vehicleList;
+        this.SelectBoxFlag = true;
+      },
+      goods_name_click(){
+        this.BouncedName = "货物";
+        this.SelectBoxList = this.goodsList;
         this.SelectBoxFlag = true;
       },
       load_unload_type_method(){
@@ -362,11 +383,6 @@
           $(".el-cascader .el-input--suffix .el-input__inner").each(function(index, item) {
             item.placeholder = ""
           })
-          var iii = $(".amap-mcode")
-          console.log(iii)
-          // $(".amap-mcode").each(function(index, item) {
-          //   item.placeholder = ""
-          // })
         })
       },
       submit(){
