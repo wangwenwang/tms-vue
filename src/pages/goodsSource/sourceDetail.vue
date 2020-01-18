@@ -142,6 +142,13 @@
       if(this.$route.query.sourceInfo){
         
         this.sourceInfo = this.$route.query.sourceInfo;//货源详情
+        
+        if(this.sourceInfo.mileage){
+          this.sourceInfo.mileage = this.sourceInfo.mileage/1000;
+          let tempVal = parseFloat(this.sourceInfo.mileage).toFixed(2)
+          this.sourceInfo.mileage = tempVal.substring(0, tempVal.length - 1)
+        }
+
         if(this.sourceInfo.min_weight == this.sourceInfo.max_weight){
           this.sourceInfo.weight = this.sourceInfo.min_weight
         }else{
