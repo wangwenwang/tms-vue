@@ -97,6 +97,10 @@
 
         <div v-if='data.driverInfo.driver_price' class="ShippingInfo">承运价格：￥{{ data.driverInfo.driver_price }} </div>
 
+        <div v-if='$store.state.userInfo.userType == "owner" && data.driverInfo.driver_price == undefined && sourceInfo.expectedCost' class="ShippingInfo">我的报价：￥{{ sourceInfo.expectedCost }}</div>
+
+        <div v-if='$store.state.userInfo.userType == "owner" && data.driverInfo.driver_price == undefined && !sourceInfo.expectedCost && data.bid.length == 0' class="ShippingInfo">暂无报价</div>
+
       </div>
     </div>
 
