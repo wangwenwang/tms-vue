@@ -55,6 +55,8 @@
           <div class="userImage">
             <img  v-if="dataItem.pictures"  class="userinfo-avatar" :src="dataItem.pictures" alt="">
             <img  v-if="!dataItem.pictures"  class="userinfo-avatar"  src="../../assets/images/defaultHead.png" alt="">
+            <!-- <img  class="userinfo-avatar"  :src="dataItem.pictures ? dataItem.pictures : '{{pictures}}'"> -->
+            
           </div>
           <div class="rightContent">
             <div class="one">
@@ -115,6 +117,7 @@ import $ from 'jquery'
     data(){
       return{
         noDataShow:false,//没有数据
+        pictures:'../../assets/images/defaultHead.png',
         xiaoxiSum:'10',//新消息数量
         optionsAddress:[],//地址
         options3:[],
@@ -222,9 +225,8 @@ import $ from 'jquery'
         }
         // 获取货源信息
         that.httpRequest_ygy("peripheralResourcesList.do",AddressData,function(goodsSourceRes){
-
-          that.goodsSourcedata = goodsSourceRes.data;
-          if(that.goodsSourcedata.length){
+          if(goodsSourceRes.data.length){
+            that.goodsSourcedata = goodsSourceRes.data;
             that.noDataShow = false;
             for( var i=0; i<goodsSourceRes.data.length; i++){
 
@@ -264,27 +266,32 @@ import $ from 'jquery'
            "c_address3":"",//终点区
         }
         // 获取货源列表信息
-        that.httpRequest_ygy("peripheralResourcesList.do",AddressData,function(goodsSourceRes){
-          that.goodsSourcedata = goodsSourceRes.data;
-          for( var i=0; i<goodsSourceRes.data.length; i++){ 
+        that.httpRequest_ygy("peripheralResourcesList.do",AddressData,function(Res){
+          if(Res.data.length){
+            that.goodsSourcedata = Res.data;
+            that.noDataShow = false;
+            for( var i=0; i<Res.data.length; i++){ 
 
-            if(goodsSourceRes.data[i].publishTime.substring(0,10) == that.nowDate){
+              if(Res.data[i].publishTime.substring(0,10) == that.nowDate){
 
-              goodsSourceRes.data[i].publishTime = goodsSourceRes.data[i].publishTime.substring(11,16);
-            }else{
-              goodsSourceRes.data[i].publishTime = goodsSourceRes.data[i].publishTime.substring(5,10);
+                Res.data[i].publishTime = Res.data[i].publishTime.substring(11,16);
+              }else{
+                Res.data[i].publishTime = Res.data[i].publishTime.substring(5,10);
+              }
+              if(Res.data[i].min_weight == Res.data[i].max_weight){
+            	
+                Res.data[i].weight = true;
+              }
+              if(Res.data[i].min_volume == Res.data[i].max_volume){
+             	
+             	  Res.data[i].volume = true;
+              }
+              that.goodsSourcedata[i].distance = Res.data[i].distance/1000;
+              let tempVal = parseFloat(that.goodsSourcedata[i].distance).toFixed(2)
+              that.goodsSourcedata[i].distance = tempVal.substring(0, tempVal.length - 1)
             }
-            if(goodsSourceRes.data[i].min_weight == goodsSourceRes.data[i].max_weight){
-          	
-              goodsSourceRes.data[i].weight = true;
-            }
-            if(goodsSourceRes.data[i].min_volume == goodsSourceRes.data[i].max_volume){
-           	
-           	  goodsSourceRes.data[i].volume = true;
-            }
-            that.goodsSourcedata[i].distance = goodsSourceRes.data[i].distance/1000;
-            let tempVal = parseFloat(that.goodsSourcedata[i].distance).toFixed(2)
-            that.goodsSourcedata[i].distance = tempVal.substring(0, tempVal.length - 1)
+          }else{
+            that.noDataShow = true;
           }
         })
       },

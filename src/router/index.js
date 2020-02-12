@@ -99,6 +99,8 @@ import od_bid from '@/pages/home/order/od_bid'  //竞价中
 import MyPublish from '@/pages/home/MyPublish'  
 //车源列表
 import PublishList from '@/pages/home/PublishList'  
+//评价
+import ToEvaluate from '@/pages/home/ToEvaluate'
 
 
 
@@ -301,6 +303,12 @@ export default new Router({
       path: '/SendLnglat',
       name: 'SendLnglat',
       component: SendLnglat
+    },
+    // 评价
+    {
+      path: '/ToEvaluate',
+      name: 'ToEvaluate',
+      component: ToEvaluate
     },
   ]
 })

@@ -1,10 +1,10 @@
 <template>
   <div class="componentOrderItem">
     <div class="orderArrContent">
-      <div class='orderArr' v-for='(item, idx) in orderArr'  :id="idx"  :key='idx'  @click="tosourceDetail(idx)">
+      <div class='orderArr' v-for='(item, idx) in orderArr'  :id="idx"  :key='idx'>
         <div class="contentInFor">
 
-          <div class="one">
+          <div class="one"  @click="tosourceDetail(idx)">
             <span>{{item.carrierCity}} </span><span> {{item.carrierAddress3}}</span>
             <span> → </span>
             <span>{{item.c_city}} </span><span> {{item.c_address3}}</span>
@@ -30,6 +30,7 @@
               <span v-if='item.loadUnloadType'>{{item.loadUnloadType}} </span>
             </div>
             <div class='status' v-if='!orderState' :style='{background:item.STATUS_color}'>{{item.STATUS_text}}</div>
+            <div class="btnEvaluate" @click="btnEvaluateClick1(idx)" v-if='orderState == "NON-RATE"'>评价</div>
           </div>
 
         </div>
@@ -67,6 +68,19 @@
           }
         })
       },
+      // 跳转到 发布评价 页面
+      btnEvaluateClick1(idx){
+       
+        var sourceInfo = this.orderArr[idx];
+        this.$router.push({
+          name:"ToEvaluate",
+          query:{
+            sourceInfo:sourceInfo,
+            whoPush:"od_bid",
+            orderState:this.orderState
+          }
+        })
+      },
   	}
   }
 </script>
@@ -92,18 +106,22 @@
             }
           }
           .two{
+            display: flex;
             .left{
               width: 402/50rem;
               overflow: hidden;
               text-overflow:ellipsis;
               white-space: nowrap;
-              float: left;
+              // float: left;
+              display: flex;
+
             }
             .distance{
               font-size: 24/50rem;
               color: #999;
-              float: right;
+              display: flex;
             }
+
           }
           .three{
             .left{
@@ -135,6 +153,16 @@
               color: #fff;
               padding-right: 10/50rem;
 
+            }
+             .btnEvaluate{
+              width: 100/50rem;
+              line-height: 50/50rem;
+              color: #FD763A;
+              border: 1/50rem solid #FD763A;
+              border-radius: 25/50rem;
+              float: right;
+              margin-bottom: 50/50rem;
+              text-align: center;
             }
           }
           .four{

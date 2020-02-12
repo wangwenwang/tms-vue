@@ -115,7 +115,7 @@
               if(that.orderState ==  ""){
                 if(that.orderArr[i].status == 'NEW'){//待装货
 
-                  that.orderArr[i].STATUS_color = '#85BE9F';
+                  that.orderArr[i].STATUS_color = '#89CE8B';
                   that.orderArr[i].STATUS_text = '新 建 ';
 
                 }else if(that.orderArr[i].status == 'NON-CONFIRM'){//待确认 F28695
@@ -135,7 +135,7 @@
 
                 }else if(that.orderArr[i].status == 'NON-RATE'){//待评价
 
-                  that.orderArr[i].STATUS_color = '#89CE8B';
+                  that.orderArr[i].STATUS_color = '#FE8B44';
                   that.orderArr[i].STATUS_text = '待评价';
 
                 }else if(that.orderArr[i].status == 'CANCEL'){//已取消

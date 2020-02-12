@@ -282,8 +282,8 @@ header>.icon-huabanfuben::before{
 }
 
 .goodsSource .el-cascader__label, .goodsSource .el-input__inner {
-  padding-left: 25/50rem;
-  width: 160/50rem;
+  padding-left: 10/50rem;
+  width: 165/50rem;
   border-style: none;
   border-radius:0;
 }
