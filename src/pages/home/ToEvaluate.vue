@@ -84,25 +84,11 @@
 	},
 	created(){
 	  if(this.$route.query.sourceInfo){
-        this.sourceInfo = this.$route.query.sourceInfo;//货源详情\
+        this.sourceInfo = this.$route.query.sourceInfo;//货源详
       }
       
       if(this.$route.query.orderState){
-        this.orderState = this.$route.query.orderState;//货源详情\
-      }
-      if(this.value1){
-      	if(this.value1 == 1){
-	      this.rate = "非常差";
-	    }else if(this.value1 == 2){
-	      this.rate = "差";
-	    }else if(this.value1 == 3){
-	      this.rate = "一般";
-	    }else if(this.value1 == 4){
-	      this.rate = "好";
-	    }else if(this.value1 == 5){
-	      this.rate = "非常好";
-	    }
-	    console.log(this.value1)
+        this.orderState = this.$route.query.orderState;//订单状态
       }
       var that = this;
       var params = {
@@ -115,8 +101,6 @@
 	      that.pictures = res.data.driver_avatar;
 		}
 	  })
-      
-
 	},
 	
 	methods:{
@@ -128,7 +112,7 @@
 		  query:{
 		  	sourceInfo:this.sourceInfo,
             whoPush:"ToEvaluate",
-            orderState:this.orderState
+            orderState:"NON-RATE"
 		  }
 		})
 	  },
@@ -145,32 +129,30 @@
 		  })  
 	      return;
 	    }else{
-	      var params = {
-		    "shipDriverID": that.sourceInfo.shipDriverID,
-		    "vSourceNo": that.sourceInfo.sourceNo,
-	        "evalLevel": that.value1,
-		    "evalContent": that.rateDescribe,
-		  };
+	      	var params = {
+			  "shipDriverID": that.sourceInfo.shipDriverID,
+			  "sourceNo": that.sourceInfo.sourceNo,
+		      "evalLevel": that.value1,
+			  "evalContent": that.rateDescribe,
+		    };
 		    that.httpRequest_ygy( "ownerEvaluate.do",params,function(res){
 
-			    that.ifTips = true;
-				that.tips_Msg = "发布成功";
-			  // if(res.data.length){
+			  that.ifTips = true;
+			  that.tips_Msg = "发布成功";
+			   //if(res.data.length){
 				 // this.pictures = res.data.driver_avatar;
 			  // }
-			 
-
-				setTimeout(function(){
-
-					that.ifTips = false;
-
-					that.$router.push({
-						name:"HomeIndex",
-						query:{
-						}
-					})
-				},1500)
+			  setTimeout(function(){  
+			  	that.ifTips = false;  
+			  	that.$router.push({
+			  	  name:"HomeIndex",
+			  	  query:{
+			  	  }
+			  	})
+			  },1500)
             })
+	      
+	      
 		}
       }
 	}

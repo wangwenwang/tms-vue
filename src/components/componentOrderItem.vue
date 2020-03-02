@@ -29,8 +29,19 @@
               <span v-if='item.loadingTime'>{{item.loadingTime}}装货 , </span>
               <span v-if='item.loadUnloadType'>{{item.loadUnloadType}} </span>
             </div>
-            <div class='status' v-if='!orderState' :style='{background:item.STATUS_color}'>{{item.STATUS_text}}</div>
-            <div class="btnEvaluate" @click="btnEvaluateClick1(idx)" v-if='orderState == "NON-RATE"'>评价</div>
+
+            <div v-if='$store.state.userInfo.userType == "owner"'>
+              <div class='status' v-if='!orderState' :style='{background:item.STATUS_color}'>{{item.STATUS_text}}</div>
+              <div class="btnEvaluate" @click="btnEvaluateClick1(idx)" v-if='orderState == "NON-RATE" && item.ownerComment == "F"'>评价</div>
+              <div class="btnEvaluate" v-if='orderState == "NON-RATE" && item.ownerComment == "T"'>已评价</div>
+            </div>
+
+            <div v-if='$store.state.userInfo.userType == "driver"'>
+              <div class='status' v-if='!orderState' :style='{background:item.STATUS_color}'>{{item.STATUS_text}}</div>
+              <div class="btnEvaluate" @click="btnEvaluateClick1(idx)" v-if='orderState == "NON-RATE" && item.driverComment == "F"'>评价</div>
+              <div class="btnEvaluate" v-if='orderState == "NON-RATE" && item.driverComment == "T"'>已评价</div>
+            </div>
+            
           </div>
 
         </div>
@@ -161,7 +172,6 @@
               border: 1/50rem solid #FD763A;
               border-radius: 25/50rem;
               float: right;
-              margin-bottom: 50/50rem;
               text-align: center;
             }
           }

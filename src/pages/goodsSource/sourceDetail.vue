@@ -49,7 +49,7 @@
             <div class="one">
               <div>{{ owner_or_driver_userName }}</div>
               <div class="call"><i v-if='owner_or_driver_tel' @click="callPhone(owner_or_driver_tel)" class="iconfont icon-dianhua-copy"></i></div>
-              <div class="todriverInfo">查看资料></div>
+              <div class="todriverInfo" @click="toUserIntroduction()">查看资料></div>
             </div>
             <div class="two">
               <span>交易999  </span>
@@ -126,17 +126,19 @@
     data(){
       return{
         is_NoData:false,
-        ifTips:false,      //提示信息是否显示
+        ifTips:false,       //提示信息是否显示
         is_NoData_text:"没有信息",
         orderstate:'',
         DialogVisible:false,
-        v_shipmentMoney:'',//司机竞价
-        shipmentMoney:'',  //司机竞价，服务器返回值
+        v_shipmentMoney:'', //司机竞价
+        shipmentMoney:'',   //司机竞价，服务器返回值
         sourceInfo:{},
         whoPush:"",
-        owner_or_driver_userName:"",//货主/承运司机名称
-        owner_or_driver_tel:"",//货主/承运司机电话
+        owner_or_driver_userName:"", //货主/承运司机名称
+        owner_or_driver_tel:"",      //货主/承运司机电话
+        owner_or_driver_ID:"",       //货主/承运司机ID
         data:{"driverInfo":{"driver_price":""},"bid":[]},
+        // select_userType:""  //被查看的货主/承运司机身份
       }
     },
     created(){
@@ -187,6 +189,7 @@
         if(that.$store.state.userInfo.userType == "driver"){
           that.owner_or_driver_userName = that.data.ownerInfo.owner_name;
           that.owner_or_driver_tel = that.data.ownerInfo.owner_tel;
+          that.owner_or_driver_ID = that.data.ownerInfo.owner_Id;
           // 获取司机自己的竞价
           for (var i = that.data.bid.length - 1; i >= 0; i--) {
             if(that.data.bid[i].bid_driver_id == that.$store.state.userInfo.user_id){
@@ -198,6 +201,9 @@
         if(that.$store.state.userInfo.userType == "owner"){
           that.owner_or_driver_userName = that.data.driverInfo.driver_name
           that.owner_or_driver_tel = that.data.driverInfo.driver_name
+          that.owner_or_driver_ID = that.data.driverInfo.driver_id;
+
+
         }
       })
     },
@@ -294,6 +300,16 @@
 
         this.v_shipmentMoney = ""
         this.DialogVisible = false
+      },
+      //查看司机/货主资料
+      toUserIntroduction(){
+        this.$router.push({
+          name:"UserIntroduction",
+          query:{
+            UserID:this.owner_or_driver_ID,
+            sourceInfo:this.sourceInfo,
+          }
+        })
       },
       // 返回上一页
       goPrev(){

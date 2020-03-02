@@ -8,7 +8,7 @@
         <div v-if='$store.state.userInfo.userType == "driver"'  class="toSure" @click='choseToSure'>竞价中</div>
         <div class="toloading" @click='choseToloading'>待装货</div>
         <div class="toTransit" @click='choseTransit'>运输中</div>
-        <div class="toEvaluate" @click='choseToEvaluate'>待评价</div>
+        <div class="toEvaluate" @click='choseToEvaluate'>评价</div>
         <div class="cancel" @click='choseCancel'>取消</div>
       </div>
       <div class="orderList">
@@ -133,10 +133,10 @@
                   that.orderArr[i].STATUS_color = '#FACE51';
                   that.orderArr[i].STATUS_text = '运输中';
 
-                }else if(that.orderArr[i].status == 'NON-RATE'){//待评价
+                }else if(that.orderArr[i].status == 'NON-RATE'||that.orderArr[i].status == 'HAS-EVAL'){//待评价
 
                   that.orderArr[i].STATUS_color = '#FE8B44';
-                  that.orderArr[i].STATUS_text = '待评价';
+                  that.orderArr[i].STATUS_text = '已完成';
 
                 }else if(that.orderArr[i].status == 'CANCEL'){//已取消
 

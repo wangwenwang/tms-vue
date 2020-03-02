@@ -93,14 +93,11 @@ import HomeIndex from '@/pages/home/home'  //个人中心首页
 import HistoricalTrack from '@/pages/home/HistoricalTrack'  //历史轨迹
 import PersonalData from '@/pages/home/PersonalData'  //个人资料
 import RePassword from '@/pages/home/RePassword'  //修改密码
-// 我的订单
-import od_bid from '@/pages/home/order/od_bid'  //竞价中
-//我的发布 
-import MyPublish from '@/pages/home/MyPublish'  
-//车源列表
-import PublishList from '@/pages/home/PublishList'  
-//评价
-import ToEvaluate from '@/pages/home/ToEvaluate'
+import od_bid from '@/pages/home/order/od_bid'  // 我的订单
+import MyPublish from '@/pages/home/MyPublish'  //我的发布 
+import PublishList from '@/pages/home/PublishList'  //车源列表
+import ToEvaluate from '@/pages/home/ToEvaluate'  //评价
+import UserIntroduction from '@/pages/home/UserIntroduction'  //货主/司机简介
 
 
 
@@ -309,6 +306,12 @@ export default new Router({
       path: '/ToEvaluate',
       name: 'ToEvaluate',
       component: ToEvaluate
+    },
+    // 货主/司机简介
+    {
+      path: '/UserIntroduction',
+      name: 'UserIntroduction',
+      component: UserIntroduction
     },
   ]
 })
