@@ -79,6 +79,7 @@
             <div>{{ item.bid_name }}</div>
             <div class="call"><i v-if='item.bid_tel' @click="callPhone(item.bid_tel)" class="iconfont icon-dianhua-copy"></i></div>
             <div @click="owner_confirm_driver(index, item.bid_price)">确认</div>
+            <div @click="owner_view_driver(index)">查看资料</div>
           </div>
         </div>
 
@@ -286,6 +287,17 @@
           var x = b[key];
           var y = a[key];
           return((x<y)?-1:((x>y)?1:0));
+        })
+      },
+      // 竞价时，货主查看司机资料
+      owner_view_driver(index){
+
+        this.$router.push({
+          name:"UserIntroduction",
+          query:{
+            UserID: this.data.bid[index].bid_driver_id,//司机id
+            sourceInfo: this.sourceInfo
+          }
         })
       },
       // 竞价时，货主确认司机
@@ -602,11 +614,20 @@
               }
               &:nth-child(3){
                 position: absolute;
-                left: 350/50rem;
+                left: 270/50rem;
               }
               &:nth-child(4){
                 float: right;
                 margin-left: 90/50rem;
+                background-color: #5965D8;
+                color: white;
+                font-size: 24/50rem;
+                padding: 0/50rem  20/50rem  0/50rem 20/50rem;
+                border-radius: 7/50rem;
+              }
+              &:nth-child(5){
+                float: right;
+                margin-right: -20/50rem;
                 background-color: #5965D8;
                 color: white;
                 font-size: 24/50rem;

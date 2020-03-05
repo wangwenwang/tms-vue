@@ -77,8 +77,10 @@
   	    "id": that.UserID,//查看资料的id
   	  };  
   	  that.httpRequest_ygy("personalData.do",postData,function(res){  
+
+        that.userInfo = res.data.userInfo;
+          
   	  	if(res.data.evalInfo.length){  
-  	      that.userInfo = res.data.userInfo;
   	      that.evalInfo = res.data.evalInfo;
 
   	      that.userInfo.registerDate = that.userInfo.registerDate.substring(0,10);
@@ -91,7 +93,7 @@
             }else{
               that.evalInfo[i].evalDate = that.evalInfo[i].evalDate.substring(0,10);
             }
-		  }
+		      }
   	  	}else{ 
   	  	  that.is_NoData = true;
   	  	}  
