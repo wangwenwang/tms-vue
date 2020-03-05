@@ -685,5 +685,58 @@ header>.icon-huabanfuben::before{
   padding-left: 0;
 
 }
+.sourceDetail .sort .el-input--suffix .el-input__inner {
+  border-style: none;
+  border-radius: 0;
+  height: 65/50rem;
+}
+
+// 自建的confirm选择框
+.selfconfirm{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 99;
+}
+.selfconfirm_contianer{
+  width: 80%;
+  background-color: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  border-radius:10/50rem;
+  .selfconfirm_head{
+    font-size: 34/50rem;
+    font-weight:700;
+    text-align: center;
+    margin-top: 20/50rem;
+  }
+  .selfconfirm_content{
+    font-size:32/50rem;
+    padding:30/50rem 10/50rem;
+    line-height: 60/50rem;
+    text-align: center;
+    box-sizing:border-box;
+  }
+  .selfconfirm_btn{
+    font-size: 30/50rem;
+    overflow: hidden;
+    border-top:1/50rem solid #777;
+    &>div{
+      float: left;
+      width: 50%;
+      text-align: center;
+      line-height: 80/50rem;
+      &:nth-child(1){
+        border-right:1/50rem solid #777;
+        box-sizing:border-box;
+      }
+    }
+  }
+}
 
 </style>

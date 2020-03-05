@@ -63,7 +63,17 @@
         </div>
 
         <div v-if='$store.state.userInfo.userType == "owner" && data.bid.length > 0 && data.driverInfo.driver_id == undefined' class="bid_info">
-          <div class="title">竞价信息</div>
+          <div class="title-">
+            <div class="prompt">竞价信息</div>
+            <div class="sort">
+              <template>
+                <el-select v-model="value" placeholder="按时间降序" @change='sort_click($event)'>
+                  <el-option v-for="item in optionsSort" :key="item.value" :label="item.label" :value="item.value">
+                  </el-option>
+                </el-select>
+              </template>
+            </div>
+          </div>
           <div v-for='(item, index) in data.bid' :id="index" :key="'info3-' + index" class="v-f-bid">
             <div>￥{{ item.bid_price }}</div>
             <div>{{ item.bid_name }}</div>
@@ -118,6 +128,17 @@
       </div>
     </div>
 
+    <div class="selfconfirm" v-if="selfconfirm_show">
+      <div class="selfconfirm_contianer">
+        <div class="selfconfirm_head">提示</div>
+        <div class="selfconfirm_content">{{ confirmcontent }}</div>
+        <div class="selfconfirm_btn">
+          <div @click='selfconfirm_cancel()'>取消</div>
+          <div @click='selfconfirm_confirm_()'>确认</div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 <script type="text/javascript">
@@ -139,6 +160,17 @@
         owner_or_driver_ID:"",       //货主/承运司机ID
         data:{"driverInfo":{"driver_price":""},"bid":[]},
         // select_userType:""  //被查看的货主/承运司机身份
+        optionsSort: [{
+          value: '时间',
+          label: '按时间降序'
+        }, {
+          value: '价格',
+          label: '按价格降序'
+        }],
+        value: '',
+        bid_time_desc: [],
+        confirmcontent: "",     //自建confirm提示内容
+        selfconfirm_show: false //自建confirm是否显示提示框
       }
     },
     created(){
@@ -210,34 +242,85 @@
       })
     },
     methods:{
+      // 自建confirm取消事件
+      selfconfirm_cancel (){
+        this.selfconfirm_show = false;
+      },
+      // 自建confirm确认事件
+      selfconfirm_confirm(){
+
+      },
+      // 自建confirm确认事件
+      selfconfirm_confirm_(){
+
+        this.selfconfirm_show = false;
+        this.selfconfirm_confirm();
+      },
+      selfconfirm(text,selfconfirm_confirm){
+        this.selfconfirm_show = true;
+        this.confirmcontent = text;
+        this.selfconfirm_confirm = selfconfirm_confirm;
+      },
+      // 对司机竞价信息排序
+      sort_click(e){
+
+        if(this.bid_time_desc.length == 0){
+          for(var i = 0; i < this.data.bid.length; i++){
+            this.bid_time_desc.push(this.data.bid[i])
+          }
+        }
+
+        if(e == "时间"){
+          this.data.bid = []
+          for(var i = 0; i < this.bid_time_desc.length; i++){
+            this.data.bid.push(this.bid_time_desc[i])
+          }
+        }else if(e == "价格"){
+          this.sortByKeyAsc(this.data.bid, "bid_price")
+        }
+      },
+      // 根据key，数组降序
+       sortByKeyAsc(array, key){
+
+        return array.sort(function(a,b){
+          var x = b[key];
+          var y = a[key];
+          return((x<y)?-1:((x>y)?1:0));
+        })
+      },
       // 竞价时，货主确认司机
       owner_confirm_driver(index, price){
 
-        var that = this;
-        var postData = {
-          sourceNo: that.sourceInfo.sourceNo,//货源单号
-          shipDriverId: that.data.bid[index].bid_driver_id,//司机id
-          expectedCost: price,//司机竞价
-        }
-        that.httpRequest_ygy("toTms.do",postData,function(res){
+        var that = this
 
-          if(res.status == 1){
+        this.selfconfirm('确定以' + price +'的价格被承运吗?', function(){
 
-            that.ifTips = true;
-            that.tips_Msg = "确认成功";
-
-            setTimeout(function(){
-              // 竞价成功后，跳转到待装货
-              that.$router.push({
-                name:"od_bid",
-              })
-            },2000)
-          }else{
-
-            that.$alert('确认失败', '提示', {
-              confirmButtonText: '确定',
-            })
+          var postData = {
+            sourceNo: that.sourceInfo.sourceNo,//货源单号
+            shipDriverId: that.data.bid[index].bid_driver_id,//司机id
+            expectedCost: price,//司机竞价
           }
+          that.httpRequest_ygy("toTms.do",postData,function(res){
+
+            if(res.status == 1){
+
+              that.ifTips = true;
+              that.tips_Msg = "确认成功";
+
+              setTimeout(function(){
+                // 竞价成功后，跳转到待装货
+                that.$router.push({
+                  name:"od_bid",
+                })
+              },2000)
+            }else{
+
+              that.$alert('确认失败', '提示', {
+                confirmButtonText: '确定',
+              })
+            }
+          })
+
         })
       },
       // 司机确认货主
@@ -490,9 +573,19 @@
           padding: 5/50rem  20/50rem  10/50rem 20/50rem;
           border-bottom: 15/50rem solid #F4F4F4;
           margin-bottom: 60/50rem;
-          .title{
-            font-weight: 600;
-            line-height: 65/50rem;
+          .title-{
+            width: 100%;
+            height: 65/50rem;
+            .prompt{
+              font-weight: 600;
+              line-height: 65/50rem;
+              float: left;
+            }
+            .sort{
+              width: 500/50rem;
+              height: 65/50rem;
+              float: left;
+            }
           }
           .v-f-bid{
             padding: 15/50rem;
