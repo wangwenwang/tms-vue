@@ -6,14 +6,14 @@
         <div class="userImage"><img src="../../assets/images/defaultHead.png" class="userinfo-avatar" alt=""></div>
         <div class="rightContent">
           <div class="one">
-            <!-- <div>{{ userName }}</div> --><div>王小强</div>
-            <div class="call"><i v-if='userTel' @click="callPhone(userTel)" class="iconfonicon-dianhua-copy"></i></div>
+            <div>{{ userInfo.userName }}</div>
+            <!-- <div class="call"><i v-if='userTel' @click="callPhone(userTel)" class="iconfonicon-dianhua-copy"></i></div> -->
           </div>
           <div class="two">
-          	<span>{{ NewTime }} 注册</span>
+          	<span>{{  userInfo.registerDate }} 注册</span>
             <!-- <span>交易999  </span>
             <span v-if='$store.state.userInfo.userType == "driver"'>接单数1234 </span>
-            <span v-if='$store.state.userInfo.userType == "owner"'>发货数1234 </span> -->
+            <span v-if='$store.state.userInfo.userType == "owner"'>发货数1234 </span> --> 
           </div>
           <div class="three">
           	<i class="iconfont icon-gou"></i> 
@@ -21,14 +21,15 @@
             <!-- <span>深圳市凯东源现代物流股份有限公司</span> -->
           </div>
         </div>
-        <div class="company"><span>公司名称</span><span>  {{userData.a}}</span></div>
-        <div class="company"><span>公司地址</span><span>  {{userData.b}}</span></div>
-        <div class="company"><span> 交易数 </span><span>{{userData.c}}</span></div>
+        <div class="company"><span>公司名称</span><span>  {{userInfo.comName}}</span></div>
+        <div class="company"><span>公司地址</span><span>  {{userInfo.comAddress}}</span></div>
+        <div class="company"><span> 发布次数 </span><span>  {{userInfo.fbcs}}</span></div>
+        <div class="company"><span> 完成次数 </span><span>  {{userInfo.wccs}}</span></div>
       </div>
       <div class="evaluateInfo">
       	<div class="title">评价</div>
-      	<div class="evaluateItem" v-for='(dataItem,index) in evaluatedata' :id="index"  :key='index'>
-      		<span class="content">{{dataItem.a}}</span><span class="time">{{dataItem.b}}</span>
+      	<div class="evaluateItem" v-for='(dataItem,index) in evalInfo' :id="index"  :key='index'>
+      		<span class="content">{{dataItem.evalContent}}</span><span class="time">{{dataItem.evalDate}}</span>
 
       	</div>
       </div>
@@ -37,7 +38,7 @@
   	  <div   v-if="is_NoData"   class="NoData" >
   	  	<div>
   	  	  <i  class="iconfont icon-meiyouwuliuxinxi" ></i>
-  	  	  <div>{{is_NoData_text}}</div>
+  	  	  <div>暂无评价</div>
   	  	</div>
   	  </div>
   	</div>
@@ -48,18 +49,11 @@
   	name:"UserIntroduction",
   	data(){
   	  return{
-  	  	TrackListData:[],  //轨迹列表
   	  	is_NoData:false,
-  	  	is_NoData_text:"没有评论",
   	  	headItem:"",//页面标题
-  	  	NewTime:"2019-12-30",
-  	  	UserID:"",  //货主/承运司机ID
-  	  	userName:"",
-  	  	userTel:"",
   	  	sourceInfo:{},
-  	  	userData:{a:"北京远航通物流有限公司",b:"北京",c:"3"},//货主/承运司机资料信息
-  	  	evaluatedata:[{a:"装货顺利，中国好货主！",b:"02-10"},
-  	  	{a:"态度好，付款及时......",b:"16:19"}]
+  	  	userInfo:{},
+  	  	evalInfo:[],
   	  }
   	},
   	created(){  
@@ -69,21 +63,36 @@
       if(this.$route.query.sourceInfo){
         this.sourceInfo = this.$route.query.sourceInfo;//货源详情
       }
-      if(this.$store.state.userInfo.userType == "ower"){
+      if(this.$store.state.userInfo.userType == "owner"){
       	this.headItem = "司机简介"
       }
       if(this.$store.state.userInfo.userType == "driver"){
       	this.headItem = "货主简介"
       }
 
+      this.nowDate = this.getNowTime().substring(0,4);
+
   	  var that = this;  
   	  var postData = {
-  	    cellphone: that.$store.state.userInfo.cellphone,//手机号   15013418360
+  	    "id": that.UserID,//查看资料的id
   	  };  
-  	  this.httpRequest("queryTrajectoryData.do",postData,function(res){  
-  	  	that.TrackListData = res.data;  
-  	  	if(!res.data.length){  
-  	  	  that.is_NoData_text = "没有结果"  
+  	  that.httpRequest_ygy("personalData.do",postData,function(res){  
+  	  	if(res.data.evalInfo.length){  
+  	      that.userInfo = res.data.userInfo;
+  	      that.evalInfo = res.data.evalInfo;
+
+  	      that.userInfo.registerDate = that.userInfo.registerDate.substring(0,10);
+
+  	      for( var i=0; i < that.evalInfo.length; i++){
+
+            if(that.evalInfo[i].evalDate.substring(0,4) == that.nowDate){
+
+              that.evalInfo[i].evalDate = that.evalInfo[i].evalDate.substring(5,10);
+            }else{
+              that.evalInfo[i].evalDate = that.evalInfo[i].evalDate.substring(0,10);
+            }
+		  }
+  	  	}else{ 
   	  	  that.is_NoData = true;
   	  	}  
   	  })  

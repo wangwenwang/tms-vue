@@ -128,7 +128,7 @@
         is_NoData:false,
         ifTips:false,       //提示信息是否显示
         is_NoData_text:"没有信息",
-        orderstate:'',
+        orderstate:' ',
         DialogVisible:false,
         v_shipmentMoney:'', //司机竞价
         shipmentMoney:'',   //司机竞价，服务器返回值
@@ -166,13 +166,18 @@
           this.sourceInfo.volume = this.sourceInfo.min_volume + "~" + this.sourceInfo.max_volume
         }
       }
+
       if(this.$route.query.whoPush){
 
         this.whoPush = this.$route.query.whoPush;//货源详情
+      }else{
+        this.whoPush ='goodsSource';
       }
       if(this.$route.query.orderState){
 
         this.orderstate = this.$route.query.orderState;//订单类型
+      }else{
+        this.orderstate = '';
       }
 
       var postData = {
@@ -194,7 +199,6 @@
           for (var i = that.data.bid.length - 1; i >= 0; i--) {
             if(that.data.bid[i].bid_driver_id == that.$store.state.userInfo.user_id){
               that.shipmentMoney = that.data.bid[i].bid_price
-              console.log(that.data.bid[i].bid_price)
             }
           }
         }
@@ -202,8 +206,6 @@
           that.owner_or_driver_userName = that.data.driverInfo.driver_name
           that.owner_or_driver_tel = that.data.driverInfo.driver_name
           that.owner_or_driver_ID = that.data.driverInfo.driver_id;
-
-
         }
       })
     },

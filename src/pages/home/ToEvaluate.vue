@@ -80,6 +80,7 @@
         colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
         rateDescribe:'', 
         pictures:'',
+        byEvalId:'', //被评价人ID
 	  }
 	},
 	created(){
@@ -90,9 +91,19 @@
       if(this.$route.query.orderState){
         this.orderState = this.$route.query.orderState;//订单状态
       }
+
+      if(this.$store.state.userInfo.userType == "driver"){
+
+        this.byEvalId = this.sourceInfo.ownerID;
+      }
+      if(this.$store.state.userInfo.userType == "owner"){
+
+        this.byEvalId = this.sourceInfo.shipDriverID;
+      }
+      
       var that = this;
       var params = {
-	    "shipDriverID": that.sourceInfo.shipDriverID,
+	    "shipDriverID": that.byEvalId,
       };
 
       that.httpRequest_ygy( "queryDriverInfo.do",params,function(res){
@@ -130,11 +141,12 @@
 	      return;
 	    }else{
 	      	var params = {
-			  "shipDriverID": that.sourceInfo.shipDriverID,
+			  "byEvalId": that.byEvalId,
 			  "sourceNo": that.sourceInfo.sourceNo,
 		      "evalLevel": that.value1,
 			  "evalContent": that.rateDescribe,
 		    };
+
 		    that.httpRequest_ygy( "ownerEvaluate.do",params,function(res){
 
 			  that.ifTips = true;
