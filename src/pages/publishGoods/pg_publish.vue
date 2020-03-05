@@ -55,20 +55,14 @@
             <div>
               <div><span>重量</span></div>
               <div>
-                <input class="two_input_width"  v-on:input="input_change('min_weight')"  type="number"  placeholder='0~99'  v-model='min_weight'></input>
-                一
-                <input class="two_input_width"  v-on:input="input_change('max_weight')"  type="number"  placeholder='0~99'  v-model='max_weight'></input>
-                吨
+                <input class="two_input_width"  v-on:input="input_change('min_weight')"  type="number"  placeholder='0~99'  v-model='min_weight'></input>&nbsp;&nbsp;吨
               </div>
             </div>
 
             <div>
               <div><span>体积</span></div>
               <div>
-                <input class="two_input_width"  v-on:input="input_change('min_volume')"  type="number"  placeholder='0~99'  v-model='min_volume'></input>
-                一
-                <input class="two_input_width"  v-on:input="input_change('max_volume')"  type="number"  placeholder='0~99'  v-model='max_volume'></input>
-                方
+                <input class="two_input_width"  v-on:input="input_change('min_volume')"  type="number"  placeholder='0~99'  v-model='min_volume'></input>&nbsp;&nbsp;方
               </div>
             </div>
 
