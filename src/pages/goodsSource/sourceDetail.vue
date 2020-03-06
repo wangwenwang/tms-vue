@@ -99,7 +99,11 @@
         <div v-if='$store.state.userInfo.userType == "owner" && data.driverInfo.driver_price == undefined && sourceInfo.expectedCost' class="ShippingInfo">我的报价：￥{{ sourceInfo.expectedCost }}</div>
 
         <div v-if='$store.state.userInfo.userType == "owner" && data.driverInfo.driver_price == undefined && !sourceInfo.expectedCost && data.bid.length == 0' class="ShippingInfo">暂无报价</div>
-
+        <div class="button" v-if='$store.state.userInfo.userType == "owner"'>
+          <div class="btnEdit" v-if="ifEdit" @click.stop="toEdit()">修改</div>
+          <div class="btnCancel" v-if="ifCancel" @click.stop="toCancel()">取消</div>
+        </div>
+      
       </div>
     </div>
 
@@ -131,12 +135,17 @@
   </div>
 </template>
 <script type="text/javascript">
+  import Vue from 'vue'
+  import { MessageBox } from 'element-ui';
+  Vue.prototype.$confirm = MessageBox.confirm
   export default{
     name:"sourceDetail",
     data(){
       return{
         is_NoData:false,
-        ifTips:false,       //提示信息是否显示
+        ifTips:false,    //提示信息是否显示
+        ifEdit:false,    //修改按钮是否显示
+        ifCancel:false,  //删除按钮是否显示
         is_NoData_text:"没有信息",
         orderstate:' ',
         DialogVisible:false,
@@ -148,7 +157,6 @@
         owner_or_driver_tel:"",      //货主/承运司机电话
         owner_or_driver_ID:"",       //货主/承运司机ID
         data:{"driverInfo":{"driver_price":""},"bid":[]},
-        // select_userType:""  //被查看的货主/承运司机身份
         optionsSort: [{
           value: '时间',
           label: '按时间降序'
@@ -180,10 +188,20 @@
 
       if(this.sourceInfo.mileage){
 
-          this.sourceInfo.mileage = this.sourceInfo.mileage/1000;
-          let tempVal = parseFloat(this.sourceInfo.mileage).toFixed(2)
-          this.sourceInfo.mileage = tempVal.substring(0, tempVal.length - 1)
-        }
+        this.sourceInfo.mileage = this.sourceInfo.mileage/1000;
+        let tempVal = parseFloat(this.sourceInfo.mileage).toFixed(2)
+        this.sourceInfo.mileage = tempVal.substring(0, tempVal.length - 1)
+      }
+      var status = this.sourceInfo.status
+      // if(status == "NEW"){
+
+      //   this.ifEdit = true;
+      // }
+      if(status == "NEW" || status =="NON-CONFIRM" || status =="NON-DELIVERY"){
+
+        this.ifCancel = true;
+      }
+      
 
       if(this.$route.query.whoPush){
 
@@ -197,12 +215,10 @@
       }
 
       var postData = {
-          "lon":this.longitude,//经度
-          "lat":this.latitude,//纬度
-          "appUserId": that.$store.state.userInfo.user_id,//用户ID
-          "sourceNo": that.sourceInfo.sourceNo,//货源单号
-          "userType": that.$store.state.userInfo.userType,//用户身份
-          "shipDriverID": that.sourceInfo.shipDriverID,//承运司机ID
+        "lon":this.longitude,//经度
+        "lat":this.latitude,//纬度
+        "sourceNo": that.sourceInfo.sourceNo,//货源单号
+        "shipDriverID": that.sourceInfo.shipDriverID,//承运司机ID
       }
       // 查询装卸点、承运司机信息
       that.httpRequest_ygy("cargoDetail.do",postData,function(res){
@@ -406,6 +422,46 @@
           }
         })
       },
+      //修改货源
+      toEdit(){
+        return
+        this.$router.push({
+          name:"sourceDetail",
+          query:{
+            sourceInfo:this.sourceInfo,
+            whoPush:"publishGoods",
+          }
+        })
+      },
+      
+      //取消货源
+      toCancel(){
+        MessageBox.confirm("是否取消该货源？").then(() => {
+           
+          var that = this;
+          var postData = {
+            "sourceNo":that.sourceInfo.sourceNo,
+            "status":that.sourceInfo.status,
+          } 
+          that.httpRequest_ygy("cancelOrder.do",postData,function(Res){
+            if(Res.status == "1"){
+              that.ifTips = true;
+              that.tips_Msg = "操作成功";
+              setTimeout(function(){
+                that.$router.push({
+                  name:that.whoPush,
+                  query:{
+                    orderstate:that.orderstate
+                  }
+                })
+              },2000)
+            }  
+          });
+        }).catch(() => {  
+
+        });
+      },
+
       // 返回上一页
       goPrev(){
         this.$router.push({
@@ -668,6 +724,25 @@
         .ShippingInfo{
           padding: 20/50rem  40/50rem  25/50rem 20/50rem;
           border-bottom: 15/50rem solid #F4F4F4;
+        }
+        .button{
+          height: 60/50rem;
+          display: flex;
+          justify-content: center; 
+          margin: 30/50rem 0 ;
+          .btnEdit,.btnCancel{
+            text-align: center;
+            height: 60/50rem;
+            width: 150/50rem;
+            line-height:60/50rem;
+            color:#757575;
+            border:1/50rem solid #999;
+            padding:5/50rem 10/50rem;
+            border-radius: 50/50rem;
+          }
+          .btnEdit{
+            margin-right:10%;
+          }
         }
       }
     }
