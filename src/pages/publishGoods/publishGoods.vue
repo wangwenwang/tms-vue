@@ -174,18 +174,14 @@
                 }  
               });
             }else{
-              // MessageBox.close(false);
-              console.log(1)
-              that.ifTips = true;
-              that.tips_Msg = "该货源不可取消！";          
-              setTimeout(function(){
-                that.ifTips = false;
-              },2000)
-            }
+              this.$alert("该货源不可取消！", '提示', {
+                confirmButtonText: '确定',
+                callback: action => {
+                }
+              })
+            } 
           }).catch(() => {
-            console.log(2)
-
-            console.log("取消")
+            
           });
         }.bind(this), 1000);
       },
