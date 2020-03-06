@@ -298,10 +298,11 @@ import $ from 'jquery'
 
       // 跳转到 货源详情 页面
   	  tosourceDetail(index){
-        this.$store.state.sourceInfo = this.goodsSourcedata[index];
+        var sourceInfo = this.goodsSourcedata[index];
   	  	this.$router.push({
     		  name:"sourceDetail",
     		  query:{
+            sourceInfo:sourceInfo,
             whoPush:"goodsSource",
     		  }
   	  	})

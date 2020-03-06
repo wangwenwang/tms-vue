@@ -171,18 +171,22 @@
     created(){
 
       var that = this
+      if(this.$route.query.sourceInfo){
+
+        this.sourceInfo = this.$route.query.sourceInfo;//货源详情存全局
+      }
 
       if(this.$store.state.sourceInfo){
 
         this.sourceInfo = this.$store.state.sourceInfo;//货源详情存全局
+      }
 
-        if(this.sourceInfo.mileage){
+      if(this.sourceInfo.mileage){
 
           this.sourceInfo.mileage = this.sourceInfo.mileage/1000;
           let tempVal = parseFloat(this.sourceInfo.mileage).toFixed(2)
           this.sourceInfo.mileage = tempVal.substring(0, tempVal.length - 1)
         }
-      }
 
       if(this.$route.query.whoPush){
 

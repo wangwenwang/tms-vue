@@ -133,12 +133,12 @@
 
       // 进入详情页
       toDetail(index){
-        // var sourceInfo = this.goodsList[index];
-        this.$store.state.sourceInfo = this.goodsList[index];
+        var sourceInfo = this.goodsList[index];
+        // this.$store.state.sourceInfo = this.goodsList[index];
         this.$router.push({
           name:"sourceDetail",
           query:{
-            // sourceInfo:sourceInfo,
+            sourceInfo:sourceInfo,
             whoPush:"publishGoods",
           }
         })
