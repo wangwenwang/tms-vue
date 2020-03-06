@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "968465",
+      "name": "编辑",
+      "font_class": "edit",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
       "icon_id": "1356142",
       "name": "勾",
       "font_class": "gou",

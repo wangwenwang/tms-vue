@@ -2,9 +2,9 @@
   <div class="componentOrderItem">
     <div class="orderArrContent">
       <div class='orderArr' v-for='(item, idx) in orderArr'  :id="idx"  :key='idx'>
-        <div class="contentInFor">
+        <div class="contentInFor"  @click="tosourceDetail(idx)">
 
-          <div class="one"  @click="tosourceDetail(idx)">
+          <div class="one" >
             <span>{{item.carrierCity}} </span><span> {{item.carrierAddress3}}</span>
             <span> → </span>
             <span>{{item.c_city}} </span><span> {{item.c_address3}}</span>
@@ -32,13 +32,13 @@
 
             <div v-if='$store.state.userInfo.userType == "owner"'>
               <div class='status' v-if='!orderState' :style='{background:item.STATUS_color}'>{{item.STATUS_text}}</div>
-              <div class="btnEvaluate" @click="btnEvaluateClick1(idx)" v-if='orderState == "NON-RATE" && item.ownerComment == "F"'>评价</div>
+              <div class="btnEvaluate" @click.stop="btnEvaluateClick1(idx)" v-if='orderState == "NON-RATE" && item.ownerComment == "F"'>评价</div>
               <div class="btnEvaluate" v-if='orderState == "NON-RATE" && item.ownerComment == "T"'>已评价</div>
             </div>
 
             <div v-if='$store.state.userInfo.userType == "driver"'>
               <div class='status' v-if='!orderState' :style='{background:item.STATUS_color}'>{{item.STATUS_text}}</div>
-              <div class="btnEvaluate" @click="btnEvaluateClick1(idx)" v-if='orderState == "NON-RATE" && item.driverComment == "F"'>评价</div>
+              <div class="btnEvaluate" @click.stop="btnEvaluateClick1(idx)" v-if='orderState == "NON-RATE" && item.driverComment == "F"'>评价</div>
               <div class="btnEvaluate" v-if='orderState == "NON-RATE" && item.driverComment == "T"'>已评价</div>
             </div>
             
