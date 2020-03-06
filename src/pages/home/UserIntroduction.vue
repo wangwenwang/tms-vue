@@ -7,23 +7,18 @@
         <div class="rightContent">
           <div class="one">
             <div>{{ userInfo.userName }}</div>
-            <!-- <div class="call"><i v-if='userTel' @click="callPhone(userTel)" class="iconfonicon-dianhua-copy"></i></div> -->
           </div>
           <div class="two">
           	<span>{{  userInfo.registerDate }} 注册</span>
-            <!-- <span>交易999  </span>
-            <span v-if='$store.state.userInfo.userType == "driver"'>接单数1234 </span>
-            <span v-if='$store.state.userInfo.userType == "owner"'>发货数1234 </span> --> 
           </div>
           <div class="three">
           	<i class="iconfont icon-gou"></i> 
           	<span> 实名认证</span>
-            <!-- <span>深圳市凯东源现代物流股份有限公司</span> -->
           </div>
         </div>
         <div class="company"><span>公司名称</span><span>  {{userInfo.comName}}</span></div>
         <div class="company"><span>公司地址</span><span>  {{userInfo.comAddress}}</span></div>
-        <div class="company"><span> 发布次数 </span><span>  {{userInfo.fbcs}}</span></div>
+        <div class="company"  v-if='$store.state.userInfo.userType == "driver"'><span> 发布次数 </span><span>  {{userInfo.fbcs}}</span></div>
         <div class="company"><span> 完成次数 </span><span>  {{userInfo.wccs}}</span></div>
       </div>
       <div class="evaluateInfo">
@@ -32,15 +27,16 @@
       		<span class="content">{{dataItem.evalContent}}</span><span class="time">{{dataItem.evalDate}}</span>
 
       	</div>
+        <!-- 页面数据为空时 -->
+        <div   v-if="is_NoData"   class="NoData" >
+          <div>
+            <div>暂无评价</div>
+          </div>
+        </div>
+
       </div>
 
-  	  <!-- 页面数据为空时 -->
-  	  <div   v-if="is_NoData"   class="NoData" >
-  	  	<div>
-  	  	  <i  class="iconfont icon-meiyouwuliuxinxi" ></i>
-  	  	  <div>暂无评价</div>
-  	  	</div>
-  	  </div>
+  	  
   	</div>
   </div>
 </template>
@@ -54,6 +50,7 @@
   	  	sourceInfo:{},
   	  	userInfo:{},
   	  	evalInfo:[],
+        whoPush:'',
   	  }
   	},
   	created(){  
@@ -63,6 +60,10 @@
       if(this.$route.query.sourceInfo){
         this.sourceInfo = this.$route.query.sourceInfo;//货源详情
       }
+      // if(this.$route.query.whoPush){
+
+      //   this.whoPush = this.$route.query.whoPush;
+      // }
       if(this.$store.state.userInfo.userType == "owner"){
       	this.headItem = "司机简介"
       }
@@ -102,13 +103,14 @@
   	methods:{
   	  // 返回上一页
   	  goPrev(){  
-  	  	this.$router.push({
-  	  	  name:"sourceDetail",
-  	  	  query:{
-  	  	  	sourceInfo:this.sourceInfo,
-  	  	  	
-  	  	  }
-  	  	})
+  	  	// this.$router.push({
+  	  	//   name:"sourceDetail",
+  	  	//   query:{
+  	  	//   	sourceInfo:this.sourceInfo,
+  	  	//   	// whoPush:this.whoPush,
+  	  	//   }
+  	  	// })
+        this.$router.back(-1);
   	  }
   	}
   }

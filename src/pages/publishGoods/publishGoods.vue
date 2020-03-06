@@ -14,7 +14,8 @@
             </div>
             <div>
               <div>{{ item.k_detail }}</div>
-              <div><i v-if="item.ifEdit" class="iconfont icon-edit"  @click.stop="toEdit(index)"></i></div>
+              <!-- <div><i v-if="item.ifEdit" class="iconfont icon-edit"  @click.stop="toEdit(index)"></i></div> -->
+              <!-- <div  v-if="item.ifCancel" @click.stop="toCancel(index)">取消</div> -->
             </div>
           </div>
         </div>
@@ -45,6 +46,7 @@
         tips_Msg:"",//提示信息
         ifTips:false,
         // ifEdit:false,
+        ifCancel:false,
       }
     },
     components:{
@@ -120,6 +122,10 @@
               d[i].ifEdit = true;
 
             }
+            if(d[i].status == "NEW" || d[i].status =="NON-CONFIRM" || d[i].status =="NON-DELIVERY"){
+              d[i].ifCancel = true;
+
+            }
           }
         })
         this.ifTips = false;
@@ -127,6 +133,20 @@
 
       // 进入详情页
       toDetail(index){
+        // var sourceInfo = this.goodsList[index];
+        this.$store.state.sourceInfo = this.goodsList[index];
+        this.$router.push({
+          name:"sourceDetail",
+          query:{
+            // sourceInfo:sourceInfo,
+            whoPush:"publishGoods",
+          }
+        })
+      },
+
+      //修改货源
+      toEdit(index){
+        return
         var sourceInfo = this.goodsList[index];
         this.$router.push({
           name:"sourceDetail",
@@ -137,10 +157,9 @@
         })
       },
 
-      //修改货源
-      toEdit(index){
-        console.log(999)
-        return
+      //取消订单
+      
+      toCancel(index){
         var sourceInfo = this.goodsList[index];
         this.$router.push({
           name:"sourceDetail",
@@ -181,7 +200,7 @@
               })
             } 
           }).catch(() => {
-            
+
           });
         }.bind(this), 1000);
       },
@@ -256,9 +275,12 @@
                 }
                 &:nth-child(2){
                   float: right;
-                  margin-top: 10/50rem;
                   margin-right: 15/50rem;
-                  color:#FD7338;
+                  color:#999;
+                  border:1/50rem solid #999;
+                  font-size: 24/50rem;
+                  padding:5/50rem 10/50rem;
+                  border-radius: 10/50rem;
                 }
               }
 

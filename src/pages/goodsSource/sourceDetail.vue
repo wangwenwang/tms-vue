@@ -17,8 +17,8 @@
           <div><span>车辆</span><span>{{sourceInfo.vehicleType}}</span></div>
           <div><span>货物</span>
             <span>{{sourceInfo.productName}} ,</span>
-            <span v-if='sourceInfo.weight'>{{sourceInfo.weight}}吨&nbsp;</span>
-            <span v-if='sourceInfo.volume'>{{sourceInfo.volume}}方&nbsp;</span>
+            <span>{{sourceInfo.min_weight}}吨&nbsp;</span>
+            <span>{{sourceInfo.min_volume}}方&nbsp;</span>
           </div>
           <div>
             <span>特殊要求</span>
@@ -45,21 +45,9 @@
 
         <div v-if='owner_or_driver_userName != undefined' class="owner-driver-Info">
           <div class="userImage"><img src="../../assets/images/defaultHead.png" class="userinfo-avatar" alt=""></div>
-          <div class="rightContent">
-            <div class="one">
-              <div>{{ owner_or_driver_userName }}</div>
-              <div class="call"><i v-if='owner_or_driver_tel' @click="callPhone(owner_or_driver_tel)" class="iconfont icon-dianhua-copy"></i></div>
-              <div class="todriverInfo" @click="toUserIntroduction()">查看资料></div>
-            </div>
-            <div class="two">
-              <span>交易999  </span>
-              <span v-if='$store.state.userInfo.userType == "driver"'>发货数1234 </span>
-              <span v-if='$store.state.userInfo.userType == "owner"'>接单数1234 </span>
-            </div>
-            <div class="three">
-              <span>深圳市凯东源现代物流股份有限公司</span>
-            </div>
-          </div>
+            <div class="userName">{{ owner_or_driver_userName }}</div>
+            <div class="call"><i v-if='owner_or_driver_tel' @click="callPhone(owner_or_driver_tel)" class="iconfont icon-dianhua-copy"></i></div>
+            <div class="todriverInfo" @click="toUserIntroduction()">查看资料 ></div>
         </div>
 
         <div v-if='$store.state.userInfo.userType == "owner" && data.bid.length > 0 && data.driverInfo.driver_id == undefined' class="bid_info">
@@ -171,40 +159,34 @@
         value: '',
         bid_time_desc: [],
         confirmcontent: "",     //自建confirm提示内容
-        selfconfirm_show: false //自建confirm是否显示提示框
+        selfconfirm_show: false, //自建confirm是否显示提示框
+        longitude:"114.046",//经度
+        latitude:"22.628571",//纬度
       }
+    },
+    mounted(){
+      this.TelliOSORAndroidVueMounted("获取当前位置页面已加载");
+      window.SetCurrAddress = this.SetCurrAddress;
     },
     created(){
 
       var that = this
 
-      if(this.$route.query.sourceInfo){
-        
-        this.sourceInfo = this.$route.query.sourceInfo;//货源详情
-        
+      if(this.$store.state.sourceInfo){
+
+        this.sourceInfo = this.$store.state.sourceInfo;//货源详情存全局
+
         if(this.sourceInfo.mileage){
+
           this.sourceInfo.mileage = this.sourceInfo.mileage/1000;
           let tempVal = parseFloat(this.sourceInfo.mileage).toFixed(2)
           this.sourceInfo.mileage = tempVal.substring(0, tempVal.length - 1)
-        }
-
-        if(this.sourceInfo.min_weight == this.sourceInfo.max_weight){
-          this.sourceInfo.weight = this.sourceInfo.min_weight
-        }else{
-          this.sourceInfo.weight = this.sourceInfo.min_weight + "~" + this.sourceInfo.max_weight
-        }
-        if(this.sourceInfo.min_volume == this.sourceInfo.max_volume){
-          this.sourceInfo.volume = this.sourceInfo.min_volume
-        }else{
-          this.sourceInfo.volume = this.sourceInfo.min_volume + "~" + this.sourceInfo.max_volume
         }
       }
 
       if(this.$route.query.whoPush){
 
-        this.whoPush = this.$route.query.whoPush;//货源详情
-      }else{
-        this.whoPush ='goodsSource';
+        this.whoPush = this.$route.query.whoPush;
       }
       if(this.$route.query.orderState){
 
@@ -214,10 +196,12 @@
       }
 
       var postData = {
-          appUserId: that.$store.state.userInfo.user_id,//用户ID
-          sourceNo: that.sourceInfo.sourceNo,//货源单号
-          userType: that.$store.state.userInfo.userType,//用户身份
-          shipDriverID: that.sourceInfo.shipDriverID,//承运司机ID
+          "lon":this.longitude,//经度
+          "lat":this.latitude,//纬度
+          "appUserId": that.$store.state.userInfo.user_id,//用户ID
+          "sourceNo": that.sourceInfo.sourceNo,//货源单号
+          "userType": that.$store.state.userInfo.userType,//用户身份
+          "shipDriverID": that.sourceInfo.shipDriverID,//承运司机ID
       }
       // 查询装卸点、承运司机信息
       that.httpRequest_ygy("cargoDetail.do",postData,function(res){
@@ -236,13 +220,27 @@
           }
         }
         if(that.$store.state.userInfo.userType == "owner"){
-          that.owner_or_driver_userName = that.data.driverInfo.driver_name
-          that.owner_or_driver_tel = that.data.driverInfo.driver_name
+          that.owner_or_driver_userName = that.data.driverInfo.driver_name;
+          that.owner_or_driver_tel = that.data.driverInfo.driver_tel; 
           that.owner_or_driver_ID = that.data.driverInfo.driver_id;
         }
       })
     },
     methods:{
+      //获取当前位置经纬度
+      SetCurrAddress:function(address, lng, lat) {
+
+        if(address == "") {
+          this.$alert(msg, '定位失败', {
+            confirmButtonText: '确定',
+            callback: action => {
+            }
+          })
+        }else {
+          this.longitude = lng;
+          this.latitude = lat;
+        }
+      },
       // 自建confirm取消事件
       selfconfirm_cancel (){
         this.selfconfirm_show = false;
@@ -404,7 +402,6 @@
           name:"UserIntroduction",
           query:{
             UserID:this.owner_or_driver_ID,
-            sourceInfo:this.sourceInfo,
           }
         })
       },
@@ -416,7 +413,7 @@
             orderstate:this.orderstate
           }
         })
-      }
+      },
     }
   }
 </script>
@@ -530,53 +527,33 @@
         }
 
         .owner-driver-Info{
-          height: 180/50rem;
+          line-height: 80/50rem;
           padding: 20/50rem  40/50rem  25/50rem 20/50rem;
           border-bottom: 15/50rem solid #F4F4F4;
+          display: flex;
+          justify-content: space-between;
           .userImage{
             width: 80/50rem;
-            height: 100%;
-            float: left;
+            height: 80/50rem;
             margin-right: 10/50rem;
             img{
               width: 80/50rem;
             }
           }
-          .rightContent{
-            padding-left: 80/50rem;
-            .one{ 
-              font-size: 30/50rem;
-              font-weight:600;
-              line-height: 65/50rem;
-              display: flex;
-              justify-content: space-between;
-              .call{
-                margin-right: 280/50rem;
-                line-height: 65/50rem;
-                color: #5965D8;
-                text-align: center;
-                font-size: 30/50rem;
-              }
-              .todriverInfo{
-                font-size: 22/50rem;
-                padding-top: 8/50rem;
-                color: #757575;
-              }
-              
-            }
-            .two{
-              float: left;
-              color: #757575;
-              font-size: 26/50rem;
-              line-height: 65/50rem;
-            }
-            .three{
-              float: left;
-              color: #757575;
-              font-weight: 550;
-              font-size: 26/50rem;
-              line-height: 65/50rem;
-            }
+          .userName{
+            font-size: 30/50rem;
+            font-weight:600;
+            margin-right: 15/50rem;
+          }
+          .call{
+            margin-right: 200/50rem;
+            color: #5965D8;
+            font-size: 34/50rem;
+          }
+          .todriverInfo{
+            font-size: 22/50rem;
+            font-weight: 550;
+            color: #757575;
           }
         }
 

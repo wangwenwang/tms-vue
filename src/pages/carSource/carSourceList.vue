@@ -11,7 +11,7 @@
     <div class="container">
 
     	<div class="slectItem">
-      	<div class="Msg" v-if="AddressShow">以下是为您推荐的周边货源</div>
+      	<div class="Msg" v-if="AddressShow">以下是为您推荐的周边车源</div>
         <div class="choose" v-if="!AddressShow">
           <div class="AddressStart">
             <el-cascader :options="optionsAddress" :show-all-levels="false"  :filterable="true"  :clearable="true" @change="startChange"></el-cascader> </el-cascader>
