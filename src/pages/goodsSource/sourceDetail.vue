@@ -173,12 +173,9 @@
       var that = this
       if(this.$route.query.sourceInfo){
 
-        this.sourceInfo = this.$route.query.sourceInfo;//货源详情存全局
-      }
-
-      if(this.$store.state.sourceInfo){
-
-        this.sourceInfo = this.$store.state.sourceInfo;//货源详情存全局
+        this.sourceInfo = this.$route.query.sourceInfo;
+      }else{
+        this.sourceInfo = this.$store.state.sourceInfo;
       }
 
       if(this.sourceInfo.mileage){
