@@ -69,11 +69,10 @@
 
       // 跳转到 货源详情 页面
       tosourceDetail(idx){
-        var sourceInfo = this.orderArr[idx];
+       this.$store.state.sourceInfo = this.orderArr[idx];
         this.$router.push({
           name:"sourceDetail",
           query:{
-            sourceInfo:sourceInfo,
             whoPush:"od_bid",
             orderState:this.orderState
           }
@@ -81,12 +80,10 @@
       },
       // 跳转到 发布评价 页面
       btnEvaluateClick1(idx){
-       
-        var sourceInfo = this.orderArr[idx];
+       this.$store.state.sourceInfo = this.orderArr[idx];
         this.$router.push({
           name:"ToEvaluate",
           query:{
-            sourceInfo:sourceInfo,
             whoPush:"od_bid",
             orderState:this.orderState
           }
