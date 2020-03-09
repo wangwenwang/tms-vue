@@ -55,7 +55,7 @@
       this.nowDate = this.getNowTime().substring(0,10);
       var that = this;
       // 获取发布车源信息
-      that.httpRequest_ygy("queryDriverInfo.do","",function(PublishRes){
+      that.httpRequest_ygy("queryVehicleSource.do","",function(PublishRes){
 
           if(PublishRes.data.length){
 
@@ -93,7 +93,7 @@
           "status":that.orderState,
         }
         // 获取门店信息
-        that.httpRequest_ygy("queryDriverInfo.do",postData,function(res){
+        that.httpRequest_ygy("queryVehicleSource.do",postData,function(res){
           that.PublishListdata = []
           if(res.data.length){
             that.orderArr = res.data;

@@ -8,7 +8,7 @@
         <div v-if='$store.state.userInfo.userType == "driver"'  class="toSure" @click='choseToSure'>竞价中</div>
         <div class="toloading" @click='choseToloading'>待装货</div>
         <div class="toTransit" @click='choseTransit'>运输中</div>
-        <div class="toEvaluate" @click='choseToEvaluate'>评价</div>
+        <div class="toEvaluate" @click='choseToEvaluate'>已完成</div>
         <div class="cancel" @click='choseCancel'>取消</div>
       </div>
       <div class="orderList">
@@ -142,6 +142,9 @@
 
                   that.orderArr[i].STATUS_color = '#999';
                   that.orderArr[i].STATUS_text = '已取消';
+                  if(that.$store.state.userInfo.userType == "driver"){
+                    that.orderArr[i].STATUS_text = '被取消';
+                  }
                 }
               }
               if(that.$store.state.userInfo.userType == "owner"){

@@ -158,13 +158,6 @@ import $ from 'jquery'
   	  window.SetCurrAddress = this.SetCurrAddress;
   	},
     created(){
-      var that = this;
-      var AddressData = {}
-      // 获取门店信息
-      that.httpRequest_ygy("queryCityAll.do",AddressData,function(AddressRes){
-
-         that.optionsAddress = AddressRes.data.json2;
-      });
 
       this.nowDate = this.getNowTime().substring(0,10);
       this.getAroundGoodsData();
@@ -214,86 +207,61 @@ import $ from 'jquery'
       },
       getGoodsData(){
 
-        var that = this;
-        var AddressData = {
-          "lon":this.longitude,//经度
-	        "lat":this.latitude,//纬度
-          "carrierCity":that.startCity,//起点城市
-          "carrierAddress3":that.startDistrict,//起点区
-          "c_city":that.endCity,//终点城市
-          "c_address3":that.endDistrict,//终点区
+        this.request_list_data(this.longitude, this.latitude, this.startCity, this.startDistrict, this.endCity, this.endDistrict)
+      },
+      // 请求列表数据
+      request_list_data(longitude, latitude, startCity, startDistrict, endCity, endDistrict){
+
+        var that = this
+
+        var posDate = {
+          "lon": longitude,                  //经度
+          "lat": latitude,                   //纬度
+          "carrierCity": startCity,          //起点城市
+          "carrierAddress3": startDistrict,  //起点区
+          "c_city": endCity,                 //终点城市
+          "c_address3": endDistrict          //终点区
         }
-        // 获取货源信息
-        that.httpRequest_ygy("peripheralResourcesList.do",AddressData,function(goodsSourceRes){
-          if(goodsSourceRes.data.length){
-            that.goodsSourcedata = goodsSourceRes.data;
-            that.noDataShow = false;
-            for( var i=0; i<goodsSourceRes.data.length; i++){
+        // 获取货源列表
+        that.httpRequest_ygy("peripheralResourcesList.do", posDate, function(res){
 
-              if(goodsSourceRes.data[i].publishTime.substring(0,10) == that.nowDate){
+          if(res.data.length){
+
+            that.goodsSourcedata = res.data
+            that.noDataShow = false
+
+            for( var i = 0; i < res.data.length; i++){
+
+              if(res.data[i].publishTime.substring(0,10) == that.nowDate){
                 
-                goodsSourceRes.data[i].publishTime = goodsSourceRes.data[i].publishTime.substring(11,16);
+                res.data[i].publishTime = res.data[i].publishTime.substring(11,16)
               }else{
-                goodsSourceRes.data[i].publishTime = goodsSourceRes.data[i].publishTime.substring(5,10);
+                res.data[i].publishTime = res.data[i].publishTime.substring(5,10)
               }
-              if(goodsSourceRes.data[i].min_weight == goodsSourceRes.data[i].max_weight){
-              	
-                goodsSourceRes.data[i].weight = true;
+              if(res.data[i].min_weight == res.data[i].max_weight){
+                
+                res.data[i].weight = true
               }
-              if(goodsSourceRes.data[i].min_volume == goodsSourceRes.data[i].max_volume){
+              if(res.data[i].min_volume == res.data[i].max_volume){
 
-               	goodsSourceRes.data[i].volume = true;
+                res.data[i].volume = true
               }
-              that.goodsSourcedata[i].distance = goodsSourceRes.data[i].distance/1000;
-  	    	    let tempVal = parseFloat(that.goodsSourcedata[i].distance).toFixed(2)
-  	          that.goodsSourcedata[i].distance = tempVal.substring(0, tempVal.length - 1)
+              that.goodsSourcedata[i].distance = res.data[i].distance/1000
+              let tempVal = parseFloat(that.goodsSourcedata[i].distance).toFixed(2)
+              that.goodsSourcedata[i].distance = tempVal.substring(0, tempVal.length - 1)
             }
           }else{
-            that.noDataShow = true;
+
+            that.goodsSourcedata = []
+            that.noDataShow = true
           }
         })
       },
 
       //周边资源
       getAroundGoodsData(){
-        var that = this;
-        var AddressData = {
-           "lon":this.longitude,//经度
-	         "lat":this.latitude,//纬度
-	         "carrierCity": "",//起点城市
-           "carrierAddress3":"",//起点区
-           "c_city":"",//终点城市
-           "c_address3":"",//终点区
-        }
-        // 获取货源列表信息
-        that.httpRequest_ygy("peripheralResourcesList.do",AddressData,function(Res){
-          if(Res.data.length){
-            that.goodsSourcedata = Res.data;
-            that.noDataShow = false;
-            for( var i=0; i<Res.data.length; i++){ 
 
-              if(Res.data[i].publishTime.substring(0,10) == that.nowDate){
-
-                Res.data[i].publishTime = Res.data[i].publishTime.substring(11,16);
-              }else{
-                Res.data[i].publishTime = Res.data[i].publishTime.substring(5,10);
-              }
-              if(Res.data[i].min_weight == Res.data[i].max_weight){
-            	
-                Res.data[i].weight = true;
-              }
-              if(Res.data[i].min_volume == Res.data[i].max_volume){
-             	
-             	  Res.data[i].volume = true;
-              }
-              that.goodsSourcedata[i].distance = Res.data[i].distance/1000;
-              let tempVal = parseFloat(that.goodsSourcedata[i].distance).toFixed(2)
-              that.goodsSourcedata[i].distance = tempVal.substring(0, tempVal.length - 1)
-            }
-          }else{
-            that.noDataShow = true;
-          }
-        })
+        this.request_list_data(this.longitude, this.latitude, "", "", "", "")
       },
 
       // 跳转到 货源详情 页面
@@ -308,11 +276,18 @@ import $ from 'jquery'
   	  	})
   	  },
 
-      //选择地区
+      // 根据筛选条件请求列表数据
       chooseAddress(){
-        this.toAddress();
-        this.AddressShow = false;
-        this.getGoodsData();
+
+        var that = this;
+        var AddressData = {}
+        // 获取省、市、区/县
+        this.httpRequest_ygy("queryCityAll.do",AddressData,function(AddressRes){
+
+          that.optionsAddress = AddressRes.data.json2;
+          that.toAddress();
+          that.AddressShow = false;
+        });
       }, 
 
       //选择周边资源
@@ -381,19 +356,19 @@ import $ from 'jquery'
           border:2/50rem solid  #fff; 
           font-size: 26/50rem;
           .chooseAddress{
-             display:inline-block;
-             width: 50%;
-             line-height: 46/50rem;
-             float: left;
-             border-right: 2/50rem solid  #fff;
+            display:inline-block;
+            width: 50%;
+            line-height: 46/50rem;
+            float: left;
+            border-right: 2/50rem solid  #fff;
           }
           .aroundResources{
             display:inline-block;
-             width: 50%;
-             line-height: 46/50rem;
-             float: left;
-             background-color:  #fff;
-             color: #5965D8;
+            width: 50%;
+            line-height: 46/50rem;
+            float: left;
+            background-color:  #fff;
+            color: #5965D8;
           }
         }
       }
@@ -448,7 +423,6 @@ import $ from 'jquery'
         overflow: scroll;
         height: calc(100% - 5.8rem);
         margin-top: 90/50rem;
-
       }
       .dataItem{
         padding:15/50rem;

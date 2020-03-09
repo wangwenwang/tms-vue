@@ -116,16 +116,13 @@
 	
 	methods:{
 	  goPrev(){
-		var that = this;
 
-		this.$router.push({
-		  name:"od_bid",
-		  query:{
-		  	sourceInfo:this.sourceInfo,
-            whoPush:"ToEvaluate",
-            orderState:"NON-RATE"
-		  }
-		})
+      this.$router.push({
+        name: "od_bid",
+        query:{
+          orderstate: "NON-RATE"
+        }
+      })
 	  },
 	  "submit":function(){
 
