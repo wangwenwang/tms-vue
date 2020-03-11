@@ -374,7 +374,7 @@
         var postData = {
           driverName : that.$store.state.userInfo.userName,//货主名称
           driverPhone : that.$store.state.userInfo.cellphone,//货主电话
-          endTime : that.end_time,//截止时间
+          endTime : that.end_time + " 23:59:59",//截止时间
           loadingTime : that.load_time,
           vehicleType : that.vehicle_type,//车型
           mark : that.remark,//备注
