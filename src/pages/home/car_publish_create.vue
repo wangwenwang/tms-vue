@@ -1,5 +1,5 @@
 <template>
-  <div class="MyPublish">
+  <div class="car_publish_create">
     <header><i class="iconfont icon-xiangzuo1"  @click="goPrev" ></i><span>发布车源</span><i class="iconfont icon-lishijilu"  @click="toPublishList" ></i></header>
     <div class="container">
       <div class="inv_goods">
@@ -33,6 +33,7 @@
         </div>
         <div class='infoContainer'>
           <div class="y_goods">
+
             <div>
               <div><span>车型车长</span></div>
               <div @click='vehicle_type_click'><span>{{ vehicle_type }}</span></div>
@@ -40,17 +41,14 @@
             
             <div>
               <div><span>运载重量</span></div>
-              <div>
-                <input class="two_input_width"  v-on:input="input_change('vehicleLoad')"  type="number"  placeholder='0~99'  v-model='vehicleLoad'></input> 吨
-              </div>
+              <div><span>{{ vehicleLoad }}吨</span></div>
             </div>
-
+            
             <div>
               <div><span>运载体积</span></div>
-              <div>
-                <input class="two_input_width"  v-on:input="input_change('vehicleVolume')"  type="number"  placeholder='0~99'  v-model='vehicleVolume'></input> 方
-              </div>
+              <div><span>{{ vehicleVolume }}方</span></div>
             </div>
+
           </div>
         </div>
 
@@ -107,7 +105,7 @@
 <script type="text/javascript">
   import componentSelectBox from '@/components/componentSelectBox'
   export default{
-    name:"MyPublish",
+    name:"car_publish_create",
     data(){
       return{
         AddressStart:[],//起点
@@ -170,15 +168,6 @@
       if(this.$store.state.pg_publish.unload_pointList.length){
         this.AddressEnd = this.$store.state.pg_publish.unload_pointList
       }
-      if(this.$store.state.pg_publish.car_info.vehicleLoad.length){
-        this.vehicleLoad = this.$store.state.pg_publish.car_info.vehicleLoad
-      }
-      if(this.$store.state.pg_publish.car_info.vehicleVolume.length){
-        this.vehicleVolume = this.$store.state.pg_publish.car_info.vehicleVolume
-      }
-      if(this.$store.state.pg_publish.car_info.vehicle_type.length){
-        this.vehicle_type = this.$store.state.pg_publish.car_info.vehicle_type
-      }
       if(this.$store.state.pg_publish.car_info.load_time.length){
         this.load_time = this.$store.state.pg_publish.car_info.load_time
       }else{
@@ -191,21 +180,43 @@
         this.remark = this.$store.state.pg_publish.car_info.remark
       }
 
-      this.httpRequest_ygy("queryVehicleModel.do","",function(res){
-
-        for(var i = 0; i < res.data.length; i++){
-          res.data[i].name = res.data[i].vehicleType
-        }
-        that.SelectBoxList = res.data
-      })
+      this.get_vehicle_type()
     },
     methods:{
 
+      // 获取当前车型
+      get_vehicle_type(){
+
+        var that = this
+        var userInfo = this.$store.state.userInfo
+        var getUserData = { cellphone: userInfo.cellphone }
+
+        this.httpRequest( "getUserInfo.do", getUserData, function(res){
+
+          that.vehicleType_code = res.data.vehicleType  // 车型
+          that.vehicleLoad = res.data.maxLoadWeight   // 载重吨
+          that.vehicleVolume = res.data.maxLoadVolumn   // 载重体积
+
+          var typeOfCarList = that.$store.state.typeOfCarList
+          if(typeOfCarList.length){
+            for(var i = 0; i < typeOfCarList.length; i++){
+              if(typeOfCarList[i].code == that.vehicleType_code){
+                that.vehicle_type = typeOfCarList[i].description
+              }
+            }
+          }else{
+            that.httpRequest_ygy("queryVehicleModel.do", "", function(rest){
+              for(var i = 0; i < rest.data.length; i++){
+                rest.data[i].name = rest.data[i].vehicleType
+              }
+              that.SelectBoxList = rest.data
+            })
+          }
+        })
+      },
       // 记住用户输入，存到vuex；数字精确2位小数
       input_change(v){
-        if(v == "vehicleLoad" || v == "vehicleVolume"){
-          this[v] = this[v].replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3'); //只能输入两个小数
-        }
+        
         this.$store.state.pg_publish.car_info[v] = this[v]
       },
       // data 转 2019-01-01
@@ -393,7 +404,7 @@
   }
 </script>
 <style lang="less" scoped>
-  .MyPublish{
+  .car_publish_create{
     overflow: hidden;
     background-color: #E5E8FA;
     .container{

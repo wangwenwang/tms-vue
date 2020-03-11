@@ -81,11 +81,8 @@ import FooterIndex from "../../components/footer"
   	  },
       // 跳转到 我的发布 页面
       toMyPublish(){  
-        this.$router.push({
-          name:"MyPublish",
-          query:{
-          }
-        })
+
+        this.$router.push("car_publish_list")
       },
   	  // 跳转到 历史轨迹 页面
   	  toHistoricalTrack(){  

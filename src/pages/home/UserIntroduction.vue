@@ -60,10 +60,10 @@
       if(this.$route.query.sourceInfo){
         this.sourceInfo = this.$route.query.sourceInfo;//货源详情
       }
-      // if(this.$route.query.whoPush){
+      if(this.$route.query.whoPush){
 
-      //   this.whoPush = this.$route.query.whoPush;
-      // }
+        this.whoPush = this.$route.query.whoPush;
+      }
       if(this.$store.state.userInfo.userType == "owner"){
       	this.headItem = "司机简介"
       }
@@ -101,16 +101,19 @@
   	  })  
   	},
   	methods:{
+
   	  // 返回上一页
   	  goPrev(){  
-  	  	// this.$router.push({
-  	  	//   name:"sourceDetail",
-  	  	//   query:{
-  	  	//   	sourceInfo:this.sourceInfo,
-  	  	//   	// whoPush:this.whoPush,
-  	  	//   }
-  	  	// })
-        this.$router.back(-1);
+
+        console.log(this.whoPush)
+
+  	  	this.$router.push({
+  	  	  name:"sourceDetail",
+  	  	  query:{
+            sourceInfo:this.sourceInfo,
+            whoPush:this.whoPush
+  	  	  }
+  	  	})
   	  }
   	}
   }

@@ -1,8 +1,8 @@
 <template>
-  <div class="PublishList">
-    <header><i class="iconfont icon-xiangzuo1"   @click="goprev"></i><span>历史车源</span></header>
+  <div class="car_publish_list">
+    <header><i class="iconfont icon-xiangzuo1"   @click="goprev"></i><span>我的发布</span></header>
     <div class="container">
-      <div class="dataItem" v-for='(dataItem,index) in PublishListdata' :id="index"  :key='index'   >
+      <div class="v-for-" v-for='(dataItem,index) in data' :id="index"  :key='index'   >
         <div class="one">
           <span>{{dataItem.carrierCity}} </span><span> {{dataItem.carrierAddress3}}</span>
           <span> → </span>
@@ -19,6 +19,9 @@
           </div>
         </div>
       </div>
+
+      <div class="create-car-publish" @click="create_car_publish()">新建车源</div>
+
       <!-- 页面数据为空时 -->
       <div  class="NoData"  v-if="noDataShow">
         <div>
@@ -39,44 +42,39 @@
         noDataShow:false,//没有数据
         orderState:'',//订单类型
         orderArr:[],//订单列表
-        PublishListdata:[],
+        data:[],
       }
     },
     components:{
       componentOrderItem
     },
     created(){
-      
-      // this.$nextTick(() => {
-      //   if(this.orderState == ""){
-      //     this.choseAll();
-      //   }
-      // })
+
       this.nowDate = this.getNowTime().substring(0,10);
       var that = this;
+
       // 获取发布车源信息
-      that.httpRequest_ygy("queryVehicleSource.do","",function(PublishRes){
+      that.httpRequest_ygy("queryVehicleSource.do", "", function(PublishRes){
 
-          if(PublishRes.data.length){
+        if(PublishRes.data.length){
 
-            that.PublishListdata = PublishRes.data;
-            that.noDataShow = false;
+          that.data = PublishRes.data;
+          that.noDataShow = false;
 
-            for( var i=0; i<that.PublishListdata.length; i++){
+          for( var i=0; i<that.data.length; i++){
 
-              if(that.PublishListdata[i].publishTime.substring(0,10) == that.nowDate){
-                
-                that.PublishListdata[i].publishTime = that.PublishListdata[i].publishTime.substring(11,16);
-              }else{
-                that.PublishListdata[i].publishTime = that.PublishListdata[i].publishTime.substring(5,10);
-              }
-              that.PublishListdata[i].loadingTime = that.PublishListdata[i].loadingTime.substring(0,10);
+            if(that.data[i].publishTime.substring(0,10) == that.nowDate){
+              
+              that.data[i].publishTime = that.data[i].publishTime.substring(11,16);
+            }else{
+              that.data[i].publishTime = that.data[i].publishTime.substring(5,10);
             }
-          }else{
-            that.noDataShow = true;
+            that.data[i].loadingTime = that.data[i].loadingTime.substring(0,10);
           }
+        }else{
+          that.noDataShow = true;
+        }
       });
-      console.log(this.PublishListdata)
     },
     methods:{
       // 返回上一页
@@ -87,6 +85,10 @@
           }
         })
       },
+      create_car_publish(){
+
+        this.$router.push("car_publish_list")
+      },
       reqOrderList(){
         var that = this
         var postData = {
@@ -94,7 +96,7 @@
         }
         // 获取门店信息
         that.httpRequest_ygy("queryVehicleSource.do",postData,function(res){
-          that.PublishListdata = []
+          that.data = []
           if(res.data.length){
             that.orderArr = res.data;
             that.noDataShow = false;
@@ -128,12 +130,13 @@
   }
 </script>
 <style lang="less" scoped>
-  .PublishList{
+  .car_publish_list{
     overflow: hidden;
     height: 100%;
     background-color: #E5E8FA;
     .container{
-      .dataItem{
+      height: 100%;
+      .v-for-{
         margin: 20/50rem;
         margin-top: 60/50rem;
         padding:30/50rem 15/50rem 50/50rem 15/50rem;
@@ -167,7 +170,19 @@
             float: right;
           }
         }
-      } 
+      }
+      .create-car-publish{
+        width: 140/50rem;
+        height: 70/50rem;
+        background-color: #5965D8;
+        position: absolute;
+        bottom: 80/50rem;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 8/50rem;
+        line-height: 70/50rem;
+        text-align: center;
+      }
     }
   }
 </style>
