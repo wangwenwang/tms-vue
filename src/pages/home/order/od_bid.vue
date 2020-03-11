@@ -69,7 +69,7 @@
         }else if(this.orderState == "NON-RATE"){
           this.choseToEvaluate();
         }else if(this.orderState == "CANCEL"){
-          this.toCancel();
+          this.choseCancel();
         }
       })
       this.nowDate = this.getNowTime().substring(0,10);
