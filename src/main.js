@@ -49,8 +49,11 @@ Vue.prototype.HOST = "http://k56.kaidongyuan.com/tmsApp/"                       
 // Vue.prototype.HOST = "http://192.168.20.98:8880/cyscm/tmsApp/"               //小邓
 // Vue.prototype.HOST = "http://192.168.20.164:8880/tmsApp/"                    //蔡晓宇
 
-// Vue.prototype.HOST = "http://kdynnjk.3322.org:9998/cyscm/tmsApp/"            //袁功谊 配货易司机S
-// Vue.prototype.HOST_ygy = "http://kdynnjk.3322.org:9998/cyscm/vehicleGoods/"  //袁功谊 车货匹配
+// Vue.prototype.HOST = "http://192.168.20.179:8080/tmsApp/"            //袁功谊 配货易司机S
+// Vue.prototype.HOST_ygy = "http://192.168.20.179:8080/vehicleGoods/"  //袁功谊 车货匹配
+
+// Vue.prototype.HOST = "http://192.168.20.96:8880/cyscm/tmsApp/"            //袁功谊 配货易司机S
+// Vue.prototype.HOST_ygy = "http://192.168.20.96:8880/cyscm/vehicleGoods/"  //袁功谊 车货匹配
 
 
 
@@ -136,25 +139,14 @@ Vue.prototype.httpRequest=function (url,params,success){
 
 				msg = url + "请求失败";
 			}
-
-			that.$alert(msg, '提示', {
-	            confirmButtonText: '确定',
-	            callback: action => {
-		            
-	            }
-           	})
+           	that.$message.error(msg)
 		}
 	})
 	.catch(function(res){
 
 		that.$emit('isLoading', false);
-			
-		that.$alert("http请求失败", '提示', {
-	        confirmButtonText: '确定',
-	        callback: action => {
-	            
-	        }
-	   	})
+
+		that.$message.error("http请求失败")
 		
 	})
 }
@@ -189,25 +181,14 @@ Vue.prototype.httpRequest_ygy=function (url,params,success){
 
 				msg = url + "请求失败";
 			}
-
-			that.$alert(msg, '提示', {
-	            confirmButtonText: '确定',
-	            callback: action => {
-		            
-	            }
-           	})
+			that.$message.error(msg)
 		}
 	})
 	.catch(function(res){
 
 		that.$emit('isLoading', false);
 			
-		that.$alert("http请求失败", '提示', {
-	        confirmButtonText: '确定',
-	        callback: action => {
-	            
-	        }
-	   	})
+		that.$message.error("http请求失败")
 		
 	})
 }

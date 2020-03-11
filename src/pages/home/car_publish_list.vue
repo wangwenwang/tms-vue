@@ -104,6 +104,7 @@
         // 更新车源信息
         this.httpRequest_ygy("updateVehiclePublishTime.do", postData, function(res){
 
+          that.$message.success("更新成功")
           that.request()
         })
       },
