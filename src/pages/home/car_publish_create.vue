@@ -338,12 +338,6 @@
           })
           return
         }
-        if(this.load_time > this.end_time ){
-          that.$alert('出发日期不能大于结束日期', '提示', {
-            confirmButtonText: '确定'
-          })
-          return
-        }
 
 
 
