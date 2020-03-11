@@ -113,7 +113,7 @@
         }
         if(this.$store.state.userInfo.userType == "driver"){
           this.$router.push({
-            name:'MyPublish',
+            name:'car_publish_create',
           })
           
         }

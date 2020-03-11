@@ -295,11 +295,11 @@ header>.icon-huabanfuben::before{
   border-color: #A1A9E7;
 } 
 
-.pg_publish .el-input__inner, .MyPublish .el-input__inner{
+.pg_publish .el-input__inner, .car_publish_create .el-input__inner{
   border: none;
 }
 //选择时间框长度
-.MyPublish .y_goods .el-input--suffix, .pg_publish .y_goods .el-input--suffix{
+.car_publish_create .y_goods .el-input--suffix, .pg_publish .y_goods .el-input--suffix{
   width: 400/50rem;
 }
 

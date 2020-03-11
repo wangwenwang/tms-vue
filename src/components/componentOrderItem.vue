@@ -116,20 +116,14 @@
             }
           }
           .two{
-            display: flex;
             .left{
               width: 402/50rem;
-              overflow: hidden;
-              text-overflow:ellipsis;
-              white-space: nowrap;
-              // float: left;
-              display: flex;
-
+              float: left;
             }
             .distance{
               font-size: 24/50rem;
               color: #999;
-              display: flex;
+              float: right;
             }
 
           }

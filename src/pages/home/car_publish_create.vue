@@ -1,6 +1,6 @@
 <template>
   <div class="car_publish_create">
-    <header><i class="iconfont icon-xiangzuo1"  @click="goPrev" ></i><span>发布车源</span><i class="iconfont icon-lishijilu"  @click="toPublishList" ></i></header>
+    <header><i class="iconfont icon-xiangzuo1"  @click="goPrev" ></i><span>发布车源</span></header>
     <div class="container">
       <div class="inv_goods">
         <div class='infoContainer'>
@@ -68,7 +68,8 @@
                 </el-date-picker>
               </div>
             </div>
-            <div class="endTime">
+
+<!--             <div class="endTime">
               <div><span>结束日期</span></div>
               <div>
                 <el-date-picker
@@ -80,7 +81,7 @@
                   format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd">
                 </el-date-picker>
               </div>
-            </div>
+            </div> -->
 
             <div>
               <div><span>备注</span></div>
@@ -122,6 +123,7 @@
         remark:"",//备注
         tips_Msg:"",//提示信息
         ifTips:false,
+        typeOfCarList: [],
         pickerOptions: {
           shortcuts: [{
             text: '今天',
@@ -173,12 +175,10 @@
       }else{
         this.load_time = this.formatDate(new Date)
       }
-      if(this.$store.state.pg_publish.car_info.end_time.length){
-        this.end_time = this.$store.state.pg_publish.car_info.end_time
-      }
       if(this.$store.state.pg_publish.car_info.remark.length){
         this.remark = this.$store.state.pg_publish.car_info.remark
       }
+      this.end_time = this.formatDate(new Date)
 
       this.get_vehicle_type()
     },
@@ -189,30 +189,39 @@
 
         var that = this
         var userInfo = this.$store.state.userInfo
-        var getUserData = { cellphone: userInfo.cellphone }
 
-        this.httpRequest( "getUserInfo.do", getUserData, function(res){
+        this.vehicleType_code = userInfo.vehicleType
+        this.vehicleLoad = userInfo.maxLoadWeight
+        this.vehicleVolume = userInfo.maxLoadVolumn
 
-          that.vehicleType_code = res.data.vehicleType  // 车型
-          that.vehicleLoad = res.data.maxLoadWeight   // 载重吨
-          that.vehicleVolume = res.data.maxLoadVolumn   // 载重体积
-
-          var typeOfCarList = that.$store.state.typeOfCarList
-          if(typeOfCarList.length){
-            for(var i = 0; i < typeOfCarList.length; i++){
-              if(typeOfCarList[i].code == that.vehicleType_code){
-                that.vehicle_type = typeOfCarList[i].description
-              }
+        if(this.$store.state.typeOfCarList.length){
+          this.typeOfCarList = this.$store.state.typeOfCarList
+          for(var i = 0; i < this.typeOfCarList.length; i++){
+            if(this.typeOfCarList[i].code == this.vehicleType_code){
+              this.vehicle_type = this.typeOfCarList[i].description
             }
-          }else{
-            that.httpRequest_ygy("queryVehicleModel.do", "", function(rest){
-              for(var i = 0; i < rest.data.length; i++){
-                rest.data[i].name = rest.data[i].vehicleType
-              }
-              that.SelectBoxList = rest.data
-            })
           }
-        })
+        }else{
+          var requestData = { listName: "TMS-客户指定车型" }
+          this.httpRequest("queryCodeLukupData.do", requestData, function(res){
+            if(res.data.length > 0){
+              that.typeOfCarList = res.data;
+              that.$store.state.typeOfCarList = res.data;
+              for(var i = 0; i < that.typeOfCarList.length; i++){
+                if(that.typeOfCarList[i].code == that.vehicleType_code){
+                  that.vehicle_type = that.typeOfCarList[i].description
+                }
+              }
+            }else{
+              that.httpRequest_ygy("queryVehicleModel.do", "", function(rest){
+                for(var i = 0; i < rest.data.length; i++){
+                  rest.data[i].name = rest.data[i].vehicleType
+                }
+                that.SelectBoxList = rest.data
+              })
+            }
+          })
+        }
       },
       // 记住用户输入，存到vuex；数字精确2位小数
       input_change(v){
@@ -245,17 +254,8 @@
           unload_pointList:[],
           car_info:{vehicleLoad:"",vehicleVolume:"",vehicle_type:"",load_time:"",end_time:"",remark:""},
         }
-        this.$router.push({
-          name:"HomeIndex"
-        })
+        this.$router.push("car_publish_list")
       },
-      //历史车源
-      toPublishList(){
-        this.$router.push({
-           name:"PublishList"
-        })
-      },
-
       //获取起点城市、区
       startChange(value) {
         this.AddressStart[0].p_c_d = value
@@ -390,7 +390,7 @@
           that.tips_Msg = "操作成功";
           setTimeout(function(){
             that.$router.push({
-              name:"PublishList",
+              name:"car_publish_list",
             })
           },2000)
           that.$store.state.pg_publish = {

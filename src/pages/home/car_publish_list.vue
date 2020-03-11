@@ -20,6 +20,8 @@
         </div>
       </div>
 
+      <div class="kong_"></div>
+
       <div class="create-car-publish" @click="create_car_publish()">新建车源</div>
 
       <!-- 页面数据为空时 -->
@@ -87,7 +89,7 @@
       },
       create_car_publish(){
 
-        this.$router.push("car_publish_list")
+        this.$router.push("car_publish_create")
       },
       reqOrderList(){
         var that = this
@@ -135,10 +137,11 @@
     height: 100%;
     background-color: #E5E8FA;
     .container{
-      height: 100%;
+      height: calc(100% - 1.8rem);
+      overflow: scroll;
       .v-for-{
         margin: 20/50rem;
-        margin-top: 60/50rem;
+        margin-top: 40/50rem;
         padding:30/50rem 15/50rem 50/50rem 15/50rem;
         height: 180/50rem;
         background-color: #fff;
@@ -171,17 +174,22 @@
           }
         }
       }
+      .kong_{
+        width: 100%;
+        height: 130/50rem;
+      }
       .create-car-publish{
-        width: 140/50rem;
-        height: 70/50rem;
+        width: 170/50rem;
+        height: 80/50rem;
         background-color: #5965D8;
         position: absolute;
-        bottom: 80/50rem;
+        bottom: 40/50rem;
         left: 50%;
         transform: translateX(-50%);
         border-radius: 8/50rem;
-        line-height: 70/50rem;
+        line-height: 80/50rem;
         text-align: center;
+        color: white;
       }
     }
   }

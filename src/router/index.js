@@ -94,8 +94,8 @@ import HistoricalTrack from '@/pages/home/HistoricalTrack'  //历史轨迹
 import PersonalData from '@/pages/home/PersonalData'  //个人资料
 import RePassword from '@/pages/home/RePassword'  //修改密码
 import od_bid from '@/pages/home/order/od_bid'  // 我的订单
-import MyPublish from '@/pages/home/MyPublish'  //我的发布 
-import PublishList from '@/pages/home/PublishList'  //车源列表
+import car_publish_create from '@/pages/home/car_publish_create'  //我的发布（车辆发布）
+import car_publish_list from '@/pages/home/car_publish_list'  //车源发布列表
 import ToEvaluate from '@/pages/home/ToEvaluate'  //评价
 import UserIntroduction from '@/pages/home/UserIntroduction'  //货主/司机简介
 
@@ -267,15 +267,15 @@ export default new Router({
     },
      // 我的发布（车源）
     {
-      path: '/MyPublish',
-      name: 'MyPublish',
-      component: MyPublish
+      path: '/car_publish_create',
+      name: 'car_publish_create',
+      component: car_publish_create
     },
     // 车源列表
     {
-      path: '/PublishList',
-      name: 'PublishList',
-      component: PublishList
+      path: '/car_publish_list',
+      name: 'car_publish_list',
+      component: car_publish_list
     },
     // 竞价中
     {
