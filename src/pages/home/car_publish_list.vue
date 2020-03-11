@@ -18,7 +18,7 @@
             <span v-if='item.vehicleLoad'>载重：{{item.vehicleLoad}}吨&nbsp;&nbsp;</span>
             <span v-if='item.vehicleVolume'>体积：{{item.vehicleVolume}}方&nbsp;</span>
           </div>
-          <div v-if='item.loadingTime'> 日期： {{item.loadingTime}}</div>
+          <div v-if='item.loadingTime'>出发时间： {{item.loadingTime}}</div>
           <div>状态：{{ item.status }}</div>
         </div>
 
