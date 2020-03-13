@@ -15,6 +15,13 @@
           	<i class="iconfont icon-gou"></i> 
           	<span> 实名认证</span>
           </div>
+
+          <!-- 星级 -->
+          <div class="block">
+            <span class="demonstration">星级： </span>
+            <el-rate class="star" v-model="value1" :colors="colors"></el-rate>
+          </div>
+
         </div>
         <div class="company"><span>公司名称</span><span>  {{userInfo.comName}}</span></div>
         <div class="company"><span>公司地址</span><span>  {{userInfo.comAddress}}</span></div>
@@ -51,6 +58,7 @@
   	  	userInfo:{},
   	  	evalInfo:[],
         whoPush:'',
+        value1:4
   	  }
   	},
   	created(){  
@@ -106,6 +114,8 @@
   	  goPrev(){  
 
         console.log(this.whoPush)
+        console.log(this.sourceInfo)
+
 
   	  	this.$router.push({
   	  	  name:"sourceDetail",
@@ -158,7 +168,18 @@
           .three{
             color: #699E3F;
           }
-
+          .block{
+            padding-top: 30/50rem;
+            display: flex; 
+            justify-content: flex-start; 
+            .demonstration{
+              font-size: 30/50rem;
+              font-weight: 550;
+            }
+            .star{
+              padding-top: 8/50rem;
+            }
+          }
         }
         .company{
           line-height: 50/50rem;
