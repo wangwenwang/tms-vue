@@ -58,14 +58,7 @@
             <div class="loadTime">
               <div><span>出发日期</span></div>
               <div>
-                <el-date-picker
-                  v-model="load_time" :editable='false' 
-                  type="date"
-                  placeholder="选择日期时间"
-                  align="right"
-                  :picker-options="pickerOptions"
-                  format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd">
-                </el-date-picker>
+                <el-date-picker size="small" id="datetime"  :editable='false' v-model="load_time"   type="datetime"  placeholder="选择日期时间"></el-date-picker>
               </div>
             </div>
 

@@ -302,6 +302,9 @@ header>.icon-huabanfuben::before{
 .car_publish_create .y_goods .el-input--suffix, .pg_publish .y_goods .el-input--suffix{
   width: 400/50rem;
 }
+.car_publish_create .loadTime .el-input__inner{
+  margin-top: 15/50rem;
+}
 
 
 //选择弹框

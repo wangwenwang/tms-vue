@@ -49,11 +49,14 @@ Vue.prototype.HOST = "http://k56.kaidongyuan.com/tmsApp/"                       
 // Vue.prototype.HOST = "http://192.168.20.98:8880/cyscm/tmsApp/"               //小邓
 // Vue.prototype.HOST = "http://192.168.20.164:8880/tmsApp/"                    //蔡晓宇
 
-// Vue.prototype.HOST = "http://192.168.20.179:8080/tmsApp/"            //袁功谊 配货易司机S
-// Vue.prototype.HOST_ygy = "http://192.168.20.179:8080/vehicleGoods/"  //袁功谊 车货匹配
+// Vue.prototype.HOST = "http://j30186f037.qicp.vip/cyscm/tmsApp/"            //袁功谊 配货易司机S
+// Vue.prototype.HOST_ygy = "http://j30186f037.qicp.vip/cyscm/vehicleGoods/"  //袁功谊 车货匹配
 
 // Vue.prototype.HOST = "http://192.168.20.96:8880/cyscm/tmsApp/"            //袁功谊 配货易司机S
 // Vue.prototype.HOST_ygy = "http://192.168.20.96:8880/cyscm/vehicleGoods/"  //袁功谊 车货匹配
+
+// Vue.prototype.HOST = "http://kdynnjk.3322.org:8770/tmsApp/"            //测试服务器 配货易司机S
+// Vue.prototype.HOST_ygy = "http://kdynnjk.3322.org:8770/vehicleGoods/"  //测试服务器 车货匹配
 
 
 

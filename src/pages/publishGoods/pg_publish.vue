@@ -108,10 +108,14 @@
           </div>
         </div>
       </div>
+      <div class="blank_"></div>
     </div>
-    <div class="BtnComponent bottomBtn">
-      <div @click='submit' class="onlyBtn">发  货</div>
+
+    <div class="bottom-btn">
+      <div class="next-btn"  @click="submit_driver">指定司机</div>
+      <div class="edit-btn" @click="submit">发 货</div>
     </div>
+
     <componentSelectBox v-if="SelectBoxFlag" v-bind:SelectBoxList='SelectBoxList' @selectedItem='selectedItem' :BouncedName="BouncedName" @selectCancel="selectCancel"></componentSelectBox>
     <div v-if="ifTips" class="msg_tips">
       <div class="tips_content">
@@ -379,44 +383,147 @@
           })
         })
       },
-      submit(){
-
-        var that = this;
-
+      check(){
         if(this.addressList.s[0].p_c_d.length == 0 || this.addressList.s[0].detail.length == 0){
-          that.$alert('请输入装货地址', '提示', {
+          this.$alert('请输入装货地址', '提示', {
             confirmButtonText: '确定'
           })
-          return
+          return false
         }
         if(this.addressList.e[0].p_c_d.length == 0 || this.addressList.e[0].detail.length == 0){
-          that.$alert('请输入卸货地址', '提示', {
+          this.$alert('请输入卸货地址', '提示', {
             confirmButtonText: '确定'
           })
-          return
+          return false
         }
         if(this.goods_name.length == 0){
-          that.$alert('请输入货物名称', '提示', {
+          this.$alert('请输入货物名称', '提示', {
             confirmButtonText: '确定'
           })
-          return
+          return false
         }
         if(this.min_weight == 0 && this.max_weight == 0){
-          that.$alert('请填写重量', '提示', {
+          this.$alert('请填写重量', '提示', {
             confirmButtonText: '确定'
           })
-          return
+          return false
         }
         if(this.min_volume == 0 && this.max_volume == 0){
-          that.$alert('请填写体积', '提示', {
+          this.$alert('请填写体积', '提示', {
             confirmButtonText: '确定'
           })
-          return
+          return false
         }
         if(this.vehicle_type == 0){
-          that.$alert('请选择车型车长', '提示', {
+          this.$alert('请选择车型车长', '提示', {
             confirmButtonText: '确定'
           })
+          return false
+        }
+        return true
+      },
+      search(cellPhone){
+
+        var that = this
+        var postData = {
+          cellPhone : cellPhone,//司机电话
+        }
+
+        this.httpRequest_ygy("queryInfoByPhone.do", postData, function(res){
+
+          that.$prompt('确定要指定给' + res.data.driver_name + "吗？", '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            showInput: false
+          }).then(({ value }) => {
+
+            // 装货点
+            var LoadingPoint = []
+            for(var i = 0; i < that.addressList.s.length; i++){
+              var item = that.addressList.s[i]
+              var load = {"l_province":item.p_c_d[0],"l_city":item.p_c_d[1],"l_district":item.p_c_d[2],"l_subdistrict":"","l_detail":item.detail,"l_lng":item.lng,"l_lat":item.lat}
+              LoadingPoint.push(load)
+            }
+
+            // 卸载点
+            var UnloadPoint = []
+            for(var i = 0; i < that.addressList.e.length; i++){
+              var item = that.addressList.e[i]
+              var load = {"u_province":item.p_c_d[0],"u_city":item.p_c_d[1],"u_district":item.p_c_d[2],"u_subdistrict":"","u_detail":item.detail,"u_lng":item.lng,"u_lat":item.lat}
+               UnloadPoint.push(load)
+            }
+
+            // 货品
+            var CargoInfo = {"name":that.goods_name,
+            "min_weight":that.min_weight?that.min_weight:that.max_weight,
+            "max_weight":that.max_weight?that.max_weight:that.min_weight,
+            "min_volume":that.min_volume?that.min_volume:that.max_volume,
+            "max_volume":that.max_volume?that.max_volume:that.min_volume}
+
+            if(LoadingPoint.length == 0 || UnloadPoint.length == 0){
+              that.$alert('请输入卸货地址', '提示', {
+                confirmButtonText: '确定'
+              })
+            }
+
+            var postData = {
+              driverId : res.data.driver_id,   // 司机id
+              ownerName : that.$store.state.userInfo.userName,//货主名称
+              ownerPhone : that.$store.state.userInfo.cellphone,//货主电话
+              endTime : "2021-1-1 23:59:59",//报价截止时间
+              loadingTime : that.load_time,
+              expectedCost : that.expected_cost,//期望运费
+              vehicleType : that.vehicle_type,//车型
+              loadUnloadType : that.load_unload_type,//装卸类型
+              mark : that.remark,//备注
+              LoadingPoint : LoadingPoint,//装货点
+              UnloadPoint : UnloadPoint,//装货点
+              CargoInfo : CargoInfo,//货物信息
+            }
+
+            that.httpRequest_ygy("addGoods.do",postData,function(res){
+
+              that.ifTips = true;
+              that.tips_Msg = "操作成功"
+              that.deleteVeux()
+              setTimeout(function(){
+                that.$router.push({
+                  name:"publishGoods",
+                })
+              },2000)
+            })
+
+          }).catch(() => { })
+        })
+      },
+      submit_driver(){
+
+        var that = this
+
+        if(this.check() == false){
+          return
+        }
+
+        if(this.expected_cost == 0){
+          this.$alert('指定司机必须填写金额', '提示', {
+            confirmButtonText: '确定'
+          })
+          return false
+        }
+
+        this.$prompt('请输入司机号码', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+        }).then(({ value }) => {
+
+          this.search(value)
+        }).catch(() => { })
+      },
+      submit(){
+
+        var that = this
+
+        if(this.check() == false){
           return
         }
 
@@ -450,6 +557,7 @@
         }
 
         var postData = {
+          driverId : "",   // 司机id
           ownerName : that.$store.state.userInfo.userName,//货主名称
           ownerPhone : that.$store.state.userInfo.cellphone,//货主电话
           endTime : "2021-1-1 23:59:59",//报价截止时间
@@ -480,12 +588,13 @@
 </script>
 <style lang="less" scoped>
   .pg_publish{
+    height: 100%;
     overflow: hidden;
     background-color: #E5E8FA;
     .container{
-      height: 100%;
+      height: calc(100% - 1.8rem);
       padding-bottom: 120/50rem;
-      overflow: hidden;
+      overflow: scroll;
       .inv_goods{
         .infoContainer{
           margin: 20/50rem;
@@ -608,6 +717,33 @@
         span{
           color: #000;
         }
+      }
+      .blank_{
+        width: 100%;
+        height: 120/50rem;
+      }
+    }
+    .bottom-btn{
+      width: 650/50rem;
+      height: 70/50rem;
+      position: absolute;
+      bottom: 40/50rem;
+      left: 50/50rem;
+      &>div{
+        width: 45%;
+        height: 100%;
+        background-color: #1e8cf8;
+        border-radius: 35/50rem;
+        font-size: 29/50rem;
+        color: white;
+        line-height: 70/50rem;
+        text-align: center;
+      }
+      .next-btn{
+        float: left;
+      }
+      .edit-btn{
+        float: right;
       }
     }
   }
