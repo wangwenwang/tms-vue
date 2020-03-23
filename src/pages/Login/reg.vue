@@ -11,6 +11,15 @@
 			    	<div><span>身份证号</span><input placeholder='必填'   ref="IDCardNum"   @keyup.enter="getFocus('vicheNo')"    v-model='IDCardNum'></input><i v-if="IDCardNum" @click="clearInput('IDCardNum')" class="iconfont icon-iconfontcuowu"></i></div>
 
 			    	<p><span>车辆信息</span></p>
+			    	<div @click='ChooseCarrier'><span>承运商</span><div ><span>{{Carrier}}</span><i  class="iconfont icon-xiangshang"></i></div></div>
+
+  	                <div><span>车辆类型</span><div class="radioValue">
+  	                  <el-radio-group v-model="vehicleAppType"  @change="changeHandler">
+                        <el-radio label="1">自有车</el-radio>
+                        <el-radio label="2">临请车</el-radio>
+                      </el-radio-group></div>
+                    </div>
+
 			    	<div><span>车牌号</span><input placeholder='必填'   ref="vicheNo"   @keyup.enter="getFocus('vehicleLength')"    v-model='vicheNo'></input><i v-if="vicheNo" @click="clearInput('vicheNo')" class="iconfont icon-iconfontcuowu"></i></div>
 				    <div @click='TypeOfCar'><span>车型</span><div><span>{{vehicleType}}</span><i class="iconfont icon-xiangshang"></i></div></div>
 				    <div><span>车长（米）</span><input placeholder='车长' type="number"   ref="vehicleLength"   @keyup.enter="getFocus('vehicleWide')"    v-model='vehicleLength'></input><i v-if="vehicleLength.length" @click="clearInput('vehicleLength')" class="iconfont icon-iconfontcuowu"></i></div>
@@ -82,6 +91,15 @@
 					<div class="cancel"   @click="selectCancel('e')">取消</div>
 				</div>
 			</div>
+			<div class="SelectMeng"   v-if="carrierShow">
+				<div class="SelectWarehouses" >
+					<div class="SelectTitle">请选择承运商</div>
+					<div class="SelectItem">
+						<div @click="CarrierComit(index)"  v-for='(dataItem,index) in CarrierList'  :id="index"  :key='index'>{{dataItem.name}}</div>
+					</div>
+					<div class="cancel"   @click="selectCancel('e')">取消</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -90,35 +108,43 @@
 		name:"Reg",
 		data(){
 			return{
-				typeMShow:false,
-				cellphone:"",//上个页面传来的手机号
-				userName:"",//姓名
-				password:"",//密码
-				IDCardNum:"",//身份证号码
-				vicheNo:"",//车牌号
-				vehicleType:"请选择",//车型
-				vehicleType_code:"",//车型代码
-				vehicleLength:"",//车长
-				vehicleWide:"",//车宽
-				vehicleHeight:"",//车高
-				maxLoadWeight:'',//载重重量
-				maxLoadVolumn:"",//载重体积
-				tips_Msg:"",//提示信息
-				ifTips:false,//提示信息是否显示
-				typeOfCarList:[],//车型列表
-				dialogImageUrl: '',
-		        dialogVisible: false,//是否放大预览照片
-		        uploadParams:{},//上传图片时 额外的参数
+				
+                typeMShow:false,
+  	  	        carrierShow:false,
+  	  	        cellphone:"",//上个页面传来的手机号
+  	  	        userName:"",//姓名
+  	  	        password:"",//密码
+  	  	        IDCardNum:"",//身份证号码
+  	  	        vicheNo:"",//车牌号
+  	  	        Carrier:"请选择",//承运商
+  	  	        CarrierID:"",//承运商ID
+  	  	        vehicleType:"请选择",//车型
+  	  	        vehicleType_code:"",//车型代码
+  	  	        vehicleLength:"",//车长
+  	  	        vehicleWide:"",//车宽
+  	  	        vehicleHeight:"",//车高
+  	  	        maxLoadWeight:'',//载重重量
+  	  	        maxLoadVolumn:"",//载重体积
+  	  	        tips_Msg:"",//提示信息
+  	  	        ifTips:false,//提示信息是否显示
+  	  	        typeOfCarList:[],//车型列表
+  	  	        CarrierList:[],//承运商列表
+  	  	        dialogImageUrl: '',
+  	            dialogVisible: false,//是否放大预览照片
+  	            uploadParams:{},//上传图片时 额外的参数  
+  	            vehicleAppType:"1",
 
 			}
 		},
 		mounted(){
 
 			this.$refs['userName'].focus();
+			
 		},
 		created(){
 
 			var that = this;
+			
 
 			this.cellphone = this.$route.query.phoneNum;
 
@@ -139,6 +165,19 @@
 				    that.$store.state.typeOfCarList = res.data;
 	            })
 		    }
+
+		    //获取承运商列表 
+  	        if (this.$store.state.CarrierList.length) {  
+
+  	            this.CarrierList = that.$store.state.CarrierList; 
+
+  	        } else {  
+  	            this.httpRequest_ygy( "queryOrgnization.do", "",function(res){  
+
+                    that.CarrierList = res.data;
+  	                that.$store.state.CarrierList = res.data;
+                })
+  	        }
 		},
 		methods:{
 			goPrev(){
@@ -149,12 +188,19 @@
 					}
 				})
 			},
-			 // 点击 注册 按钮
+			changeHandler(value) {
+			    if(this.vehicleAppType == "2"){
+    
+			    	this.Carrier = "";
+			    	this.CarrierID = "";
+			    }
+            },
+			// 点击 注册 按钮
 			regBtn (){
-
 			    var that = this;
 
-			    if(!(that.userName && that.password  && that.IDCardNum && that.vicheNo && that.maxLoadWeight && that.maxLoadVolumn)){
+			    if(!(that.userName && that.password && that.IDCardNum && that.vicheNo && that.maxLoadWeight 
+			    	&& that.maxLoadVolumn )){
 
 			    	that.$alert("请输入必填项", '提示', {
 				        confirmButtonText: '确定',
@@ -170,6 +216,13 @@
 			    }else if (that.password.length<6){
 
 			      	that.$alert("密码不能小于六位数", '提示', {
+				        confirmButtonText: '确定',
+				   	})
+				   	return;
+
+			    }else if (that.vehicleAppType == "1" && !that.CarrierID){
+
+			      	that.$alert("请选择承运商", '提示', {
 				        confirmButtonText: '确定',
 				   	})
 				   	return;
@@ -195,6 +248,9 @@
 			          vehicleHeight: that.vehicleHeight,//高
 			          maxLoadWeight: that.maxLoadWeight,//载重重量
 			          maxLoadVolumn: that.maxLoadVolumn,//载重体积
+			          vehicleAppType: that.vehicleAppType,//车辆类型
+                      orgnizationId: that.CarrierID,//承运商id
+
 			        };
 
 			        that.httpRequest( "registerAppUser.do",params,function(res){
@@ -229,6 +285,18 @@
 			    this.vehicleType = this.typeOfCarList[index].description;
 			    this.vehicleType_code = this.typeOfCarList[index].code;
 			},
+
+			// 点击 承运商列表出现
+  	        ChooseCarrier (){  
+
+  	            this.carrierShow = true;
+  	        },
+  	        // 选择类型   确认具体车辆车型
+  	        CarrierComit:function(index){
+  	        	this.carrierShow = false;
+  	            this.Carrier = this.CarrierList[index].name;
+  	            this.CarrierID = this.CarrierList[index].id;
+  	        },
 		}
 	}
 </script>
@@ -263,6 +331,7 @@
 					    	margin-left: 10/50rem;
 					    }
 					}
+					.radioValue{ float: left;}
 				}
 				&>p{
 					width: 100%;
