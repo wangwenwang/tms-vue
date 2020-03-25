@@ -50,7 +50,7 @@
 
 					this.page = "wangjimima";
 
-				}else if(this.$route.query.page == "Reg"){
+				}else if(this.$route.query.page == "ChooseRole"){
 
 					this.page = "zhucezhanghao";
 				}
@@ -131,8 +131,8 @@
 			// 点击 下一步 按钮触发，验证用户输入的验证码，跳转到 注册 页面或者 忘记密码 页面
 			nextTo (){
 
-			    var that = this;
-
+				var that = this;
+				
 			    if (!that.phoneNum){
 
 			    	that.$alert("请输入手机号", '提示', {
@@ -179,10 +179,10 @@
 									}
 								})
 
-							}else if(that.$route.query.page == "Reg"){
+							}else if(that.$route.query.page == "ChooseRole"){
 
 								that.$router.push({
-									name:"Reg",
+									name:"ChooseRole",
 									query:{
 										phoneNum:that.phoneNum
 									}

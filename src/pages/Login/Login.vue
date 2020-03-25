@@ -262,7 +262,7 @@
 				this.$router.push({
 					name:"Identifying",
 					query:{
-						page:"Reg"
+						page:"ChooseRole"
 					}
 				})
 			},

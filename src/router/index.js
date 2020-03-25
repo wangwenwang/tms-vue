@@ -7,6 +7,8 @@ import Login from '@/pages/Login/Login'  //登录
 import Reg from '@/pages/Login/reg'  //注册
 import ForgotPwd from '@/pages/Login/forgotPwd'  //忘记密码
 import Identifying from '@/pages/Login/identifying'  //验证手机号
+import ChooseRole from '@/pages/Login/chooseRole'  //忘记密码
+
 
 
 // 帐号与第三方关联
@@ -131,6 +133,11 @@ export default new Router({
       path: '/Identifying',
       name: 'Identifying',
       component: Identifying
+    },
+    {
+      path: '/ChooseRole',
+      name: 'ChooseRole',
+      component: ChooseRole
     },
     // 搜索
     {

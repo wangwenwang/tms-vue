@@ -582,6 +582,7 @@ Vue.prototype.typeSelect = function(e){
 // 选择弹框 消失
 Vue.prototype.selectCancel = function(e){
 	this.typeMShow = false;
+	this.carrierShow = false;
 }
 
 // ———————————————————————————————————配载单操作按钮事件———————————————————————————————————————————————————————————

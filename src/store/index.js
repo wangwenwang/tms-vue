@@ -8,6 +8,7 @@ export default new vuex.Store({
 		userInfo:[],//登录页面 登录成功后获得的用户信息列表
 
 		typeOfCarList:[],//注册页面 车型列表
+		CarrierList:[],//注册页面  承运商列表
 
 		// 我的任务页面
 		Waybill:{
