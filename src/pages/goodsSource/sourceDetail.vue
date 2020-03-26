@@ -28,7 +28,7 @@
       
         <div class="handlingInfo">
           <div class="title"><span>装卸信息</span><span>{{sourceInfo.loadUnloadType}}</span>
-            <span v-if='$store.state.userInfo.userType == "driver"'>距装货地{{sourceInfo.distance}}km</span>
+            <span v-if='$store.state.userInfo.userType == "driver" && sourceInfo.distanceShow != false'>距装货地{{sourceInfo.distance}}km</span>
           </div>
           <div class="date"><i class="iconfont icon-yidongduanicon-"></i>
             <span>{{sourceInfo.loadingTime}} 全天00：00-24：00可装</span>
@@ -297,14 +297,20 @@
           this.sortByKeyAsc(this.data.bid, "bid_price")
         }
       },
-      // 根据key，数组降序
+      // 根据key，数组升序
        sortByKeyAsc(array, key){
 
         return array.sort(function(a,b){
-          var x = b[key];
-          var y = a[key];
-          return((x<y)?-1:((x>y)?1:0));
+          var x = a[key]
+          var y = b[key]
+          return ((x<y)?-1:(x>y)?1:0)
         })
+        // 降序
+        // return array.sort(function(a,b){
+        //   let x = Number(a[key])
+        //   let y = Number(b[key])
+        //   return((x<y)?1:((x>y)?-1:0))
+        // })
       },
       // 竞价时，货主查看司机资料
       owner_view_driver(index){
@@ -313,7 +319,8 @@
           name:"UserIntroduction",
           query:{
             UserID: this.data.bid[index].bid_driver_id,//司机id
-            sourceInfo: this.sourceInfo
+            sourceInfo: this.sourceInfo,
+            whoPush: this.whoPush
           }
         })
       },
