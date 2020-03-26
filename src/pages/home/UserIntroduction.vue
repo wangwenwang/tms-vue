@@ -141,7 +141,7 @@
         line-height: 40/50rem;
         .userImage{
           width: 100/50rem;
-          height: 110/50rem;
+          height: 100/50rem;
           float: left;
           img{
             width: 100/50rem;height: 110/50rem;
@@ -217,6 +217,9 @@
   	  			font-weight: 550;
   	  		}
   	  	}
+        .NoData{
+          margin-top: 50/50rem;
+        }
 
   	  }
   	}

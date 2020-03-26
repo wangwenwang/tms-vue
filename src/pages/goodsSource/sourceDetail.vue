@@ -100,7 +100,7 @@
 
         <div v-if='$store.state.userInfo.userType == "owner" && data.driverInfo.driver_price == undefined && !sourceInfo.expectedCost && data.bid.length == 0' class="ShippingInfo">暂无报价</div>
         <div class="button" v-if='$store.state.userInfo.userType == "owner"'>
-          <div class="btnEdit" v-if="ifEdit" @click.stop="toEdit()">修改</div>
+          <!-- <div class="btnEdit" v-if="ifEdit" @click.stop="toEdit()">修改</div> -->
           <div class="btnCancel" v-if="ifCancel" @click.stop="toCancel()">取消</div>
         </div>
       
@@ -170,6 +170,7 @@
         selfconfirm_show: false, //自建confirm是否显示提示框
         longitude:"114.046",//经度
         latitude:"22.628571",//纬度
+        sourceDetailInfo:{}
       }
     },
     mounted(){
@@ -183,6 +184,7 @@
 
         this.sourceInfo = this.$route.query.sourceInfo;
       }else{
+        console.log(999)
         this.sourceInfo = this.$store.state.sourceInfo;
       }
 
@@ -193,10 +195,10 @@
         this.sourceInfo.mileage = tempVal.substring(0, tempVal.length - 1)
       }
       var status = this.sourceInfo.status
-      // if(status == "NEW"){
+      if(status == "NEW"){
 
-      //   this.ifEdit = true;
-      // }
+        this.ifEdit = true;
+      }
       if(status == "NEW" || status =="NON-CONFIRM" || status =="NON-DELIVERY"){
 
         this.ifCancel = true;
@@ -224,7 +226,7 @@
       that.httpRequest_ygy("cargoDetail.do",postData,function(res){
 
         that.data = res.data
-        
+        that.sourceDetailInfo = res.data
         if(that.$store.state.userInfo.userType == "driver"){
           that.owner_or_driver_userName = that.data.ownerInfo.owner_name;
           that.owner_or_driver_tel = that.data.ownerInfo.owner_tel;
@@ -419,17 +421,19 @@
           name:"UserIntroduction",
           query:{
             UserID:this.owner_or_driver_ID,
+            whoPush:this.whoPush,
+            sourceInfo:this.sourceInfo,
           }
         })
       },
       //修改货源
       toEdit(){
-        return
         this.$router.push({
-          name:"sourceDetail",
+          name:"pg_publish",
           query:{
+            pushType:"Edit",
             sourceInfo:this.sourceInfo,
-            whoPush:"publishGoods",
+            sourceDetailInfo:this.sourceDetailInfo,
           }
         })
       },

@@ -60,9 +60,7 @@
           </div>
           <div class="rightContent">
             <div class="one">
-              <span>{{dataItem.carrierCity}} </span><span> {{dataItem.carrierAddress3}}</span>
-              <span> → </span>
-              <span>{{dataItem.c_city}} </span><span> {{dataItem.c_address3}}</span>
+              <span>{{dataItem.carrierCity}} {{dataItem.carrierAddress3}} → {{dataItem.c_city}} {{dataItem.c_address3}}</span>
               <span class="publishTime">{{dataItem.publishTime}}</span>
             </div>
             <div class="two">
@@ -79,20 +77,19 @@
               <div class="distance">约{{dataItem.distance}}km装货</div>
             </div>
             <div class="three">
-              <div class="left">
-              <span v-if='dataItem.cargoType'>{{dataItem.cargoType}} , </span>
-              <span v-if='dataItem.productName'>{{dataItem.productName}} , </span>
-              <span v-if='dataItem.loadingTime'>{{dataItem.loadingTime}}装货 , </span>
-
-              
-              <span v-if='dataItem.loadUnloadType'>{{dataItem.loadUnloadType}} </span>
-              
+              <div>
+                <div class="left">
+                  <span v-if='dataItem.cargoType'>{{dataItem.cargoType}} , </span>
+                  <span v-if='dataItem.productName'>{{dataItem.productName}} , </span>
+                  <span v-if='dataItem.loadingTime'>{{dataItem.loadingTime}}装货 , </span>
+                  <span v-if='dataItem.loadUnloadType'>{{dataItem.loadUnloadType}} </span>
+                </div>
+                <div class="left">
+                  <span v-if='dataItem.ownerName'>{{dataItem.ownerName}}</span>
+                </div>
               </div>
-              <div class="call"><i v-if='dataItem.ownerPhone' @click="callPhone(dataItem.ownerPhone)" class="iconfont icon-dianhua-copy"></i></div>
-            </div>
-            <div class="four">
-              <div class="left">
-              <span v-if='dataItem.ownerName'>{{dataItem.ownerName}}</span>
+              <div class="call">
+                <i v-if='dataItem.ownerPhone' @click="callPhone(dataItem.ownerPhone)" class="iconfont icon-dianhua-copy"></i>
               </div>
             </div>
           </div>
@@ -376,17 +373,14 @@ import $ from 'jquery'
 
     .container{
       height: 100%;
-      margin-top:80/50rem;
-      overflow: scroll;
+      top:180/50rem;
       .slectItem{
         width: 100%;
-        height: 80/50rem;
         border-bottom: 1/50rem solid  #ddd;
         background-color: #fff;
         display: flex;
-        position:fixed;
+        position:absolute;
         top:90/50rem;
-        z-index: 50;
         .choose{
           overflow: hidden;
           display: flex;
@@ -402,16 +396,14 @@ import $ from 'jquery'
           // float: left;
         }
         .Msg{
-          // float: left; 
           flex-grow: 3;
-          // width: 520/50rem;
           padding-left: 30/50rem;
           color: #999; 
           line-height: 70/50rem;
           font-size: 26/50rem;
         }
         .Screen{
-          height: 70/50rem;
+          // height: 70/50rem;
           // float: left;
           // position: absolute;
           // right: 0/50rem;
@@ -420,81 +412,85 @@ import $ from 'jquery'
         }
       }
       .dataContent{
+        width: 100%;
         overflow: scroll;
         height: calc(100% - 5.8rem);
-        margin-top: 90/50rem;
-      }
-      .dataItem{
-        padding:15/50rem;
-        height: 160/50rem;
-        border-bottom: 1/50rem solid  #ddd;
-        .userImage{
-          width: 80/50rem;
-          height: 150/50rem;
-          float: left;
-          margin-right: 10/50rem;
-          .userinfo-avatar{
+        position:absolute;
+        top: 180/50rem;
+        .dataItem{
+          padding:15/50rem;
+          margin-bottom: 15/50rem;
+          border-bottom: 1/50rem solid  #ddd;
+          display: flex;
+          line-height: 40/50rem;
+          .userImage{
             width: 80/50rem;
-            height: 80/50rem;
-            display: block;
-          }
-        }
-        .rightContent{
-          padding-left: 80/50rem;
-          .one{ 
-            font-size: 30/50rem;
-            font-weight: 550;
-            padding-bottom: 10/50rem;
-            .publishTime{
-              font-size: 22/50rem;
-              padding-top: 8/50rem;
-              color: #999;
-              float: right;
+            .userinfo-avatar{
+              width: 80/50rem;
+              height: 80/50rem;
+              display: block;
             }
           }
-          .two{
-            .left{
-              width: 402/50rem;
-              overflow: hidden;
-              text-overflow:ellipsis;
-              white-space: nowrap;
-              float: left;
-            }
-            .distance{
-              font-size: 24/50rem;
-              color: #999;
-              float: right;
-            }
-          }
-          .three{
-            .left{
-              width: 560/50rem;
-              overflow: hidden;
-              text-overflow:ellipsis;
-              white-space: nowrap;
-              float: left;
-            }
-            .call{
-              float: right;
-              width: 50/50rem;
-              height: 50/50rem;
-              line-height: 50/50rem;
-              border: 1/50rem solid #5965D8;
-              color: #5965D8;
-              border-radius: 50%;
-              text-align: center;
-              margin-top:15/50rem;
+          .rightContent{
+            width: 620/50rem;
+            margin-left: 10/50rem;
+            line-height: 40/50rem;
+            
+            .one{ 
+              width: 540/50rem;
               font-size: 30/50rem;
+              font-weight: 550;
+              padding-bottom: 10/50rem;
+              display: flex;
+              justify-content: space-between;
+              .publishTime{
+                position: absolute;
+                width: 100/50rem;
+                font-size: 22/50rem;
+                padding-top: 8/50rem;
+                color: #999;
+                right:10/50rem;
+                text-align: center;
+              }
+            }
+            .two{
+              display: flex;
+              justify-content: space-between;
+              .left{
+                width: 402/50rem;
+                overflow: hidden;
+                text-overflow:ellipsis;
+                white-space: nowrap;
+              }
+              .distance{
+                font-size: 24/50rem;
+                color: #999;
+              }
+            }
+            .three{
+              display: flex;
+              justify-content: space-between;
+              .left{
+                width: 530/50rem;
+                overflow: hidden;
+                text-overflow:ellipsis;
+                white-space: nowrap;
+              }
+              .call{
+                width: 50/50rem;
+                height: 50/50rem;
+                line-height: 50/50rem;
+                border: 1/50rem solid #5965D8;
+                color: #5965D8;
+                border-radius: 50%;
+                text-align: center;
+                font-size: 30/50rem;
+                margin-top: 15/50rem;
+              }
             }
           }
-          .four{
-            .left{
-              float: left;
-              width: 560/50rem;
-            }
-          }
-        }
-      } 
+        } 
+      }
     }
   }
 </style>

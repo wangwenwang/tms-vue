@@ -7,15 +7,45 @@
 		    <div><span>姓名</span><input  readonly  v-model='userName'></input></div>
 		    <div><span>手机号</span><input   readonly v-model='cellphone'></input></div>
 		    <div><span>身份证号</span><input placeholder='必填'   ref="IDCardNum"   @keyup.enter="getFocus('vicheNo')"    v-model='IDCardNum'></input><i v-if="IDCardNum" @click="clearInput('IDCardNum')" class="iconfont icon-iconfontcuowu"></i></div>
+		    <div class="driverInfo" v-if='$store.state.userInfo.userType == "driver"'>
 
-		    <p  class="car"><img src="../../assets/images/car.png"><span>车辆信息</span></p>
-		    <div><span>车牌号</span><input   placeholder='必填' ref="vicheNo" v-model='vicheNo'></input><i v-if="vicheNo" @click="clearInput('vicheNo')" class="iconfont icon-iconfontcuowu"></i></div>
-		    <div @click='TypeOfCar'><span>车辆车型</span><div ><span>{{vehicleType}}</span><i class="iconfont icon-xiangshang"></i></div></div>
-		    <div><span>车长/米</span><input  placeholder='车长' type="number"   ref="vehicleLength" v-model='vehicleLength'></input><i v-if="vehicleLength" @click="clearInput('vehicleLength')" class="iconfont icon-iconfontcuowu"></i></div>
-		    <div><span>车宽/米</span><input   placeholder='车宽' type="number"   ref="vehicleWide" v-model='vehicleWide'></input><i v-if="vehicleWide" @click="clearInput('vehicleWide')" class="iconfont icon-iconfontcuowu"></i></div>
-		    <div><span>车高/米</span><input  placeholder='车高' type="number"   ref="vehicleHeight" v-model='vehicleHeight'></input><i v-if="vehicleHeight" @click="clearInput('vehicleHeight')" class="iconfont icon-iconfontcuowu"></i></div>
-		    <div><span>载重/吨</span><input placeholder='必填'   ref="maxLoadWeight"   @keyup.enter="getFocus('maxLoadVolumn')"  type="number"   v-model='maxLoadWeight'></input><i v-if="maxLoadWeight" @click="clearInput('maxLoadWeight')" class="iconfont icon-iconfontcuowu"></i></div>
-		    <div><span>载重体积</span><input placeholder='必填' type="number"    ref="maxLoadVolumn"   @keyup.enter="regBtn"    v-model='maxLoadVolumn'></input><i v-if="maxLoadVolumn" @click="clearInput('maxLoadVolumn')" class="iconfont icon-iconfontcuowu"></i></div>
+		      <p  class="car"><img src="../../assets/images/car.png"><span>车辆信息</span></p>
+		      <div><span>车辆类型</span>
+		      	<input  readonly  v-model='vehicleAppType'></input>
+		      </div>
+              <div  @click='ChooseCarrier' v-if = 'vehicleAppType == "自有车"'><span>承运商</span>
+              	<div ><span>{{orgName}}</span><i  class="iconfont icon-xiangshang"></i></div>
+              </div>
+  
+		      <div><span>车牌号</span>
+		      	<input  placeholder='必填' ref="vicheNo"  @keyup.enter="getFocus('vicheNo')" v-model='vicheNo'>
+		        </input>
+		      	<i v-if="vicheNo" @click="clearInput('vicheNo')" class="iconfont icon-iconfontcuowu"></i>
+		      </div>
+		      <div @click='TypeOfCar'><span>车辆车型</span>
+		      	<div><span>{{vehicleType}}</span><i class="iconfont icon-xiangshang"></i></div>
+		      </div>
+		      <div><span>车长/米</span>
+		      	<input  placeholder='车长' type="number"  ref="vehicleLength"  @keyup.enter="getFocus('vehicleLength')  " v-model='vehicleLength'></input>
+		      	<i v-if="vehicleLength" @click="clearInput('vehicleLength')" class="iconfont icon-iconfontcuowu"></i>
+		      </div>
+		      <div><span>车宽/米</span>
+		      	<input   placeholder='车宽' type="number"   ref="vehicleWide"   @keyup.enter="getFocus('vehicleWide')"   v-model='vehicleWide'></input>
+		      	<i v-if="vehicleWide" @click="clearInput('vehicleWide')" class="iconfont icon-iconfontcuowu"></i>
+		      </div>
+		      <div><span>车高/米</span>
+		      	<input  placeholder='车高' type="number"   ref="vehicleHeight"  @keyup.enter="getFocus('vehicleHeight'  )" v-model='vehicleHeight'></input>
+		      	<i v-if="vehicleHeight" @click="clearInput('vehicleHeight')" class="iconfont icon-iconfontcuowu"></i>
+		      </div>
+		      <div><span>载重/吨</span>
+		      	<input placeholder='必填'   ref="maxLoadWeight"   @keyup.enter="getFocus('maxLoadWeight')"  type="  number"   v-model='maxLoadWeight'></input>
+		      	<i v-if="maxLoadWeight" @click="clearInput('maxLoadWeight')" class="iconfont icon-iconfontcuowu"></i>
+		      </div>
+		      <div><span>载重体积</span>
+		      	<input placeholder='必填' type="number"    ref="maxLoadVolumn"   @keyup.enter="getFocus('maxLoadVolumn  ')"    v-model='maxLoadVolumn'></input>
+		      	<i v-if="maxLoadVolumn" @click="clearInput('maxLoadVolumn')" class="iconfont icon-iconfontcuowu"></i>
+		      </div>
+		    </div>
 
 		    <p  class="upload"><img src="../../assets/images/upload.png"><span>上传资料</span></p>
 			<div class="uploadImg">
@@ -76,6 +106,16 @@
 				<div class="cancel"   @click="selectCancel('e')">取消</div>
 			</div>
 		</div>
+        <!--承运商-->
+		<div class="SelectMeng"   v-if="carrierShow">
+				<div class="SelectWarehouses" >
+					<div class="SelectTitle">请选择承运商</div>
+					<div class="SelectItem">
+						<div @click="CarrierComit(index)"  v-for='(dataItem,index) in CarrierList'  :id="index"  :key='index'>{{dataItem.name}}</div>
+					</div>
+					<div class="cancel"   @click="selectCancel('e')">取消</div>
+				</div>
+			</div>
 		<div v-if="ifTips" class="msg_tips">
 			<div class="tips_content">
 				<i class="iconfont icon-chenggong1"></i>
@@ -90,10 +130,15 @@
 		data(){
 			return{
 			    typeMShow:false,//车辆车型弹出框 是否出现
+			    carrierShow:false,//承运商弹出框 是否出现
 			    typeOfCarList:[], //车辆车型 列表数据
+			    CarrierList:[],//承运商 列表数据
 			    userName:"",//姓名
 			    cellphone:"",//手机号
 			    IDCardNum:'',//身份证号
+			    vehicleAppType:'',//车辆类型
+			    orgName :'',//承运商
+			    orgID:'',//承运商
 			    vicheNo:"",//车牌号
 			    vehicleType:"",//车型
 			    vehicleType_code:"",//车型代码
@@ -121,7 +166,6 @@
 			var getUserData = { cellphone: userInfo.cellphone };
 
             this.httpRequest( "getUserInfo.do",getUserData,function(resData){
-            	console.log(resData)
 
             	that.$store.state.userInfo = resData.data;
 
@@ -129,6 +173,8 @@
 				that.cellphone = resData.data.cellphone;//手机号
 				that.IDCardNum = resData.data.idNo;// 身份证号码
 				that.vicheNo = resData.data.vicheNo;//车牌号
+				that.vehicleAppType = resData.data.vehicleAppType;//车辆类型
+				that.orgName = resData.data.orgName;//承运商
 				that.vehicleType_code = resData.data.vehicleType;//车型
 				that.vehicleLength = resData.data.vehicleLength;//车长
 				that.vehicleWide = resData.data.vehicleWide;//车宽
@@ -164,6 +210,19 @@
 				        		that.vehicleType = that.typeOfCarList[i].description;
 				        	}
 				        }
+		            })
+			    }
+
+			    if (that.$store.state.CarrierList.length) {
+
+			        that.CarrierList = that.$store.state.CarrierList;
+
+			    } else {
+
+		            that.httpRequest_ygy( "queryOrgnization.do","",function(res){
+
+		            	that.CarrierList = res.data;
+					    that.$store.state.CarrierList = res.data;
 		            })
 			    }
             })
@@ -221,12 +280,15 @@
 				        vehicleHeight: that.vehicleHeight,
 				        maxLoadWeight: that.maxLoadWeight,//载重吨
 					    maxLoadVolumn: that.maxLoadVolumn,//载重体积
+					    orgId: that.orgID,//承运商id
 				    };
+				    console.log(params)
+				    // return;
 
 				    that.httpRequest( "regAppUserUpdate.do",params,function(res){
 
 					    that.ifTips = true;
-						that.tips_Msg = "保存成功";
+						that.tips_Msg = res.Msg;
 
 						setTimeout(function(){
 
@@ -245,12 +307,25 @@
 			TypeOfCar(){
 				this.typeMShow = true;
 			},
+			// 点击 承运商列表出现
+  	        ChooseCarrier (){  
+
+  	            this.carrierShow = true;
+  	            console.log(111)
+  	        },
 			// 选择类型   确认具体车辆车型
 			SelectComit:function(index){
 				this.typeMShow = false;
 			    this.vehicleType = this.typeOfCarList[index].description;
 			    this.vehicleType_code = this.typeOfCarList[index].code;
 			},
+			// 选择类型   确认具体车辆类型
+  	        CarrierComit:function(index){
+  	        	console.log(index);
+  	        	this.carrierShow = false;
+  	            this.orgName = this.CarrierList[index].name;
+  	            this.orgID = this.CarrierList[index].id;
+  	        },
 			// 预览放大图片
 			handlePictureCardPreview (file) {
 
