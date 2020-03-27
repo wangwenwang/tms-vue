@@ -126,10 +126,8 @@
       },
       onError(data, map){
 
-        var that = this
         console.log("获取【当前位置】失败", data)
-        var p = {lng:114.039706, lat:22.622864}
-        that.loadMap(map, p)
+        this.$message.error("定位失败，请打开手机GPS")
       },
       loadMap(map, p){
 
