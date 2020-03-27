@@ -61,6 +61,15 @@
         value1:4
   	  }
   	},
+    mounted(){
+
+      window.history.pushState(null, null, document.URL)
+      window.addEventListener("popstate", this.onBrowserBack, false)
+    },
+    destroyed() {
+
+      window.removeEventListener("popstate", this.onBrowserBack, false)
+    },
   	created(){  
   	  if(this.$route.query.UserID){
         this.UserID = this.$route.query.UserID;
@@ -109,7 +118,11 @@
   	  })  
   	},
   	methods:{
-
+      // 监听系统返回键
+      onBrowserBack() {
+        
+        this.goPrev()
+      },
   	  // 返回上一页
   	  goPrev(){  
 
