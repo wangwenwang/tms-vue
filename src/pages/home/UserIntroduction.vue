@@ -177,7 +177,7 @@
               font-weight: 550;
             }
             .star{
-              padding-top: 8/50rem;
+              padding-top: 4/50rem;
             }
           }
         }

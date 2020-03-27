@@ -190,8 +190,9 @@
             setTimeout(function(){  
               that.ifTips = false;  
               that.$router.push({
-                name:"HomeIndex",
+                name: "od_bid",
                 query:{
+                  orderstate: "NON-RATE"
                 }
               })
             }, 1500)

@@ -43,14 +43,14 @@
           </div>
         </div>
 
-        <div v-if='owner_or_driver_userName != undefined' class="owner-driver-Info">
+        <div v-if='owner_or_driver_userName != undefined && sourceInfo.status != "CANCEL"' class="owner-driver-Info">
           <div class="userImage"><img src="../../assets/images/defaultHead.png" class="userinfo-avatar" alt=""></div>
             <div class="userName">{{ owner_or_driver_userName }}</div>
-            <div class="call"><i v-if='owner_or_driver_tel' @click="callPhone(owner_or_driver_tel)" class="iconfont icon-dianhua-copy"></i></div>
+            <div class="call"><i v-if='owner_or_driver_tel && data.driverInfo.driver_id != undefined' @click="callPhone(owner_or_driver_tel)" class="iconfont icon-dianhua-copy"></i></div>
             <div class="todriverInfo" @click="toUserIntroduction()">查看资料 ></div>
         </div>
 
-        <div v-if='$store.state.userInfo.userType == "owner" && data.bid.length > 0 && data.driverInfo.driver_id == undefined' class="bid_info">
+        <div v-if='$store.state.userInfo.userType == "owner" && data.bid.length > 0 && data.driverInfo.driver_id == undefined && sourceInfo.status != "CANCEL"' class="bid_info">
           <div class="title-">
             <div class="prompt">竞价信息</div>
             <div class="sort">
@@ -84,7 +84,7 @@
           <div class="call" @click="callPhone(data.ownerInfo.owner_tel)"><i class="iconfont icon-dianhua"></i>电话联系</div>
           <div class="biddingPrice" v-if="sourceInfo.expectedCost"><i class="iconfont icon-xuanzhong" @click="driver_confirm_owner()"></i>确 认</div>
           <div class="biddingPrice" v-if="!sourceInfo.expectedCost" @click="DialogVisible = true"><i class="iconfont icon-jingjia"></i>竞 价</div>
-          <el-dialog title="竞 价" :visible.sync="DialogVisible"  width="80%" top="50%" center>
+          <el-dialog title="竞 价" :visible.sync="DialogVisible"  :close-on-click-modal="false"  width="80%" top="50%" center>
             <span>请输入承运费用：</span>
             <el-input v-model="v_shipmentMoney" auto-complete="off"></el-input>
             <span slot="footer" class="dialog-footer">
@@ -94,11 +94,11 @@
           </el-dialog>
         </div>
 
-        <div v-if='data.driverInfo.driver_price' class="ShippingInfo">承运价格：￥{{ data.driverInfo.driver_price }} </div>
+        <div v-if='data.driverInfo.driver_price && sourceInfo.status != "CANCEL"' class="ShippingInfo">承运价格：￥{{ data.driverInfo.driver_price }} </div>
 
-        <div v-if='$store.state.userInfo.userType == "owner" && data.driverInfo.driver_price == undefined && sourceInfo.expectedCost' class="ShippingInfo">我的报价：￥{{ sourceInfo.expectedCost }}</div>
+        <div v-if='$store.state.userInfo.userType == "owner" && data.driverInfo.driver_price == undefined && sourceInfo.expectedCost && sourceInfo.status != "CANCEL"' class="ShippingInfo">我的报价：￥{{ sourceInfo.expectedCost }}</div>
 
-        <div v-if='$store.state.userInfo.userType == "owner" && data.driverInfo.driver_price == undefined && !sourceInfo.expectedCost && data.bid.length == 0' class="ShippingInfo">暂无报价</div>
+        <div v-if='$store.state.userInfo.userType == "owner" && data.driverInfo.driver_price == undefined && !sourceInfo.expectedCost && data.bid.length == 0 && sourceInfo.status != "CANCEL"' class="ShippingInfo">暂无报价</div>
         <div class="button" v-if='$store.state.userInfo.userType == "owner"'>
           <!-- <div class="btnEdit" v-if="ifEdit" @click.stop="toEdit()">修改</div> -->
           <div class="btnCancel" v-if="ifCancel" @click.stop="toCancel()">取消</div>
@@ -447,7 +447,7 @@
       
       //取消货源
       toCancel(){
-        MessageBox.confirm("是否取消该货源？").then(() => {
+        MessageBox.confirm("是否取消该货源？","",{closeOnClickModal: false, }).then(() => {
            
           var that = this;
           var postData = {

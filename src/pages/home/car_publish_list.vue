@@ -82,9 +82,16 @@
 
               if(item.publishTime.substring(0, 10) == that.getNowTime().substring(0, 10)){
                 item.status = "有效"
+                item.publishTime = item.publishTime.substring(10, 16)
               }else{
                 item.status = "无效"
                 item.add_class = "opt"
+                if(item.publishTime.substring(0, 4) != that.getNowTime().substring(0, 4)){
+                  item.publishTime = item.publishTime.substring(0, 7)
+                }else{
+                  item.publishTime = item.publishTime.substring(5, 10)
+                }
+                
               }
             }
           }else{
@@ -116,7 +123,8 @@
         this.$confirm('此操作将删除该发布, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
+          type: 'warning',
+          closeOnClickModal: false,
         }).then(() => {
           // 刪除车源信息
           this.httpRequest_ygy("cancelVehicleSource.do", postData, function(res){

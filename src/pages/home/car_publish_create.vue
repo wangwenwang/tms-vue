@@ -167,6 +167,7 @@
         this.load_time = this.$store.state.pg_publish.car_info.load_time
       }else{
         this.load_time = this.formatDate(new Date)
+        console.log(this.load_time)
       }
       if(this.$store.state.pg_publish.car_info.remark.length){
         this.remark = this.$store.state.pg_publish.car_info.remark
@@ -283,7 +284,12 @@
         })
       },
       vehicle_type_click(){
-        this.SelectBoxFlag = true;
+        
+        if(this.$store.state.typeOfCarList.length){
+          this.SelectBoxFlag = false;
+        }else{
+          this.SelectBoxFlag = true;
+        }
 
       },
       submit(){

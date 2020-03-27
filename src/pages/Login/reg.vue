@@ -18,7 +18,7 @@
                             <el-radio label="2">临请车</el-radio>
                           </el-radio-group></div>
                         </div>
-                        <div @click='ChooseCarrier' v-if = "vehicleAppType == 1"><span>承运商</span><div ><span>
+                        <div @click='ChooseCarrier' v-if = "vehicleAppType == 1"><span>承运商</span><div><span>
                             {{Carrier}}</span><i  class="iconfont icon-xiangshang"></i></div></div>
     
     
@@ -28,7 +28,7 @@
 			    	    	<i v-if="vicheNo"  @click="clearInput('vicheNo')" class="iconfont icon-iconfontcuowu"></i>
 			    	    </div>
 				        <div @click='TypeOfCar'><span>车型</span>
-				        	<div><span>{{vehicleType}}</span><i class="iconfonticon-xiangshang"></i></div>
+				        	<div><span>{{vehicleType}}</span><i class="iconfont icon-xiangshang"></i></div>
 				        </div>
 				        <div><span>车长（米）</span>
 				        	<input placeholder='车长' type="number"   ref="vehicleLength" @keyup.enter="getFocus('vehicleLength')"    v-model='vehicleLength'></input>
@@ -366,7 +366,7 @@
 		.regContainer{
 			&>.regInfo,.driverInfo{
 
-				&>div{
+				&>div:not(.driverInfo){
 					position: relative;
 				    width:100%;
 				    padding: 20/50rem 30/50rem;
@@ -413,7 +413,7 @@
 				.driverInfo{
 					.radioValue{ float: left;}
 					&>div{
-				        padding: 20/50rem 0;
+				        padding: 20/50rem 30/50rem;
 					    &>div{
 					        float: right;
 					        color: #7A7A7A;

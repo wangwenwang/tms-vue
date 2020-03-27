@@ -7,9 +7,10 @@
 		    <div><span>姓名</span><input  readonly  v-model='userName'></input></div>
 		    <div><span>手机号</span><input   readonly v-model='cellphone'></input></div>
 		    <div><span>身份证号</span><input placeholder='必填'   ref="IDCardNum"   @keyup.enter="getFocus('vicheNo')"    v-model='IDCardNum'></input><i v-if="IDCardNum" @click="clearInput('IDCardNum')" class="iconfont icon-iconfontcuowu"></i></div>
-		    <div class="driverInfo" v-if='$store.state.userInfo.userType == "driver"'>
+		    
 
-		      <p  class="car"><img src="../../assets/images/car.png"><span>车辆信息</span></p>
+		    <p  class="car" v-if='$store.state.userInfo.userType == "driver"'><img src="../../assets/images/car.png"><span>车辆信息</span></p>
+		    <div class="driverInfo" v-if='$store.state.userInfo.userType == "driver"'>
 		      <div><span>车辆类型</span>
 		      	<input  readonly  v-model='vehicleAppType'></input>
 		      </div>
@@ -182,48 +183,51 @@
 				that.maxLoadWeight = resData.data.maxLoadWeight;//载重吨
 				that.maxLoadVolumn = resData.data.maxLoadVolumn;//载重体积
 
-				if (that.$store.state.typeOfCarList.length) {
+				if(resData.data.userType == "driver"){
 
-			        that.typeOfCarList = that.$store.state.typeOfCarList;
-
-			        for(var i = 0;i < that.typeOfCarList.length; i++){
-
-			        	if(that.typeOfCarList[i].code == that.vehicleType_code){
-
-			        		that.vehicleType = that.typeOfCarList[i].description;
-			        	}
+				    if (that.$store.state.typeOfCarList.length) {
+    
+			            that.typeOfCarList = that.$store.state.typeOfCarList;
+    
+			            for(var i = 0;i < that.typeOfCarList.length; i++){
+    
+			            	if(that.typeOfCarList[i].code == that.vehicleType_code){
+    
+			            		that.vehicleType = that.typeOfCarList[i].description;
+			            	}
+			            }
+    
+			        } else {
+    
+			            var requestData = { listName: "TMS-客户指定车型" };
+    
+		                that.httpRequest( "queryCodeLukupData.do",requestData,function(res){
+    
+		                	that.typeOfCarList = res.data;
+				    	    that.$store.state.typeOfCarList = res.data;
+    
+				    	    for(var i = 0;i < that.typeOfCarList.length; i++){
+    
+				            	if(that.typeOfCarList[i].code == that.vehicleType_code){
+    
+				            		that.vehicleType = that.typeOfCarList[i].description;
+				            	}
+				            }
+		                })
 			        }
-
-			    } else {
-
-			        var requestData = { listName: "TMS-客户指定车型" };
-
-		            that.httpRequest( "queryCodeLukupData.do",requestData,function(res){
-
-		            	that.typeOfCarList = res.data;
-					    that.$store.state.typeOfCarList = res.data;
-
-					    for(var i = 0;i < that.typeOfCarList.length; i++){
-
-				        	if(that.typeOfCarList[i].code == that.vehicleType_code){
-
-				        		that.vehicleType = that.typeOfCarList[i].description;
-				        	}
-				        }
-		            })
-			    }
-
-			    if (that.$store.state.CarrierList.length) {
-
-			        that.CarrierList = that.$store.state.CarrierList;
-
-			    } else {
-
-		            that.httpRequest_ygy( "queryOrgnization.do","",function(res){
-
-		            	that.CarrierList = res.data;
-					    that.$store.state.CarrierList = res.data;
-		            })
+    
+			        if (that.$store.state.CarrierList.length) {
+    
+			            that.CarrierList = that.$store.state.CarrierList;
+    
+			        } else {
+    
+		                that.httpRequest_ygy( "queryOrgnization.do","",function(res){
+    
+		                	that.CarrierList = res.data;
+				    	    that.$store.state.CarrierList = res.data;
+		                })
+			        }
 			    }
             })
 		},
@@ -339,35 +343,30 @@
 	.PersonalData{overflow: hidden;
 		.container{
 		  	font-size: 26/50rem;
-		  	&>.regInfo{
-		  		&>div{
-		  			position: relative;
-				  	padding: 20/50rem 30/50rem;
-				  	box-sizing: border-box;
-				  	overflow: hidden;
-				  	font-size: 28/50rem;
-				  	border-bottom: 1/50rem solid #EDEDED;
-				  	input{
-				  		width: 500/50rem;
+
+		  	&>.regInfo,.driverInfo{
+
+				&>div:not(.driverInfo){
+					position: relative;
+				    width:100%;
+				    padding: 20/50rem 30/50rem;
+				    box-sizing: border-box;
+				    overflow: hidden;
+				    font-size: 28/50rem;
+				    border-bottom: 1/50rem solid #EDEDED;
+				    &>span{
 					    float: left;
-				  		border:none;
-				  	}
-				  	&>span{
-					  	float: left;
-					  	width: 140/50rem;
-					  	height: 50/50rem;
-					  	line-height: 50/50rem;
+					    width: 170/50rem;
+					    height: 50/50rem;
+					    line-height: 50/50rem;
 					}
-					&>div{
-					  	line-height: 50/50rem;
-					  	float: right;
-					  	color: #7A7A7A;
-					  	i{
-					  		margin-left: 10/50rem;
-					  	}
+					&>input{
+						width: 500/50rem;
+					    float: left;
+					    border: none;
 					}
 				}
-				&>p{
+				 &>p{
 					width: 100%;
 					height: 80/50rem;
 					line-height: 80/50rem;
@@ -397,7 +396,20 @@
 						color: #aaa;
 					}
 				}
-		  	}
+				.driverInfo{
+					&>div{
+				        width: 100%;
+					    &>div{
+					        float: right;
+					        color: #7A7A7A;
+					        line-height: 50/50rem;
+					        i{
+					        	margin-left: 10/50rem;
+					        }
+					    }
+				    }
+				}
+			}
 		  	.g_signBtn{
 		  		margin-bottom: 40/50rem;
 		  	}

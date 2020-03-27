@@ -430,11 +430,21 @@
         }
 
         this.httpRequest_ygy("queryInfoByPhone.do", postData, function(res){
+          if(res.data == ""){
+            that.ifTips = true;
+            that.tips_Msg = "没有找到该司机";//res.Msg;
+
+            setTimeout(function(){
+              that.ifTips = false;
+            },1800)
+            return;
+          }
 
           that.$prompt('确定要指定给' + res.data.driver_name + "吗？", '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
-            showInput: false
+            showInput: false,
+            closeOnClickModal: false, 
           }).then(({ value }) => {
 
             // 装货点
@@ -514,6 +524,9 @@
         this.$prompt('请输入司机号码', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
+          inputPattern: /^1[3456789]\d{9}$/,
+          inputErrorMessage: '请输入正确的手机号码',
+          closeOnClickModal: false, 
         }).then(({ value }) => {
 
           this.search(value)
