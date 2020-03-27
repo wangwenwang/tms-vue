@@ -39,6 +39,15 @@
         p_c_d:[],           //["广东省","深圳市","龙华区"]
       }
     },
+    mounted(){
+
+      window.history.pushState(null, null, document.URL)
+      window.addEventListener("popstate", this.onBrowserBack, false)
+    },
+    destroyed() {
+
+      window.removeEventListener("popstate", this.onBrowserBack, false)
+    },
     created(){
       
       if(this.$route.query.type){
@@ -80,6 +89,11 @@
       })
     },
     methods:{
+      // 监听系统返回键
+      onBrowserBack() {
+        
+        this.goPrev()
+      },
       // 返回上一页
       goPrev(){
 

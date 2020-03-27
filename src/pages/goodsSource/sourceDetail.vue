@@ -176,6 +176,13 @@
     mounted(){
       this.TelliOSORAndroidVueMounted("获取当前位置页面已加载");
       window.SetCurrAddress = this.SetCurrAddress;
+
+      window.history.pushState(null, null, document.URL)
+      window.addEventListener("popstate", this.onBrowserBack, false)
+    },
+    destroyed() {
+
+      window.removeEventListener("popstate", this.onBrowserBack, false)
     },
     created(){
 
@@ -471,6 +478,11 @@
         }).catch(() => {  
 
         });
+      },
+      // 监听系统返回键
+      onBrowserBack() {
+        
+        this.goPrev()
       },
 
       // 返回上一页

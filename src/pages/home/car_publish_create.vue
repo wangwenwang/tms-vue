@@ -144,6 +144,15 @@
     components:{
       componentSelectBox,
     },
+     mounted(){
+
+      window.history.pushState(null, null, document.URL)
+      window.addEventListener("popstate", this.onBrowserBack, false)
+    },
+    destroyed() {
+
+      window.removeEventListener("popstate", this.onBrowserBack, false)
+    },
     created(){
 
       var that = this
@@ -240,6 +249,11 @@
       // 取消按钮 弹出选择框
       selectCancel(){
         this.SelectBoxFlag = false
+      },
+      // 监听系统返回键
+      onBrowserBack() {
+        
+        this.goPrev()
       },
       // 返回上一页
       goPrev(){

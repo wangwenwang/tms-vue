@@ -29,8 +29,19 @@
 		},
 		mounted(){
 			this.$refs['newPassWord'].focus();
+			window.history.pushState(null, null, document.URL)
+            window.addEventListener("popstate", this.onBrowserBack, false)
 		},
+        destroyed() {
+    
+            window.removeEventListener("popstate", this.onBrowserBack, false)
+        },
 		methods:{
+			// 监听系统返回键
+            onBrowserBack() {
+              
+                this.goPrev()
+            },
 			goPrev(){
 				this.$router.push({
 					name:"Identifying",

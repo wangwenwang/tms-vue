@@ -179,6 +179,15 @@
     components:{
       componentSelectBox,
     },
+    mounted(){
+
+      window.history.pushState(null, null, document.URL)
+      window.addEventListener("popstate", this.onBrowserBack, false)
+    },
+    destroyed() {
+
+      window.removeEventListener("popstate", this.onBrowserBack, false)
+    },
     created(){
 
       var that = this
@@ -266,6 +275,11 @@
         var d = date.getDate()
         d = d < 10 ? ('0' + d) : d
         return y + '-' + m + '-' + d
+      },
+      // 监听系统返回键
+      onBrowserBack() {
+        
+        this.goPrev()
       },
 
       // 返回上一页

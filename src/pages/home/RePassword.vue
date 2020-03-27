@@ -40,10 +40,24 @@
 				ifTips:false
 			}
 		},
+		 mounted(){
+
+            window.history.pushState(null, null, document.URL)
+            window.addEventListener("popstate", this.onBrowserBack, false)
+        },
+        destroyed() {
+    
+            window.removeEventListener("popstate", this.onBrowserBack, false)
+        },
 		created(){
 
 		},
 		methods:{
+			// 监听系统返回键
+            onBrowserBack() {
+              
+                this.goPrev()
+            },
 			goPrev(){
 				var that = this;
 

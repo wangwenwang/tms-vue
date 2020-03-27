@@ -170,8 +170,14 @@
 		mounted(){
 
 			this.$refs['userName'].focus();
-			
+			window.history.pushState(null, null, document.URL)
+            window.addEventListener("popstate", this.onBrowserBack, false)
 		},
+		destroyed() {
+
+            window.removeEventListener("popstate", this.onBrowserBack, false)
+        },
+
 		created(){
 
 			var that = this;
@@ -212,6 +218,11 @@
   	        }
 		},
 		methods:{
+			// 监听系统返回键
+            onBrowserBack() {
+              
+                this.goPrev()
+            },
 			goPrev(){
 				this.$router.push({
 					name:"ChooseRole",

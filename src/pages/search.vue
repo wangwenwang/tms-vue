@@ -84,6 +84,15 @@
 			    businessType_stateText:"请选择",//我的运单 中的 运单类型
 			}
 		},
+        mounted(){
+
+            window.history.pushState(null, null, document.URL)
+            window.addEventListener("popstate", this.onBrowserBack, false)
+        },
+        destroyed() {
+    
+            window.removeEventListener("popstate", this.onBrowserBack, false)
+        },
         created(){
 
             var that = this;
@@ -114,6 +123,11 @@
             }
         },
     	methods:{
+            // 监听系统返回键
+            onBrowserBack() {
+              
+                this.goPrev()
+            },
             goPrev(){
                 var that = this;
 

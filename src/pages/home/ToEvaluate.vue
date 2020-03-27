@@ -102,6 +102,15 @@
         eva_mul: ""      //选择的评价
       }
     },
+    mounted(){
+
+      window.history.pushState(null, null, document.URL)
+      window.addEventListener("popstate", this.onBrowserBack, false)
+    },
+    destroyed() {
+
+      window.removeEventListener("popstate", this.onBrowserBack, false)
+    },
     created(){
 
       if(this.$route.query.sourceInfo){
@@ -142,6 +151,11 @@
 
           $(e.target).css({"background-color":"transparent", "color":"black"})
         }
+      },
+      // 监听系统返回键
+      onBrowserBack() {
+        
+        this.goPrev()
       },
       goPrev(){
 
