@@ -1,6 +1,6 @@
 <template>
   <div class="od_bid">
-    <header><i v-if='$store.state.userInfo.userType == "driver"' class="iconfont icon-xiangzuo1" @click="goprev"></i><span>我的订单</span></header>
+    <header><i v-if='$store.state.userInfo.userType == "driver"' class="iconfont icon-xiangzuo1" @click="goPrev"></i><span>我的订单</span></header>
     <div class="container">
       <div class="orderState">
         <div class="all" @click='choseAll'>全部</div>
@@ -44,6 +44,15 @@
       FooterIndex,
       componentOrderItem
     },
+    mounted(){
+
+      window.history.pushState(null, null, document.URL)
+      window.addEventListener("popstate", this.onBrowserBack, false)
+    },
+    destroyed() {
+
+      window.removeEventListener("popstate", this.onBrowserBack, false)
+    },
     created(){
 
       if(this.$store.state.userInfo.userType == "driver"){
@@ -75,8 +84,13 @@
       this.nowDate = this.getNowTime().substring(0,10);
     },
     methods:{
+      // 监听系统返回键
+      onBrowserBack() {
+        
+        this.goPrev()
+      },
       // 返回上一页
-      goprev(){
+      goPrev(){
         this.$router.push({
           name:"HomeIndex",
           query:{

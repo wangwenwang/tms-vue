@@ -1,6 +1,6 @@
 <template>
   <div class="car_publish_list">
-    <header><i class="iconfont icon-xiangzuo1"   @click="goprev"></i><span>我的发布</span></header>
+    <header><i class="iconfont icon-xiangzuo1"   @click="goPrev"></i><span>我的发布</span></header>
     <div class="container">
       <div :class="'v-for- ' + item.add_class" v-for='(item, index) in data' :id = "index" :key = 'index'>
 
@@ -57,13 +57,27 @@
     components:{
       componentOrderItem
     },
+    mounted(){
+
+      window.history.pushState(null, null, document.URL)
+      window.addEventListener("popstate", this.onBrowserBack, false)
+    },
+    destroyed() {
+
+      window.removeEventListener("popstate", this.onBrowserBack, false)
+    },
     created(){
 
       this.request()
     },
     methods:{
+      // 监听系统返回键
+      onBrowserBack() {
+        
+        this.goPrev()
+      },
       // 返回上一页
-      goprev(){
+      goPrev(){
 
         this.$router.push("HomeIndex")
       },
