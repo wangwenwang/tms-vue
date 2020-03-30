@@ -145,6 +145,21 @@
 				}
 			},
 
+		    // 用于安卓自带返回键，当用户类型是货主时，'订单'页面位于主菜单，禁用安卓自带返回键	
+			KeepUserType:function(type){
+
+				// 安卓
+				try {
+
+					CallAndroidOrIOS.callAndroid("用户类型", type);
+
+				} 
+				catch(error) {
+
+					console.log("没有CallAndroidOrIOS.callAndroid方法")
+				}
+			},
+
 			WXBind_NO_Ajax:function(openid) {
 
 				this.$store.state.WX_Openid = openid;
@@ -168,6 +183,8 @@
 				this.setCookie(this.userName,this.password,10*365*60);
 
 				this.KeepUserNameAndPassord(this.userName, this.password);
+
+				this.KeepUserType(obj.data.userType)
 
 				this.$router.push({
 					name:"Index",
