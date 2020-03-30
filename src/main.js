@@ -43,6 +43,7 @@ Vue.config.productionTip = false;
 
 
 Vue.prototype.HOST = "http://k56.kaidongyuan.com/tmsApp/"                       //正式
+Vue.prototype.HOST_ygy = "http://k56.kaidongyuan.com/vehicleGoods/"             //正式
 
 // Vue.prototype.HOST = "http://192.168.20.113:8880/cyscm/tmsApp/"              //许三晏
 // Vue.prototype.HOST = "http://192.168.20.131:8880/cyscm/tmsApp/"              //黄伟雄
