@@ -321,6 +321,8 @@
 			                password: that.password,//密码
 			                cellphone: that.cellphone,//手机号
                             userType: that.userRole,//用户角色
+                            vehicleAppType: that.vehicleAppType,//车辆类型
+                            orgnizationId: that.CarrierID,//承运商id
 			            };
 			        }
 			        that.httpRequest( "registerAppUser.do",that.params,function(res){
