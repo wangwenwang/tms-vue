@@ -32,7 +32,7 @@
 				strLicense:"",//查询已交付状态配载单
 		    };
 
-			this.httpRequestMHY("http://120.77.206.44:8088/easyToSell/GetOrderPicture.do",postData,function(res){
+			this.httpRequestMHY("http://mobile.kaidongyuan.com/easyToSell/GetOrderPicture.do",postData,function(res){
 
 				that.$emit('isLoading_',false);
 
