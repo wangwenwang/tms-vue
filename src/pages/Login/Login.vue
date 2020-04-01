@@ -254,6 +254,8 @@
 					that.setCookie(that.userName,that.password,10*365*60);
 
 					that.KeepUserNameAndPassord(that.userName, that.password);
+					
+                    that.KeepUserType(res.data.userType)
 
 					
 					that.$router.push({
