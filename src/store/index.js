@@ -52,8 +52,8 @@ export default new vuex.Store({
 		pg_publish:{
 			load_pointList:[],
 			unload_pointList:[],
-			other_info:{goods_name:"", min_weight:"",max_weight:"",min_volume:"",max_volume:"",vehicle_type:"",load_time:"",remark:"",expected_cost:""},
-			car_info:{vehicleLoad:"",vehicleVolume:"",vehicle_type:"",load_time:"",remark:"",expected_cost:""},
+			other_info:{goods_name:"", min_weight:"",max_weight:"",min_volume:"",max_volume:"",vehicle_type:"",orderType:"",load_time:"",remark:"",expected_cost:""},
+			car_info:{vehicleLoad:"",vehicleVolume:"",vehicle_type:"",orderType:"",load_time:"",remark:"",expected_cost:""},
 		},
 		sourceInfo:{},//货源详情
 	}

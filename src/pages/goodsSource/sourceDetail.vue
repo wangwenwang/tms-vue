@@ -20,6 +20,7 @@
             <span>{{sourceInfo.min_weight}}吨&nbsp;</span>
             <span>{{sourceInfo.min_volume}}方&nbsp;</span>
           </div>
+          <div v-if='sourceInfo.orderType'><span>订单类型</span><span>{{sourceInfo.orderType}}</span></div>
           <div>
             <span>特殊要求</span>
             <span class="markInfo">{{sourceInfo.mark}}</span>
@@ -36,10 +37,18 @@
           <div class="address1" v-for='(dataItem,index) in data.start' :id="index" :key="'info1-' + index">
             <span class="i">装</span><span>{{dataItem.s_city}} {{dataItem.s_district}}</span>
             <div class="AddressDetail"> {{dataItem.s_address}}</div>
+            <div class="shipperInfo"> 
+              <span v-if='dataItem.l_shipper'><i class="iconfont icon-lianxiren"></i>  {{dataItem.l_shipper}}</span>
+              <span v-if='dataItem.l_shipper_tel'><i class="iconfont icon-dianhua"></i>  {{dataItem.l_shipper_tel}}</span>
+            </div>
           </div>
           <div class="address2" v-for='(dataItem,index) in data.end' :id="index"  :key="'info2-' + index">
             <span class="i">卸</span><span>{{dataItem.e_city}} {{dataItem.e_district}}</span>
             <div class="AddressDetail"> {{dataItem.e_address}}</div>
+            <div class="shipperInfo"> 
+              <span v-if='dataItem.u_shipper'><i class="iconfont icon-lianxiren"></i>  {{dataItem.u_shipper}}</span>
+              <span v-if='dataItem.u_shipper_tel'><i class="iconfont icon-dianhua"></i>  {{dataItem.u_shipper_tel}}</span>
+            </div>
           </div>
         </div>
 
@@ -231,6 +240,7 @@
       }
       // 查询装卸点、承运司机信息
       that.httpRequest_ygy("cargoDetail.do",postData,function(res){
+        console.log(res.data)
 
         that.data = res.data
         that.sourceDetailInfo = res.data
@@ -580,11 +590,22 @@
               font-size:30/50rem;
               line-height: 60/50rem;
             }
-            .AddressDetail{
+            .AddressDetail,.shipperInfo{
               font-size:26/50rem;
               line-height: 40/50rem;
               color: #757575;
               padding-left: 64/50rem;
+            }
+            .shipperInfo{
+              display: flex;
+              justify-content: space-between;
+              width: 60%;
+              &>span{
+                font-size: 24/50rem;
+                &>i{
+                color: #5965D8;
+                }
+              }
             }
           }
           .address2{

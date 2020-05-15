@@ -18,6 +18,18 @@
         <div class='c'>地址：</div>
         <textarea id='address' class='e' v-model='address'></textarea>
       </div>
+      <div class="line">
+        <div class='c'>联系人：</div>
+        <div  class='d'>
+        <input class='a' v-model='shipper'></input></div>
+      </div>
+      <div class="line">
+        <div class='c'>联系电话：</div>
+        <div  class='d'>
+        <input class='a' v-model='shipper_tel'></input></div>
+      </div>
+
+
     </div>
 
   </div>
@@ -37,6 +49,8 @@
         type:"",            //装货还是卸货  load   unload
         index:0,            //下标 列表里第几个地址
         p_c_d:[],           //["广东省","深圳市","龙华区"]
+        shipper:'',         //联系人
+        shipper_tel:'',     //联系电话
       }
     },
     mounted(){
@@ -55,6 +69,12 @@
       }
       if(this.$route.query.index){
         this.index = this.$route.query.index;
+      }
+      if(this.$route.query.shipper){
+        this.shipper = this.$route.query.shipper;
+      }
+      if(this.$route.query.shipper_tel){
+        this.shipper_tel = this.$route.query.shipper_tel;
       }
       // 去除高德地图logo
       this.$nextTick(() => {
@@ -108,28 +128,32 @@
           return
         }
         if(this.type == "装货点"){
+
           this.$store.state.pg_publish.load_pointList[this.index].detail = this.address
           this.$store.state.pg_publish.load_pointList[this.index].lng = this.lng
           this.$store.state.pg_publish.load_pointList[this.index].lat = this.lat
           this.$store.state.pg_publish.load_pointList[this.index].p_c_d = this.p_c_d
+          this.$store.state.pg_publish.load_pointList[this.index].shipper = this.shipper
+          this.$store.state.pg_publish.load_pointList[this.index].shipper_tel = this.shipper_tel
+ console.log(this.$store.state.pg_publish.load_pointList[this.index].detail)
         }else if(this.type == "卸货点"){
           this.$store.state.pg_publish.unload_pointList[this.index].detail = this.address
           this.$store.state.pg_publish.unload_pointList[this.index].lng = this.lng
           this.$store.state.pg_publish.unload_pointList[this.index].lat = this.lat
           this.$store.state.pg_publish.unload_pointList[this.index].p_c_d = this.p_c_d
+          this.$store.state.pg_publish.unload_pointList[this.index].shipper = this.shipper
+          this.$store.state.pg_publish.unload_pointList[this.index].shipper_tel = this.shipper_tel
         }
 
         if(this.$store.state.userInfo.userType == "owner"){
           this.$router.push({
             name:'pg_publish',
           })
-
         }
         if(this.$store.state.userInfo.userType == "driver"){
           this.$router.push({
             name:'car_publish_create',
           })
-          
         }
       },
       onComplete(data, map){
@@ -269,7 +293,7 @@
     }
     .container{
       width: 100%; 
-      height: 70%;
+      height: 64%;
     }
     .pickerBox{
       position: absolute;
@@ -284,32 +308,31 @@
     }
 
     .resultView{
-      height: calc(30% - 1.8rem);
+      height: calc(36% - 1.8rem);
+      overflow: scroll;
       font-size: 27/50rem;
       .resultTitle{
-        width: 100%;
         background-color: #dadada;
         padding: 12/50rem;
       }
       .line{
-        height: 70/50rem;
-        line-height: 70/50rem;
+        line-height: 76/50rem;
+        display: flex;
+        justify-content: space-between;
         .c{
           font-weight: bold;
           padding-left: 15/50rem;
-          width: 110/50rem;
+          width: 150/50rem;
           text-align: right;
-          float: left;
         }
         .d{
           width: calc(100% - 3rem);
-          height: 75/50rem;
-          float: left;
+          text-align: left;
         }
         .e{
           width: calc(100% - 3.24rem);
-          height: 75/50rem;
-          float: left;
+          line-height: 40/50rem;
+          display: block;
           border: 1/50rem solid #ccc;
           padding: 10/50rem;
         }

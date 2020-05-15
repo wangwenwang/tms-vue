@@ -18,6 +18,10 @@
                   <span v-if='addressList.s[idx].detail.length'>{{ item.detail }}</span>
                   <span v-if='addressList.s[idx].detail.length == 0' class="prompt_color">请输入详情地址</span>
                 </div>
+                <div class="lineThree" v-if='addressList.s[idx].shipper!="" || addressList.s[idx].shipper_tel!=""' >
+                  <span v-if='addressList.s[idx].shipper'><i class="iconfont icon-lianxiren" ></i>  {{ item.shipper }}</span>
+                  <span v-if='addressList.s[idx].shipper_tel'><i class="iconfont icon-dianhua" ></i>  {{ item.shipper_tel }}</span>
+                </div>
               </div>
               <div class="jia_jian_icon">
                 <div  @click='load_jia_jian_click(item.jia_jian)'>{{ item.jia_jian }}</div>
@@ -36,6 +40,10 @@
                   <span v-if='addressList.e[idx].detail.length'>{{ item.detail }}</span>
                   <span v-if='addressList.e[idx].detail.length == 0' class="prompt_color">请输入详情地址</span>
                 </div>
+                <div class="lineThree" v-if='addressList.e[idx].shipper!="" || addressList.e[idx].shipper_tel!=""' >
+                  <span v-if='addressList.e[idx].shipper'><i class="iconfont icon-lianxiren"></i>  {{item.shipper}}</span>
+                  <span v-if='addressList.e[idx].shipper_tel'><i class="iconfont icon-dianhua"></i>  {{item.shipper_tel }}</span>
+                </div>
               </div>
               <div class="jia_jian_icon">
                 <div  @click='unload_jia_jian_click(item.jia_jian)'>{{ item.jia_jian }}</div>
@@ -47,32 +55,42 @@
           <div class="y_goods">
 
             <div>
-              <div><span>货物名称</span></div>
+              <div><span class="icon"> * </span><span>货物名称</span></div>
               <div @click='goods_name_click'><span>{{goods_name}}</span>
               </div>
             </div>
 
             <div>
-              <div><span>重量</span></div>
+              <div><span class="icon"> * </span><span>重量</span></div>
               <div>
                 <input class="two_input_width"  v-on:input="input_change('min_weight')"  type="number"  placeholder='0~99'  v-model='min_weight'></input>&nbsp;&nbsp;吨
               </div>
             </div>
 
             <div>
-              <div><span>体积</span></div>
+              <div><span class="icon"> * </span><span>体积</span></div>
               <div>
                 <input class="two_input_width"  v-on:input="input_change('min_volume')"  type="number"  placeholder='0~99'  v-model='min_volume'></input>&nbsp;&nbsp;方
               </div>
             </div>
 
             <div>
-              <div><span>车型车长</span></div>
+              <div><span class="icon"> * </span><span>车型车长</span></div>
               <div @click='vehicle_type_click'><span>{{ vehicle_type }}</span></div>
             </div>
 
             <div>
-              <div><span>几装几卸</span></div>
+              <div><span class="icon"> * </span><span>订单类型</span></div>
+              <div class="radioValue">
+                <el-radio-group v-model="orderType"  @change="changeorderType">
+                  <el-radio label="城配订单">城配订单</el-radio>
+                  <el-radio label="城际订单">城际订单</el-radio>
+                </el-radio-group>
+              </div>
+            </div>
+
+            <div>
+              <div><span class="icon"> * </span><span>几装几卸</span></div>
               <div><span>{{ load_unload_type }}</span></div>
             </div>
 
@@ -82,7 +100,7 @@
           <div class="y_goods">
 
             <div>
-              <div><span>装货时间</span></div>
+              <div><span></span><span>装货时间</span></div>
               <div>
                 <el-date-picker
                   v-model="load_time" :editable='false' 
@@ -96,12 +114,12 @@
             </div>
 
             <div>
-              <div><span>备注</span></div>
+              <div><span></span><span>备注</span></div>
               <div><input  v-on:input="input_change('remark')"  placeholder='选填'  v-model='remark'></input></div>
             </div>
 
             <div>
-              <div><span>期望金额</span></div>
+              <div><span></span><span>期望金额</span></div>
               <div><input  v-on:input="input_change('expected_cost')"  placeholder='可不填，由司机发起竞价'  v-model='expected_cost'></input></div>
             </div>
 
@@ -152,6 +170,7 @@
         expected_cost:"",//期望金额
         tips_Msg:"",//提示信息
         ifTips:false,
+        orderType:'',//订单类型
         pickerOptions: {
           shortcuts: [{
             text: '今天',
@@ -192,14 +211,16 @@
 
       var that = this
 
-      that.httpRequest_ygy("queryCityAll.do","",function(AddressRes){
+      that.httpRequest_ygy("queryCityAll.do","",function(AddressRes){ 
 
         that.optionsAddress = AddressRes.data.json2;
       })
 
       // 初始化
-      this.addressList.s = [{"icon":"装","p_c_d":[],"detail":"","lng":0,"lat":0,"jia_jian":"+"}]
-      this.addressList.e = [{"icon":"卸","p_c_d":[],"detail":"","lng":0,"lat":0,"jia_jian":"+"}]
+      this.addressList.s = [{"icon":"装","p_c_d":[],"detail":"","lng":0,"lat":0,"shipper":"","shipper_tel":"",
+      "jia_jian":"+"}]
+      this.addressList.e = [{"icon":"卸","p_c_d":[],"detail":"","lng":0,"lat":0,"shipper":"","shipper_tel":"",
+      "jia_jian":"+"}]
 
       // 赋值
       if(this.$store.state.pg_publish.load_pointList.length){
@@ -225,6 +246,9 @@
       }
       if(this.$store.state.pg_publish.other_info.vehicle_type.length){
         this.vehicle_type = this.$store.state.pg_publish.other_info.vehicle_type
+      }
+      if(this.$store.state.pg_publish.other_info.orderType.length){
+        this.orderType = this.$store.state.pg_publish.other_info.orderType
       }
       if(this.$store.state.pg_publish.other_info.load_time.length){
         this.load_time = this.$store.state.pg_publish.other_info.load_time
@@ -295,7 +319,7 @@
         this.$store.state.pg_publish = {
           load_pointList:[],
           unload_pointList:[],
-          other_info:{goods_name:"",min_weight:"",max_weight:"",min_volume:"",max_volume:"",vehicle_type:"",load_time:"",remark:"",expected_cost:""}
+          other_info:{goods_name:"",min_weight:"",max_weight:"",min_volume:"",max_volume:"",vehicle_type:"",orderType:"",load_time:"",remark:"",expected_cost:""}
         }
       },
       load_ads_record(idx){
@@ -317,11 +341,14 @@
       load_address_detail(idx){
         this.$store.state.pg_publish.load_pointList = this.addressList.s
         this.$store.state.pg_publish.other_info.load_time = this.load_time
+        console.log(this.addressList.s)
         this.$router.push({
           name:"SendLnglat",
           query:{
             type:"装货点",
             index:idx,
+            shipper:this.addressList.s[idx].shipper,
+            shipper_tel:this.addressList.s[idx].shipper_tel,
           }
         })
       },
@@ -333,13 +360,15 @@
           query:{
             type:"卸货点",
             index:idx,
+            shipper:this.addressList.e[idx].shipper,
+            shipper_tel:this.addressList.e[idx].shipper_tel,
           }
         })
       },
       load_jia_jian_click(type){
         if(type == "+"){
           this.addressList.s[0].jia_jian = ""
-          var item = {"icon":"装","p_c_d":[],"detail":"","lng":0,"lat":0,"jia_jian":"-"};
+          var item = {"icon":"装","p_c_d":[],"detail":"","lng":0,"lat":0,"shipper":"","shipper_tel":"","jia_jian":"-"};
           this.addressList.s.push(item)
         }else if(type == "-"){
           this.addressList.s.pop()
@@ -350,7 +379,7 @@
       unload_jia_jian_click(type){
         if(type == "+"){
           this.addressList.e[0].jia_jian = ""
-          var item = {"icon":"卸","p_c_d":[],"detail":"","lng":0,"lat":0,"jia_jian":"-"};
+          var item = {"icon":"卸","p_c_d":[],"detail":"","lng":0,"lat":0,"shipper":"","shipper_tel":"","jia_jian":"-"};
           this.addressList.e.push(item)
         }else if(type == "-"){
           this.addressList.e.pop()
@@ -397,6 +426,9 @@
           })
         })
       },
+      changeorderType(value) {
+        this.$store.state.pg_publish.other_info.orderType = this.orderType
+      },
       check(){
         if(this.addressList.s[0].p_c_d.length == 0 || this.addressList.s[0].detail.length == 0){
           this.$alert('请输入装货地址', '提示', {
@@ -428,8 +460,14 @@
           })
           return false
         }
-        if(this.vehicle_type == 0){
+        if(this.vehicle_type == ""){
           this.$alert('请选择车型车长', '提示', {
+            confirmButtonText: '确定'
+          })
+          return false
+        }
+        if(this.orderType == ""){
+          this.$alert('请选择订单类型', '提示', {
             confirmButtonText: '确定'
           })
           return false
@@ -465,7 +503,8 @@
             var LoadingPoint = []
             for(var i = 0; i < that.addressList.s.length; i++){
               var item = that.addressList.s[i]
-              var load = {"l_province":item.p_c_d[0],"l_city":item.p_c_d[1],"l_district":item.p_c_d[2],"l_subdistrict":"","l_detail":item.detail,"l_lng":item.lng,"l_lat":item.lat}
+              var load = {"l_province":item.p_c_d[0],"l_city":item.p_c_d[1],"l_district":item.p_c_d[2],"l_subdistrict":"","l_detail":item.detail,"l_lng":item.lng,"l_lat":item.lat,"l_shipper":item.shipper,
+              "l_shipper_tel":item.shipper_tel}
               LoadingPoint.push(load)
             }
 
@@ -473,7 +512,8 @@
             var UnloadPoint = []
             for(var i = 0; i < that.addressList.e.length; i++){
               var item = that.addressList.e[i]
-              var load = {"u_province":item.p_c_d[0],"u_city":item.p_c_d[1],"u_district":item.p_c_d[2],"u_subdistrict":"","u_detail":item.detail,"u_lng":item.lng,"u_lat":item.lat}
+              var load = {"u_province":item.p_c_d[0],"u_city":item.p_c_d[1],"u_district":item.p_c_d[2],"u_subdistrict":"","u_detail":item.detail,"u_lng":item.lng,"u_lat":item.lat,"u_shipper":item.shipper,
+              "u_shipper_tel":item.shipper_tel}
                UnloadPoint.push(load)
             }
 
@@ -498,6 +538,7 @@
               loadingTime : that.load_time,
               expectedCost : that.expected_cost,//期望运费
               vehicleType : that.vehicle_type,//车型
+              orderType : that.orderType,//订单类型
               loadUnloadType : that.load_unload_type,//装卸类型
               mark : that.remark,//备注
               LoadingPoint : LoadingPoint,//装货点
@@ -558,7 +599,8 @@
         var LoadingPoint = []
         for(var i = 0; i < this.addressList.s.length; i++){
           var item = this.addressList.s[i]
-          var load = {"l_province":item.p_c_d[0],"l_city":item.p_c_d[1],"l_district":item.p_c_d[2],"l_subdistrict":"","l_detail":item.detail,"l_lng":item.lng,"l_lat":item.lat}
+          var load = {"l_province":item.p_c_d[0],"l_city":item.p_c_d[1],"l_district":item.p_c_d[2],"l_subdistrict":"","l_detail":item.detail,"l_lng":item.lng,"l_lat":item.lat,"l_shipper":item.shipper,
+              "l_shipper_tel":item.shipper_tel}
           LoadingPoint.push(load)
         }
 
@@ -566,7 +608,8 @@
         var UnloadPoint = []
         for(var i = 0; i < this.addressList.e.length; i++){
           var item = this.addressList.e[i]
-          var load = {"u_province":item.p_c_d[0],"u_city":item.p_c_d[1],"u_district":item.p_c_d[2],"u_subdistrict":"","u_detail":item.detail,"u_lng":item.lng,"u_lat":item.lat}
+          var load = {"u_province":item.p_c_d[0],"u_city":item.p_c_d[1],"u_district":item.p_c_d[2],"u_subdistrict":"","u_detail":item.detail,"u_lng":item.lng,"u_lat":item.lat,"u_shipper":item.shipper,
+              "u_shipper_tel":item.shipper_tel}
            UnloadPoint.push(load)
         }
 
@@ -591,6 +634,7 @@
           loadingTime : that.load_time,
           expectedCost : that.expected_cost,//期望运费
           vehicleType : that.vehicle_type,//车型
+          orderType : that.orderType,//订单类型
           loadUnloadType : that.load_unload_type,//装卸类型
           mark : that.remark,//备注
           LoadingPoint : LoadingPoint,//装货点
@@ -631,49 +675,40 @@
           background-color: #fff;
           margin-bottom: 20/50rem;
           margin-top: 70/50rem;
+
           .y_address{
             overflow: hidden;
             .load_unload_v_for{
               overflow: hidden;
-              height: 150/50rem;
               border-bottom:1.5/50rem solid #eee;
+              display: flex;
+              justify-content: space-between;
               .load_unload_icon{
-                float: left;
-                width: 80/50rem;
                 height: 100%;
                 &>div{
-                  float: left;
-                  padding: 10/50rem;
+                  padding: 15/50rem;
                   background-color: #FACE51;
-                  position: relative;
-                  left: 50%;
-                  top: 50%;
-                  -webkit-transform: translate(-50%,-50%);
-                  -ms-transform: translate(-50%,-50%);
-                  transform: translate(-50%,-50%)
+                  margin-top: calc(40%);
+                  border-radius:  20%;
                 }
                 .xie{background-color: #FD757F;}
               }
               .oneTwo{
                 height: 100%;
-                float: left;
                 width: 500/50rem;
+                border-bottom:1.5/50rem solid #eee;
+                padding-bottom: 15/50rem;
                 .prompt_color{
                   color: #a7a7a7;
+                  padding-right: 10/50rem;
                 }
                 .lineOne{
-                  float: left;
-                  height: 50%;
-                  width: 100%;
                   line-height: 90/50rem;
                   border-bottom:1.5/50rem solid #eee;
                   font-size: 27/50rem;
                   font-weight: 600;
                 }
                 .AddressStart{
-                  float: left;
-                  width: 100%;
-                  border-bottom:1.5/50rem solid #eee;
                   font-weight: 600;
                   pointer-events: none;
                   .el-cascader{
@@ -681,29 +716,32 @@
                   }
                 }
                 .lineTwo{
-                  float: left;
-                  height: 50%;
-                  width: 100%;
                   line-height: 37/50rem;
                   font-size: 23/50rem;
+                  padding-bottom: 15/50rem;
+                }
+                .lineThree{
+                  line-height: 40/50rem;
+                  font-size: 23/50rem;
+                  display: flex;
+                  justify-content: space-between;
+                  &>span{
+                    &>i{
+                      color:  #5965D8;
+                    }
+                  }
                 }
               }
               .jia_jian_icon{
-                float: right;
                 height: 100%;
                 width: 80/50rem;
+                line-height: 100%;
                 &>div{
-                  float: left;
+                  margin-top: calc(40%);
                   font-size: 50/50rem;
                   padding: 10/50rem;
                   padding-left: 20/50rem;
                   padding-right: 20/50rem;
-                  position: relative;
-                  left: 50%;
-                  top: 50%;
-                  -webkit-transform: translate(-50%,-50%);
-                  -ms-transform: translate(-50%,-50%);
-                  transform: translate(-50%,-50%)
                 }
               }
             }
@@ -715,16 +753,24 @@
             &>div{
               width: 100%;
               height: 80/50rem;
-              input{width: 330/50rem;}
+              display: flex;
+              justify-content: space-between;
+              line-height: 80/50rem;
+              input{width: 330/50rem; }
               &>div{
+                .icon{
+                  color: red;
+                }
                 line-height: 80/50rem;
+
                 &:nth-child(1){
-                  float: left;
                   width: 22%;
-                  text-align: right;
+                  display: flex;
+                  justify-content: space-between;
+                  line-height: 80/50rem;
+                  padding-right: 24/50rem;
                 }
                 &:nth-child(2){
-                  float: left;
                   width: 78%;
                   border-bottom:1.5/50rem solid #eee;
                   .two_input_width{
@@ -732,7 +778,7 @@
                   }
                 }
                 &>span{
-                  padding: 15/50rem;
+                  line-height: 80/50rem;
                 }
               }
               .prompt_color{

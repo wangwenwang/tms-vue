@@ -7,27 +7,38 @@
           <div class="y_address">
             <div class="start">
               <div class="leftContent"><span class="i">起</span></div>
-              <div class="Address" >
-                <el-cascader :options="optionsAddress"  :filterable="true"  :clearable="true" 
-                v-model="AddressStart[0].p_c_d"  @change="startChange"></el-cascader> </el-cascader>
-              </div>
-
-              <div class="AddressDetail" @click='load_address_detail'>
-                <span v-if='AddressStart[0].detail'>{{ AddressStart[0].detail }}</span>
-                <span v-if='!AddressStart[0].detail' class="prompt_color">请输入详情地址</span>
+              <div>
+                <div class="Address" >
+                  <el-cascader :options="optionsAddress"  :filterable="true"  :clearable="true" 
+                  v-model="AddressStart[0].p_c_d"  @change="startChange"></el-cascader> </el-cascader>
+                </div>
+  
+                <div class="AddressDetail" @click='load_address_detail'>
+                  <span v-if='AddressStart[0].detail'>{{ AddressStart[0].detail }}</span>
+                  <span v-if='!AddressStart[0].detail' class="prompt_color">请输入详情地址</span>
+                </div>
+                <div class="lineThree" v-if='AddressStart[0].shipper!="" || AddressStart[0].shipper_tel!=""' >
+                  <span v-if='AddressStart[0].shipper'><i class="iconfont icon-lianxiren" ></i>  {{ AddressStart[0].  shipper }}</span>
+                  <span v-if='AddressStart[0].shipper_tel'><i class="iconfont icon-dianhua" ></i>  {{ AddressStart[0].  shipper_tel }}</span>
+                </div>
               </div>
             </div>
             <div class="end">
-              <div class="leftContent"><span class="ii">终</span></div> 
-              <div class="Address" >
-                <el-cascader :options="optionsAddress"  :filterable="true"  :clearable="true"  
-                v-model="AddressEnd[0].p_c_d"   @change="endChange"> </el-cascader>
+              <div class="leftContent"><span class="ii">终</span></div>
+              <div>
+                <div class="Address" >
+                  <el-cascader :options="optionsAddress"  :filterable="true"  :clearable="true"  
+                  v-model="AddressEnd[0].p_c_d"   @change="endChange"> </el-cascader>
+                </div>
+                <div class="AddressDetail" @click='unload_address_detail'>
+                  <span v-if='AddressEnd[0].detail'>{{ AddressEnd[0].detail }}</span>
+                  <span v-if='!AddressEnd[0].detail' class="prompt_color">请输入详情地址</span>
+                </div>
+                <div class="lineThree" v-if='AddressEnd[0].shipper!="" || AddressEnd[0].shipper_tel!=""' >
+                  <span v-if='AddressEnd[0].shipper'><i class="iconfont icon-lianxiren" ></i>  {{ AddressEnd[0].    shipper }}</span>
+                  <span v-if='AddressEnd[0].shipper_tel'><i class="iconfont icon-dianhua" ></i>  {{ AddressEnd[0].    shipper_tel }}</span>
+                </div>
               </div>
-              <div class="AddressDetail" @click='unload_address_detail'>
-                <span v-if='AddressEnd[0].detail'>{{ AddressEnd[0].detail }}</span>
-                <span v-if='!AddressEnd[0].detail' class="prompt_color">请输入详情地址</span>
-              </div>
-              
             </div>
           </div>
         </div>
@@ -37,6 +48,15 @@
             <div>
               <div><span>车型车长</span></div>
               <div @click='vehicle_type_click'><span>{{ vehicle_type }}</span></div>
+            </div>
+            <div>
+              <div><span>订单类型</span></div>
+              <div class="radioValue">
+                <el-radio-group v-model="orderType"  @change="changeorderType">
+                  <el-radio label="城配订单">城配订单</el-radio>
+                  <el-radio label="城际订单">城际订单</el-radio>
+                </el-radio-group>
+              </div>
             </div>
             
             <div>
@@ -116,6 +136,7 @@
         remark:"",//备注
         tips_Msg:"",//提示信息
         ifTips:false,
+        orderType:"",//订单类型
         typeOfCarList: [],
         pickerOptions: {
           shortcuts: [{
@@ -163,8 +184,8 @@
       })
 
       // 初始化
-      this.AddressStart  = [{"p_c_d":[],"detail":"","lng":0,"lat":0}]
-      this.AddressEnd = [{"p_c_d":[],"detail":"","lng":0,"lat":0}]
+      this.AddressStart  = [{"p_c_d":[],"detail":"","lng":0,"lat":0,"shipper":"","shipper_tel":""}]
+      this.AddressEnd = [{"p_c_d":[],"detail":"","lng":0,"lat":0,"shipper":"","shipper_tel":""}]
       // 赋值
       if(this.$store.state.pg_publish.load_pointList.length){
         this.AddressStart = this.$store.state.pg_publish.load_pointList
@@ -172,11 +193,16 @@
       if(this.$store.state.pg_publish.unload_pointList.length){
         this.AddressEnd = this.$store.state.pg_publish.unload_pointList
       }
+      if(this.$store.state.pg_publish.car_info.vehicle_type.length){
+        this.vehicle_type = this.$store.state.pg_publish.car_info.vehicle_type
+      }
+      if(this.$store.state.pg_publish.car_info.orderType.length){
+        this.orderType = this.$store.state.pg_publish.car_info.orderType
+      }
       if(this.$store.state.pg_publish.car_info.load_time.length){
         this.load_time = this.$store.state.pg_publish.car_info.load_time
       }else{
         this.load_time = this.formatDate(new Date)
-        console.log(this.load_time)
       }
       if(this.$store.state.pg_publish.car_info.remark.length){
         this.remark = this.$store.state.pg_publish.car_info.remark
@@ -226,6 +252,10 @@
           })
         }
       },
+      changeorderType(value) {
+        this.$store.state.pg_publish.car_info.orderType = this.orderType
+      },
+
       // 记住用户输入，存到vuex；数字精确2位小数
       input_change(v){
         
@@ -260,7 +290,7 @@
         this.$store.state.pg_publish = {
           load_pointList:[],
           unload_pointList:[],
-          car_info:{vehicleLoad:"",vehicleVolume:"",vehicle_type:"",load_time:"",end_time:"",remark:""},
+          car_info:{vehicleLoad:"",vehicleVolume:"",vehicle_type:"",orderType:"",load_time:"",end_time:"",remark:""},
         }
         this.$router.push("car_publish_list")
       },
@@ -275,25 +305,29 @@
       
       load_address_detail(){
         this.$store.state.pg_publish.load_pointList = this.AddressStart
-        this.$store.state.pg_publish.car_info.load_time = this.load_time
-        this.$store.state.pg_publish.car_info.end_time = this.end_time
+        // this.$store.state.pg_publish.car_info.load_time = this.load_time
+        // this.$store.state.pg_publish.car_info.end_time = this.end_time
         this.$router.push({
           name:"SendLnglat",
           query:{
             type:"装货点",
             index:0,
+            shipper:this.AddressStart[0].shipper,
+            shipper_tel:this.AddressStart[0].shipper_tel,
           }
         })
       },
       unload_address_detail(){
         this.$store.state.pg_publish.unload_pointList = this.AddressEnd
-        this.$store.state.pg_publish.car_info.load_time = this.load_time
-        this.$store.state.pg_publish.car_info.end_time = this.end_time
+        // this.$store.state.pg_publish.car_info.load_time = this.load_time
+        // this.$store.state.pg_publish.car_info.end_time = this.end_time
         this.$router.push({
           name:"SendLnglat",
           query:{
             type:"卸货点",
             index:0,
+            shipper:this.AddressEnd[0].shipper,
+            shipper_tel:this.AddressEnd[0].shipper_tel,
           }
         })
       },
@@ -333,19 +367,25 @@
           })
           return
         }
-        if(this.vehicle_type == 0){
+        if(this.vehicle_type == ""){
           that.$alert('请选择车型车长', '提示', {
             confirmButtonText: '确定'
           })
           return
         }
-        if(this.load_time == 0){
+        if(this.orderType == ""){
+          that.$alert('请选择订单类型', '提示', {
+            confirmButtonText: '确定'
+          })
+          return
+        }
+        if(this.load_time == ""){
           that.$alert('请选择出发日期', '提示', {
             confirmButtonText: '确定'
           })
           return
         }
-        if(this.end_time == 0){
+        if(this.end_time == ""){
           that.$alert('请选择结束日期', '提示', {
             confirmButtonText: '确定'
           })
@@ -358,7 +398,8 @@
         var LoadingPoint = []
         for(var i = 0; i < this.AddressStart.length; i++){
           var item = this.AddressStart[i]
-          var load = {"l_province":item.p_c_d[0],"l_city":item.p_c_d[1],"l_district":item.p_c_d[2],"l_subdistrict":"","l_detail":item.detail,"l_lng":item.lng,"l_lat":item.lat}
+          var load = {"l_province":item.p_c_d[0],"l_city":item.p_c_d[1],"l_district":item.p_c_d[2],"l_subdistrict":"","l_detail":item.detail,"l_lng":item.lng,"l_lat":item.lat,"l_shipper":item.shipper,
+              "l_shipper_tel":item.shipper_tel}
           LoadingPoint.push(load)
         }
 
@@ -366,7 +407,8 @@
         var UnloadPoint = []
         for(var i = 0; i < this.AddressEnd.length; i++){
           var item = this.AddressEnd[i]
-          var load = {"u_province":item.p_c_d[0],"u_city":item.p_c_d[1],"u_district":item.p_c_d[2],"u_subdistrict":"","u_detail":item.detail,"u_lng":item.lng,"u_lat":item.lat}
+          var load = {"u_province":item.p_c_d[0],"u_city":item.p_c_d[1],"u_district":item.p_c_d[2],"u_subdistrict":"","u_detail":item.detail,"u_lng":item.lng,"u_lat":item.lat,"u_shipper":item.shipper,
+              "u_shipper_tel":item.shipper_tel}
            UnloadPoint.push(load)
         }
 
@@ -384,6 +426,7 @@
           endTime : that.end_time + " 23:59:59",//截止时间
           loadingTime : that.load_time,
           vehicleType : that.vehicle_type,//车型
+          orderType : that.orderType,//订单类型
           mark : that.remark,//备注
           LoadingPoint : LoadingPoint,//装货点
           UnloadPoint : UnloadPoint,//装货点
@@ -403,7 +446,8 @@
           that.$store.state.pg_publish = {
             load_pointList:[],
             unload_pointList:[],
-            car_info:{vehicleLoad:"",vehicleVolume:"",vehicle_type:"",load_time:"",end_time:"",remark:""},
+            car_info:{vehicleLoad:"",vehicleVolume:"",vehicle_type:"",orderType:"",load_time:"",end_time:"",
+            remark:""},
           }
         })
       },
@@ -430,11 +474,11 @@
           .y_address{
             overflow: hidden;
             .start,.end{ 
-              height: 200/50rem;
+              display: flex;
+              justify-content: space-between;
               .leftContent{
                 width: 80/50rem;
                 height: 160/50rem;
-                float :left;
                 text-align: center;
                 top:50/50rem;
                 .i{
@@ -459,10 +503,29 @@
               .Address,.AddressDetail{
                 float: left;
                 width: 600/50rem;
-                line-height: 80/50rem;
+                padding:10/50rem 26/50rem;
+                line-height: 40/50rem;
                 .prompt_color{
                   padding-left: 20/50rem;
                   color: #a7a7a7;
+                }
+              }
+              .Address{
+                font-weight: 600;
+                pointer-events: none;
+                padding:0;
+              }
+              .lineThree{
+                line-height: 40/50rem;
+                font-size: 23/50rem;
+                width: 500/50rem;
+                padding:10/50rem 20/50rem;
+                display: flex;
+                justify-content: space-between;
+                &>span{
+                  &>i{
+                    color:  #5965D8;
+                  }
                 }
               }
             }
@@ -483,7 +546,7 @@
                 }
                 &:nth-child(2){
                   float: left;
-                  width: 78%;
+                  width: 70%;
                   border-bottom:1.5/50rem solid #eee;
                   .two_input_width{
                     width: 140/50rem;
@@ -496,6 +559,9 @@
               .prompt_color{
                 color: #a7a7a7;
               }
+            }
+            .radioValue{
+              padding-left: 15/50rem;
             }
           }
         }

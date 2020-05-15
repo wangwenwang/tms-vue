@@ -30,6 +30,8 @@
   	   	  	<i class= "iconfont icon-xiangshang" ></i></div>
   	   	  <div  @click="toHistoricalTrack" v-if='$store.state.userInfo.userType == "driver"'><i class="iconfont icon-lishiguiji" ></i><span>历史轨迹</span>  
   	   	  	<i  class="iconfont icon-xiangshang" ></i></div>
+          <div  @click="toOpen"><i class="iconfont icon-xiazai" ></i><span>二维码下载</span>
+            <i class="iconfont icon-xiangshang" ></i></div>
   	   	  <div  @click="toPersonalData"><i class="iconfont icon-gerenziliaoxiugai" ></i><span>个人资料</span>
   	   	  	<i class="iconfont icon-xiangshang" ></i></div>
   	   	  <div  @click="toPassword"><i class="iconfont icon-xiugaimima" ></i><span>修改密码</span>
@@ -41,8 +43,18 @@
   	      <i class="iconfont icon-icon-yxj-switch-account"  @click="exit" ></i>
   	      <div><span @click="exit">退出登录</span></div>
   	    </div>
+
+        <div>
+          <el-dialog title="下载" :visible.sync="dialogVisible" :close-on-click-modal="false" :modal="true" :show-close="true" :center="true" class="dialog"  width="80%" height= "30%">
+            <div class="center">
+              <img src="/static/images/APP.png" class="appImg"></img>
+            </div>
+            
+         </el-dialog>
+        </div>
   	  </div>
   	</div>
+    
   	<FooterIndex/>
   </div>
 </template>
@@ -56,6 +68,7 @@ import FooterIndex from "../../components/footer"
   	  	cellphone:"",//手机号码
   	  	VersionNum: "",//版本号
         imageUrl: "",//用户头像
+        dialogVisible: false,//二维码弹框
 
   	  }
   	},
@@ -92,6 +105,11 @@ import FooterIndex from "../../components/footer"
   	  	  }
   	  	})
   	  },
+      //打开二维码弹框
+      toOpen(){
+        this.dialogVisible = true;
+
+      },
   	  // 跳转到 个人资料 页面
   	  toPersonalData(){  
   	  	this.$router.push({
@@ -335,8 +353,18 @@ import FooterIndex from "../../components/footer"
   	  	    margin-top: 10/50rem;
   	  	  }
   	  	}
+
+        //弹框图片
+        .appImg{
+          width:400/50rem;
+          height: 500/50rem;
+        }
+        .center{
+          text-align: center;
+        }
   	  }
   	}
+
   }
 
 </style>
