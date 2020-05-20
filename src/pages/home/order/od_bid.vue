@@ -62,7 +62,9 @@
       }
 
       if(this.$route.query.orderstate){ 
+        
         this.orderState = this.$route.query.orderstate;
+        console.log(this.orderState)
       }
       
       this.$nextTick(() => {

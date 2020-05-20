@@ -23,6 +23,7 @@
   	  return{
         data:{},
         sourceDetail:[],//货源详情
+        orderState:'',//订单状态
   	  }
   	},
   	components:{
@@ -31,6 +32,13 @@
 
       var that = this;
 
+      if(this.$route.query.whoPush){
+        this.whoPush = this.$route.query.whoPush;
+      }
+      if(this.$route.query.orderstate){
+        this.orderState = this.$route.query.orderstate;
+        console.log(this.orderstate)
+      }
       if(this.$route.query.sourceInfo){
         this.sourceInfo = this.$route.query.sourceInfo;
       }
@@ -38,7 +46,6 @@
       var postData = {
         "sourceNo":that.sourceInfo.sourceNo,
       }
-      console.log(that.sourceNo)
       that.httpRequest_ygy("GetTMSOrderInfo.do",postData,function(res){
 
         that.data = res.data[0];
@@ -56,6 +63,8 @@
           name:"sourceDetail",
           query:{
             sourceInfo:this.sourceInfo,
+            whoPush:this.whoPush,
+            orderState:this.orderState
           }
         })
       },

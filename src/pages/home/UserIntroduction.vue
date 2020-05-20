@@ -19,7 +19,7 @@
           <!-- 星级 -->
           <div class="block">
             <span class="demonstration">星级： </span>
-            <el-rate class="star" v-model="value1" :colors="colors"></el-rate>
+            <el-rate class="star" v-model="value1" :colors="['#99A9BF', '#F7BA2A', '#FF9900']"></el-rate>
           </div>
 
         </div>
@@ -58,6 +58,7 @@
   	  	userInfo:{},
   	  	evalInfo:[],
         whoPush:'',
+        orderState:'',//订单状态
         value1:4
   	  }
   	},
@@ -80,6 +81,10 @@
       if(this.$route.query.whoPush){
 
         this.whoPush = this.$route.query.whoPush;
+      }
+      if(this.$route.query.orderstate){
+        this.orderState = this.$route.query.orderstate;
+        console.log(this.orderstate)
       }
       if(this.$store.state.userInfo.userType == "owner"){
       	this.headItem = "司机简介"
@@ -125,16 +130,12 @@
       },
   	  // 返回上一页
   	  goPrev(){  
-
-        console.log(this.whoPush)
-        console.log(this.sourceInfo)
-
-
   	  	this.$router.push({
   	  	  name:"sourceDetail",
   	  	  query:{
             sourceInfo:this.sourceInfo,
-            whoPush:this.whoPush
+            whoPush:this.whoPush,
+            orderState:this.orderState
   	  	  }
   	  	})
   	  }

@@ -235,10 +235,10 @@
       if(this.$route.query.orderState){
 
         this.orderstate = this.$route.query.orderState;//订单类型
+        console.log(this.orderstate)
       }else{
         this.orderstate = '';
       }
-
       var postData = {
         "lon":this.longitude,//经度
         "lat":this.latitude,//纬度
@@ -344,7 +344,8 @@
           query:{
             UserID: this.data.bid[index].bid_driver_id,//司机id
             sourceInfo: this.sourceInfo,
-            whoPush: this.whoPush
+            whoPush: this.whoPush,
+            orderstate:this.orderstate
           }
         })
       },
@@ -454,6 +455,7 @@
             UserID:this.owner_or_driver_ID,
             whoPush:this.whoPush,
             sourceInfo:this.sourceInfo,
+            orderstate:this.orderstate
           }
         })
       },
@@ -502,6 +504,8 @@
         this.$router.push({
           name:"LogisticsInfoDetail",
           query:{
+            whoPush:this.whoPush,
+            orderstate:this.orderstate,
             sourceInfo:this.sourceInfo,
           }
         })
