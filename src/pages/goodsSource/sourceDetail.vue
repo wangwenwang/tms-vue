@@ -21,6 +21,7 @@
             <span>{{sourceInfo.min_volume}}方&nbsp;</span>
           </div>
           <div v-if='sourceInfo.orderType'><span>订单类型</span><span>{{sourceInfo.orderType}}</span></div>
+          <div v-if='$store.state.userInfo.userType == "owner"'><span>货源单号</span><span>{{sourceInfo.sourceNo}}</span></div>
           <div>
             <span>特殊要求</span>
             <span class="markInfo">{{sourceInfo.mark}}</span>
@@ -54,9 +55,9 @@
 
         <div v-if='owner_or_driver_userName != undefined && sourceInfo.status != "CANCEL"' class="owner-driver-Info">
           <div class="userImage"><img src="../../assets/images/defaultHead.png" class="userinfo-avatar" alt=""></div>
-            <div class="userName">{{ owner_or_driver_userName }}</div>
-            <div class="call"><i v-if='owner_or_driver_tel && data.driverInfo.driver_id != undefined' @click="callPhone(owner_or_driver_tel)" class="iconfont icon-dianhua-copy"></i></div>
-            <div class="todriverInfo" @click="toUserIntroduction()">查看资料 ></div>
+          <div class="userName">{{ owner_or_driver_userName }}</div>
+          <div class="call"><i v-if='owner_or_driver_tel && data.driverInfo.driver_id != undefined' @click="callPhone(owner_or_driver_tel)" class="iconfont icon-dianhua-copy"></i></div>
+          <div class="todriverInfo" @click="toUserIntroduction()">查看资料 ></div>
         </div>
 
         <div v-if='$store.state.userInfo.userType == "owner" && data.bid.length > 0 && data.driverInfo.driver_id == undefined && sourceInfo.status != "CANCEL"' class="bid_info">
@@ -111,6 +112,7 @@
         <div class="button" v-if='$store.state.userInfo.userType == "owner"'>
           <!-- <div class="btnEdit" v-if="ifEdit" @click.stop="toEdit()">修改</div> -->
           <div class="btnCancel" v-if="ifCancel" @click.stop="toCancel()">取消</div>
+          <div class="btnInfo" v-if="ifInfo" @click.stop="toInfo()">物流信息</div>
         </div>
       
       </div>
@@ -154,7 +156,8 @@
         is_NoData:false,
         ifTips:false,    //提示信息是否显示
         ifEdit:false,    //修改按钮是否显示
-        ifCancel:false,  //删除按钮是否显示
+        ifCancel:false,  //取消按钮是否显示
+        ifInfo:false,    //物流信息是否显示
         is_NoData_text:"没有信息",
         orderstate:' ',
         DialogVisible:false,
@@ -218,6 +221,10 @@
       if(status == "NEW" || status =="NON-CONFIRM" || status =="NON-DELIVERY"){
 
         this.ifCancel = true;
+      }
+      if(status != "NEW" && status !="NON-CONFIRM"){
+
+        this.ifInfo = true;
       }
       
 
@@ -488,6 +495,16 @@
         }).catch(() => {  
 
         });
+      },
+
+      //物流信息
+      toInfo(){
+        this.$router.push({
+          name:"LogisticsInfoDetail",
+          query:{
+            sourceInfo:this.sourceInfo,
+          }
+        })
       },
       // 监听系统返回键
       onBrowserBack() {
@@ -771,10 +788,11 @@
         }
         .button{
           height: 60/50rem;
+          padding:0  80/50rem;
           display: flex;
-          justify-content: center; 
+          justify-content: space-around; 
           margin: 30/50rem 0 ;
-          .btnEdit,.btnCancel{
+          .btnEdit,.btnCancel,.btnInfo{
             text-align: center;
             height: 60/50rem;
             width: 150/50rem;

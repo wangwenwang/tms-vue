@@ -72,6 +72,8 @@ import ReportForms from "@/pages/ReportForms/ReportForms"
 // 货源
 import goodsSource from "@/pages/goodsSource/goodsSource"
 import sourceDetail from "@/pages/goodsSource/sourceDetail"
+import LogisticsInfoDetail from "@/pages/goodsSource/LogisticsInfoDetail"
+
 
 
 // ——————————————————————————————————————车源——————————————————————————————————————————
@@ -234,6 +236,12 @@ export default new Router({
       path: '/sourceDetail',
       name: 'sourceDetail',
       component: sourceDetail
+    },
+    //物流信息
+    {
+      path: '/LogisticsInfoDetail',
+      name: 'LogisticsInfoDetail',
+      component: LogisticsInfoDetail
     },
      //车源
     {
