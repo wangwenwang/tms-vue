@@ -47,7 +47,7 @@
         <div>
           <el-dialog title="下载" :visible.sync="dialogVisible" :close-on-click-modal="false" :modal="true" :show-close="true" :center="true" class="dialog"  width="80%" height= "30%">
             <div class="center">
-              <img src="/static/images/APP.png" class="appImg"></img>
+              <img src="../../assets/images/app_QRCode.png" class="appImg"></img>
             </div>
             
          </el-dialog>

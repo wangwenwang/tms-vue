@@ -40,7 +40,7 @@
             <div class="AddressDetail"> {{dataItem.s_address}}</div>
             <div class="shipperInfo"> 
               <span v-if='dataItem.l_shipper'><i class="iconfont icon-lianxiren"></i>  {{dataItem.l_shipper}}</span>
-              <span v-if='dataItem.l_shipper_tel'><i class="iconfont icon-dianhua"></i>  {{dataItem.l_shipper_tel}}</span>
+              <span v-if='dataItem.l_shipper_tel'><i class="iconfont icon-dianhua" @click="callPhone(dataItem.l_shipper_tel)"></i>  {{dataItem.l_shipper_tel}}</span>
             </div>
           </div>
           <div class="address2" v-for='(dataItem,index) in data.end' :id="index"  :key="'info2-' + index">
@@ -48,7 +48,7 @@
             <div class="AddressDetail"> {{dataItem.e_address}}</div>
             <div class="shipperInfo"> 
               <span v-if='dataItem.u_shipper'><i class="iconfont icon-lianxiren"></i>  {{dataItem.u_shipper}}</span>
-              <span v-if='dataItem.u_shipper_tel'><i class="iconfont icon-dianhua"></i>  {{dataItem.u_shipper_tel}}</span>
+              <span v-if='dataItem.u_shipper_tel'><i class="iconfont icon-dianhua" @click="callPhone(dataItem.u_shipper_tel)"></i>  {{dataItem.u_shipper_tel}}</span>
             </div>
           </div>
         </div>
