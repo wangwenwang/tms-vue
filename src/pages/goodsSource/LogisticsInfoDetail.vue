@@ -27,7 +27,16 @@
   	  }
   	},
   	components:{
-	},
+	  },
+    mounted(){
+
+      window.history.pushState(null, null, document.URL)
+      window.addEventListener("popstate", this.onBrowserBack, false)
+    },
+    destroyed() {
+
+      window.removeEventListener("popstate", this.onBrowserBack, false)
+    },
   	created(){
 
       var that = this;

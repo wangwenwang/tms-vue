@@ -1,6 +1,7 @@
 <template>
   <div class="sourceDetail">
-    <header><i class="iconfont icon-xiangzuo1"  @click="goPrev"></i><span>货源详情</span></header>
+    <header><i class="iconfont icon-xiangzuo1"  @click="goPrev"></i><span>货源详情</span><i 
+      class="iconfont icon-jiantou_zuoyouqiehuan"  @click="goReverse"></i></header>
     <div class="container">
       <div class="sourceInfo" >
         
@@ -525,6 +526,16 @@
           }
         })
       },
+      //反转路线
+      goReverse(){
+        this.$router.push({
+          name:"goodsSource",
+          query:{
+            sourceInfo:this.sourceInfo,
+            SelectType:"RuteReverse"
+          }
+        })
+      },
     }
   }
 </script>
@@ -532,6 +543,13 @@
   .sourceDetail{
     overflow: hidden;
     height: 100%;
+    header{
+      &>i:last-child{
+        float: right;
+        margin-left: 250/50rem;
+        font-size: 44/50rem;
+      }
+    }
     .container{
       overflow: hidden;
       height: 100%;
@@ -795,7 +813,7 @@
           padding:0  80/50rem;
           display: flex;
           justify-content: space-around; 
-          margin: 30/50rem 0 ;
+          margin: 10/50rem 0 ;
           .btnEdit,.btnCancel,.btnInfo{
             text-align: center;
             height: 60/50rem;

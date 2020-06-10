@@ -18,10 +18,10 @@
       	<div class="Msg" v-if="AddressShow">以下是为您推荐的周边货源</div>
         <div class="choose" v-if="!AddressShow">
           <div class="AddressStart">
-            <el-cascader :options="optionsAddress" :show-all-levels="false"  :filterable="true"  :clearable="true" @change="startChange"></el-cascader> </el-cascader>
+            <el-cascader :options="optionsAddress"  :show-all-levels="false" :filterable="true"  :clearable="true" @change="startChange" v-model="AddressStart" ></el-cascader>
           </div>
           <div class="AddressEnd">
-            <el-cascader :options="optionsAddress" :show-all-levels="false"  :filterable="true"  :clearable="true"   @change="endChange"> </el-cascader>
+            <el-cascader :options="optionsAddress" :show-all-levels="false"  :filterable="true"  :clearable="true"   @change="endChange"  v-model="AddressEnd"> </el-cascader>
           </div>
           <div class="Sort">
             <template>
@@ -118,6 +118,7 @@ import $ from 'jquery'
         xiaoxiSum:'10',//新消息数量
         optionsAddress:[],//地址
         options3:[],
+        value:'',
         value7:'',
         selectedOptions: [],//选择的地址
         city_master_id:'',//上一级地址id
@@ -134,6 +135,8 @@ import $ from 'jquery'
           label: '距离排序'
         }],
         value: '',//排序选择
+        AddressStart:[],//起点
+        AddressEnd:[],//终点
         startCity:'',//起点城市 
         startDistrict:'',//起点区 
         endCity:'',//终点城市 
@@ -155,9 +158,31 @@ import $ from 'jquery'
   	  window.SetCurrAddress = this.SetCurrAddress;
   	},
     created(){
-
       this.nowDate = this.getNowTime().substring(0,10);
-      this.getAroundGoodsData();
+
+      if(this.$route.query.sourceInfo){
+
+        this.sourceInfo = this.$route.query.sourceInfo;
+      }
+      console.log(this.$route.query.SelectType)
+      if(this.$route.query.SelectType == "RuteReverse"){
+        this.chooseAddress();
+        this.startCity = this.sourceInfo.c_city;
+        this.startDistrict = this.sourceInfo.c_address3;
+        this.endCity = this.sourceInfo.carrierCity;
+        this.endDistrict = this.sourceInfo.carrierAddress3;
+        
+
+        this.AddressStart = [this.sourceInfo.c_state, this.startCity, this.startDistrict];
+        this.AddressEnd = [this.sourceInfo.carrierState, this.endCity, this.endDistrict];
+        console.log(this.AddressStart)
+        console.log(this.AddressEnd)
+
+        this.request_list_data(this.longitude, this.latitude, this.startCity, this.startDistrict, this.endCity, this.endDistrict)
+
+      }else{
+        this.getAroundGoodsData();
+      }
     },
     methods:{
       //点击消息

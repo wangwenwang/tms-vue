@@ -10,7 +10,7 @@
               <div>
                 <div class="Address" >
                   <el-cascader :options="optionsAddress"  :filterable="true"  :clearable="true" 
-                  v-model="AddressStart[0].p_c_d"  @change="startChange"></el-cascader> </el-cascader>
+                  v-model="AddressStart[0].p_c_d"  @change="startChange"></el-cascader>
                 </div>
   
                 <div class="AddressDetail" @click='load_address_detail'>
