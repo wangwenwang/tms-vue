@@ -430,17 +430,23 @@
         this.$store.state.pg_publish.other_info.orderType = this.orderType
       },
       check(){
-        if(this.addressList.s[0].p_c_d.length == 0 || this.addressList.s[0].detail.length == 0){
-          this.$alert('请输入装货地址', '提示', {
-            confirmButtonText: '确定'
-          })
-          return false
+        for(var i = 0; i < this.addressList.s.length; i++){
+          var item = this.addressList.s[i]
+          if(item.p_c_d[i] == undefined){
+            this.$alert('请完善装货地址', '提示', {
+              confirmButtonText: '确定'
+            })
+            return false
+          }
         }
-        if(this.addressList.e[0].p_c_d.length == 0 || this.addressList.e[0].detail.length == 0){
-          this.$alert('请输入卸货地址', '提示', {
-            confirmButtonText: '确定'
-          })
-          return false
+        for(var i = 0; i < this.addressList.e.length; i++){
+          var item = this.addressList.e[i]
+          if(item.p_c_d[i] == undefined){
+            this.$alert('请完善卸货地址', '提示', {
+              confirmButtonText: '确定'
+            })
+            return false
+          }
         }
         if(this.goods_name.length == 0){
           this.$alert('请输入货物名称', '提示', {
