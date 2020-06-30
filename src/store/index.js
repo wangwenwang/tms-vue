@@ -56,5 +56,6 @@ export default new vuex.Store({
 			car_info:{vehicleLoad:"",vehicleVolume:"",vehicle_type:"",orderType:"",load_time:"",remark:"",expected_cost:""},
 		},
 		sourceInfo:{},//货源详情
+		CarrierArr:[],//承运商列表(注册)
 	}
 })

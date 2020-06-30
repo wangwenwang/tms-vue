@@ -13,7 +13,7 @@
           </div>
           <div class="distance">最短里程约{{sourceInfo.mileage}}km</div>
         </div>
-        <div class="carInfo">
+        <div class="carInfo"> 
           <div class="title">车货信息</div>
           <div><span>车辆</span><span>{{sourceInfo.vehicleType}}</span></div>
           <div><span>货物</span>
@@ -22,7 +22,7 @@
             <span>{{sourceInfo.min_volume}}方&nbsp;</span>
           </div>
           <div v-if='sourceInfo.orderType'><span>订单类型</span><span>{{sourceInfo.orderType}}</span></div>
-          <div v-if='$store.state.userInfo.userType == "owner"'><span>货源单号</span><span>{{sourceInfo.sourceNo}}</span></div>
+          <div><span>货源单号</span><span>{{sourceInfo.sourceNo}}</span></div>
           <div>
             <span>特殊要求</span>
             <span class="markInfo">{{sourceInfo.mark}}</span>

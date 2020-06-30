@@ -12,14 +12,17 @@
                     
 			    	<p v-if="userRole == 'driver'"><span>车辆信息</span></p>
 			    	<div class="driverInfo" v-if="userRole == 'driver'">
-  	                    <div><span>车辆类型</span><div class="radioValue">
+  	                   <!--  <div><span>车辆类型</span><div class="radioValue">
   	                      <el-radio-group v-model="vehicleAppType"  @change="changeHandler">
                             <el-radio label="1">自有车</el-radio>
                             <el-radio label="2">临请车</el-radio>
                           </el-radio-group></div>
+                        </div> -->
+                        <div><span>承运商</span>
+                        	<div><span>{{Carrier}}</span>
+                        		<i  class="iconfont icon-xiangshang" v-if="CarrierList.length>1"  @click='ChooseCarrier'></i>
+                        	</div>
                         </div>
-                        <div @click='ChooseCarrier' v-if = "vehicleAppType == 1"><span>承运商</span><div><span>
-                            {{Carrier}}</span><i  class="iconfont icon-xiangshang"></i></div></div>
     
     
 			    	    <div>
@@ -145,7 +148,7 @@
   	  	        password:"",//密码
   	  	        IDCardNum:"",//身份证号码
   	  	        vicheNo:"",//车牌号
-  	  	        Carrier:"请选择",//承运商
+  	  	        Carrier:"",//承运商
   	  	        CarrierID:"",//承运商ID
   	  	        vehicleType:"请选择",//车型
   	  	        vehicleType_code:"",//车型代码
@@ -203,19 +206,31 @@
 				    that.$store.state.typeOfCarList = res.data;
 	            })
 		    }
+		    if(this.$store.state.CarrierArr.length == 1){
+
+		    	this.CarrierID = this.$store.state.CarrierArr[0].id;
+		    	this.Carrier = this.$store.state.CarrierArr[0].name;
+		    	this.vehicleAppType = this.$store.state.CarrierArr[0].vehicleAppType;
+
+		    }else if(this.$store.state.CarrierArr.length > 1){
+		    	
+		    	this.CarrierList = this.$store.state.CarrierArr;
+		    	this.Carrier = "请选择";
+		    }
+
 
 		    //获取承运商列表 
-  	        if (this.$store.state.CarrierList.length) {  
+  	        // if (this.$store.state.CarrierList.length) {  
 
-  	            this.CarrierList = that.$store.state.CarrierList; 
+  	        //     this.CarrierList = that.$store.state.CarrierList; 
 
-  	        } else {  
-  	            this.httpRequest_ygy( "queryOrgnization.do", "",function(res){  
+  	        // } else {  
+  	            // this.httpRequest_ygy( "queryOrgnization.do", "",function(res){  
 
-                    that.CarrierList = res.data;
-  	                that.$store.state.CarrierList = res.data;
-                })
-  	        }
+               //      that.CarrierList = res.data;
+  	            //     that.$store.state.CarrierList = res.data;
+               //  })
+  	        // }
 		},
 		methods:{
 			// 监听系统返回键
@@ -232,16 +247,15 @@
 					}
 				})
 			},
-			changeHandler(value) {
-			    if(this.vehicleAppType == "2"){
+			// changeHandler(value) {
+			//     if(this.vehicleAppType == "2"){
 
-			    	this.Carrier = "";
-			    	this.CarrierID = "";
-			    }
-            },
+			//     	this.Carrier = "";
+			//     	this.CarrierID = "";
+			//     }
+            // },
 			// 点击 注册 按钮
 			regBtn (){
-
 			    var that = this;
 			    if(!(that.userName && that.password && that.IDCardNum)){
      
@@ -263,14 +277,16 @@
 				    })
 				    return ;
      
-			    }else if (!that.vehicleAppType && that.userRole == "driver"){
+			    }
+			    // else if (!that.vehicleAppType && that.userRole == "driver"){
      
-			       	that.$alert("请选择车辆类型", '提示', {
-				        confirmButtonText: '确定',
-				    })
-				    return;
+			       //  that.$alert("请选择车辆类型", '提示', {
+				   //      confirmButtonText: '确定',
+				   //  })
+				   //  return;
      
-			    }else if (that.vehicleAppType == "1" && !that.CarrierID && that.userRole == "driver"){
+			    // }
+			    else if (!that.CarrierID && that.userRole == "driver"){
      
 			        that.$alert("请选择承运商", '提示', {
 				        confirmButtonText: '确定',
@@ -370,6 +386,7 @@
   	        	this.carrierShow = false;
   	            this.Carrier = this.CarrierList[index].name;
   	            this.CarrierID = this.CarrierList[index].id;
+		    	this.vehicleAppType = this.CarrierList[index].vehicleAppType;
   	        },
 		}
 	}

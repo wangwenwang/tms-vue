@@ -180,6 +180,7 @@
 								})
 
 							}else if(that.$route.query.page == "ChooseRole"){
+								that.$store.state.CarrierArr = res.data;
 
 								that.$router.push({
 									name:"ChooseRole",
