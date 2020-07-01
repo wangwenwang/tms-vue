@@ -18,10 +18,10 @@
       	<div class="Msg" v-if="AddressShow">以下是为您推荐的周边货源</div>
         <div class="choose" v-if="!AddressShow">
           <div class="AddressStart">
-            <el-cascader :options="optionsAddress"  :show-all-levels="false" :filterable="true"  :clearable="true" @change="startChange" v-model="AddressStart" ></el-cascader>
+            <el-cascader :options="optionsAddress"  :show-all-levels="false" :filterable="true"  :clearable="true" @change="startChange" v-model="AddressStart" change-on-select></el-cascader>
           </div>
           <div class="AddressEnd">
-            <el-cascader :options="optionsAddress" :show-all-levels="false"  :filterable="true"  :clearable="true"   @change="endChange"  v-model="AddressEnd"> </el-cascader>
+            <el-cascader :options="optionsAddress" :show-all-levels="false"  :filterable="true"  :clearable="true"   @change="endChange"  v-model="AddressEnd" change-on-select> </el-cascader>
           </div>
           <div class="Sort">
             <template>
@@ -32,23 +32,7 @@
             </template>
           </div>
         </div>
-        <div class="Screen">
-          <template>
-            <el-select v-model="value7" placeholder="  筛选">
-              <el-option-group
-                v-for="group in options3"
-                :key="group.label"
-                :label="group.label">
-                <el-option
-                  v-for="item in group.options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-option-group>
-            </el-select>
-          </template>
-        </div>  
+        <div class="Screen" @click="openChoose()">筛选</div>  
       </div>
       <div class="dataContent">
         <div class="dataItem" v-for='(dataItem,index) in goodsSourcedata' :id="index"  :key='index'  @click="tosourceDetail(index)" >
@@ -95,6 +79,29 @@
           </div>
         </div>
       </div>
+
+      <!-- 筛选框 -->
+      <div class="mask" v-if="visibles">
+        <div class="showChoose"  @touchmove.prevent>
+          <div>
+            <div class="item">车型</div>
+            <div class="taglist"><div class="cartag" v-for="(tag,idx) in Cartags" :key="tag.idx" @click="getcar(idx)">  {{tag.name}}{{tag.unit}}  </div></div>
+          </div>
+          <div>
+            <div class="item">重量(吨)</div>
+            <div class="taglist"><div class="weighttag" v-for="(tag,idx) in Weight" :key="tag.idx" @click="getweight(idx)">  {{tag.minWeight}} - {{tag.maxWeight}}  </div></div>
+          </div>
+          <div>
+            <div class="item">体积(方)</div>
+            <div class="taglist"><div class="volumetag" v-for="(tag,idx) in Volume" :key="tag.idx" @click="getvolume(idx)">  {{tag.minVolume}} - {{tag.maxVolume}}   </div></div>
+          </div>
+          <div class="button">
+            <div  class="cacel"  @click="cacel_click()">重置</div>
+            <div  class="submit" @click="submit_click()">确定</div>
+          </div>
+        </div>
+      </div>
+
       <!-- 页面数据为空时 -->
       <div  class="NoData"  v-if="noDataShow">
         <div>
@@ -126,19 +133,18 @@ import $ from 'jquery'
         AddressShow:true,//地址选择栏
         optionsSort: [{
           value: '选项1',
-          label: '智能排序'
-        }, {
-          value: '选项2',
           label: '时间排序'
         }, {
-          value: '选项3',
+          value: '选项2',
           label: '距离排序'
         }],
         value: '',//排序选择
         AddressStart:[],//起点
         AddressEnd:[],//终点
+        startProvince:'',//起点省份 
         startCity:'',//起点城市 
         startDistrict:'',//起点区 
+        endProvince:'',//终点省份 
         endCity:'',//终点城市 
         endDistrict:'',//终点区 
         goods:'',//运输物品 化妆品
@@ -148,6 +154,34 @@ import $ from 'jquery'
     		weight:false,
     		volume:false,
         whoPush:"",
+        visibles: false,
+        choose_car:'',
+        choose_minWeight:"",
+        choose_maxWeight:"",
+        choose_minVolume:"",
+        choose_maxVolume:"",
+
+        Cartags: [
+          { name: '4.2' ,unit: 'M'}, 
+          { name: '7.6' ,unit: 'M'},
+          { name: '9.6' ,unit: 'M' },
+          { name: '13.5' ,unit: 'M' },
+          { name: '其他' ,unit: ''}
+        ],
+        Weight: [
+          { minWeight: '0',maxWeight: '5' },
+          { minWeight: '5',maxWeight: '10' },
+          { minWeight: '10',maxWeight: '15' },
+          { minWeight: '15',maxWeight: '20' },
+          { minWeight: '20',maxWeight: '99' }
+        ],
+        Volume: [
+          { minVolume: '0',maxVolume: '5' },
+          { minVolume: '5',maxVolume: '10' },
+          { minVolume: '10',maxVolume: '15' },
+          { minVolume: '15',maxVolume: '20' },
+          { minVolume: '20',maxVolume: '99' }
+        ]
       }
     },
     components:{
@@ -164,7 +198,6 @@ import $ from 'jquery'
 
         this.sourceInfo = this.$route.query.sourceInfo;
       }
-      console.log(this.$route.query.SelectType)
       if(this.$route.query.SelectType == "RuteReverse"){
         this.chooseAddress();
         this.startCity = this.sourceInfo.c_city;
@@ -189,6 +222,110 @@ import $ from 'jquery'
       Xiaoxi(){
 
       },
+      openChoose(){
+        if(this.visibles == false){
+          this.visibles = true;
+          this.$nextTick(() => {
+            if(this.$store.state.choose_carIdx >= 0){
+              this.getcar(this.$store.state.choose_carIdx)
+            }
+            if(this.$store.state.choose_weightIdx >= 0){
+
+              this.getweight(this.$store.state.choose_weightIdx)
+            }
+            if(this.$store.state.choose_volumeIdx >= 0){
+              this.getvolume(this.$store.state.choose_volumeIdx)
+            }
+          })
+        }else if(this.visibles == true){
+          this.visibles = false;
+        }
+      },
+      getcar(idx){
+        if(idx === ""){
+          return
+        }
+        this.$store.state.choose_carIdx = idx;
+
+        for (var i = 0 ;i <= this.Cartags.length ;  i++) {
+          if(i == idx){
+            if($('.cartag').eq(idx).css("color") == "rgb(0, 0, 0)"){
+
+              $('.cartag').eq(idx).css({"background-color":"#C4CAEF", "color":"white"})
+              this.choose_car = this.Cartags[idx].name;
+            }else{
+
+              $('.cartag').eq(idx).css({"background-color":"transparent", "color":"black"})
+              this.$store.state.choose_carIdx = ""
+              this.choose_car = "";
+            }
+          }else{ 
+            $('.cartag').eq(i).css({"background-color":"transparent", "color":"black"})
+          }
+        }
+      },
+      getweight(idx){
+        if(idx === ""){
+          return
+        }
+        this.$store.state.choose_weightIdx = idx;
+
+        for (var i = 0 ;i <= this.Weight.length ;  i++) {
+          if(i == idx){
+            if($('.weighttag').eq(idx).css("color") == "rgb(0, 0, 0)"){
+
+              $('.weighttag').eq(idx).css({"background-color":"#C4CAEF", "color":"white"})
+              this.choose_minWeight = this.Weight[idx].minWeight;
+              this.choose_maxWeight = this.Weight[idx].maxWeight;
+            }else{
+
+              $('.weighttag').eq(idx).css({"background-color":"transparent", "color":"black"})
+              this.$store.state.choose_weightIdx = ""
+              this.choose_minWeight = "";
+              this.choose_maxWeight = "";
+            }
+          }else{ 
+            $('.weighttag').eq(i).css({"background-color":"transparent", "color":"black"})
+          }
+        }
+      },
+      getvolume(idx){
+        if(idx === ""){
+          return
+        }
+        this.$store.state.choose_volumeIdx = idx;
+
+        for (var i = 0 ;i <= this.Volume.length ;  i++) {
+          if(i == idx){
+            if($('.volumetag').eq(idx).css("color") == "rgb(0, 0, 0)"){
+
+              $('.volumetag').eq(idx).css({"background-color":"#C4CAEF", "color":"white"})
+              this.choose_minVolume = this.Volume[idx].minVolume;
+              this.choose_maxVolume = this.Volume[idx].maxVolume;
+            }else{
+
+              $('.volumetag').eq(idx).css({"background-color":"transparent", "color":"black"})
+              this.$store.state.choose_volumeIdx = ""
+              this.choose_minVolume = "";
+              this.choose_maxVolume = "";
+            }
+          }else{ 
+            $('.volumetag').eq(i).css({"background-color":"transparent", "color":"black"})
+          }
+        }
+      },
+      submit_click(){
+        this.visibles = false;
+        this. getGoodsData();
+      },
+      //重置条件查询
+      cacel_click(){
+        this.$store.state.choose_carIdx = "";
+        this.$store.state.choose_weightIdx = "";
+        this.$store.state.choose_volumeIdx = "";
+        this.visibles = false;
+        this. getAroundGoodsData();
+      },
       //获取当前位置经纬度
       SetCurrAddress:function(address, lng, lat) {
 
@@ -201,15 +338,26 @@ import $ from 'jquery'
     		}else {
     		  this.longitude = lng;
     		  this.latitude = lat;
+          this.getAroundGoodsData();
     		}
   	  },
 
       //获取起点城市、区
       startChange(value) {
-        if(value.length){
+        if(value.length == 1){
+          this.startProvince = value[0];
+          this.startCity = "";
+          this.startDistrict = "";
+        }else if(value.length == 2){
+          this.startProvince = value[0];
+          this.startCity = value[1];
+          this.startDistrict = "";
+        }else if(value.length ==3){
+          this.startProvince = value[0];
           this.startCity = value[1];
           this.startDistrict = value[2];
         }else{
+          this.startProvince = "";
           this.startCity = "";
           this.startDistrict = "";
         }
@@ -218,10 +366,20 @@ import $ from 'jquery'
       //获取终点城市、区
       endChange(value) {
         
-        if(value.length){
+        if(value.length == 1){
+          this.endProvince = value[0];
+          this.endCity = "";
+          this.endDistrict = "";
+        }else if(value.length == 2){
+          this.endProvince = value[0];
           this.endCity = value[1];
-          this.endDistrict = value[2];
+          this.endDistrict = "";
+        }else if(value.length == 3){
+          this.endProvince = value[0];
+          this.endCity = value[1];
+          this.endDistrict = alue[2];
         }else{
+          this.endProvince = "";
           this.endCity = "";
           this.endDistrict = "";
         }
@@ -229,20 +387,27 @@ import $ from 'jquery'
       },
       getGoodsData(){
 
-        this.request_list_data(this.longitude, this.latitude, this.startCity, this.startDistrict, this.endCity, this.endDistrict)
+        this.request_list_data(this.longitude, this.latitude, this.startProvince, this.startCity, this.startDistrict, this.endProvince, this.endCity, this.endDistrict, this.choose_car, this.choose_minWeight, this.choose_maxWeight, this.choose_minVolume, this.choose_maxVolume)
       },
       // 请求列表数据
-      request_list_data(longitude, latitude, startCity, startDistrict, endCity, endDistrict){
+      request_list_data(longitude, latitude, startProvince, startCity, startDistrict, endProvince, endCity, endDistrict, vehicleType, minWeight, maxWeight, minVolume, maxVolume){
 
         var that = this
 
         var posDate = {
           "lon": longitude,                  //经度
           "lat": latitude,                   //纬度
+          "carrierState": startProvince,     //起点省份
           "carrierCity": startCity,          //起点城市
           "carrierAddress3": startDistrict,  //起点区
+          "c_state": endProvince,            //终点省份
           "c_city": endCity,                 //终点城市
-          "c_address3": endDistrict          //终点区
+          "c_address3": endDistrict,         //终点区
+          "vehicleType": vehicleType,        //车型
+          "minWeight": minWeight,            //重量
+          "maxWeight": maxWeight,
+          "minVolume": minVolume,            //体积
+          "maxVolume": maxVolume, 
         }
         // 获取货源列表
         that.httpRequest_ygy("peripheralResourcesList.do", posDate, function(res){
@@ -283,7 +448,7 @@ import $ from 'jquery'
       //周边资源
       getAroundGoodsData(){
 
-        this.request_list_data(this.longitude, this.latitude, "", "", "", "")
+        this.request_list_data(this.longitude, this.latitude, "", "", "", "", "", "", "", "", "", "", "")
       },
 
       // 跳转到 货源详情 页面
@@ -395,7 +560,6 @@ import $ from 'jquery'
         }
       }
     }
-
     .container{
       height: 100%;
       top:180/50rem;
@@ -428,12 +592,9 @@ import $ from 'jquery'
           font-size: 26/50rem;
         }
         .Screen{
-          // height: 70/50rem;
-          // float: left;
-          // position: absolute;
-          // right: 0/50rem;
-          // width: 100/50rem;
-          // background-color: red;
+          width: 100/50rem;
+          line-height: 70/50rem;
+          text-align: center;
         }
       }
       .dataContent{
@@ -516,6 +677,57 @@ import $ from 'jquery'
           }
         } 
       }
+      .mask{
+        display: flex;
+        position: relative;
+        top: 70/50rem;
+        height: calc(100% - 1.8rem);
+        z-index: 1;
+        background: rgba(0, 0, 0, 0.3);
+        .showChoose{
+          width: calc(100% - 0.4rem);
+          z-index: 120;
+          position: absolute;
+          top: 1/50rem;
+          left: 0;
+          background-color: #fff;
+          padding:10/50rem;
+          .item{
+            padding-left: 20/50rem;
+            color:#999; 
+          }
+          .taglist{
+            display: flex;
+            justify-content: space-between;
+            line-height: 60/50rem;
+            margin: 20/50rem 20/50rem 30/50rem 20/50rem;
+            &>div{
+              width: 120/50rem;
+              text-align: center;
+              border: 1/50rem solid #ccc;
+              border-radius: 10/50rem;
+            }          
+          }
+          .button{
+            margin:60/50rem 100/50rem;
+            display: flex;
+            justify-content: space-between;
+            .cacel,.submit{
+              border:1/50rem solid #ccc;
+              border-radius: 40/50rem;
+              width: 200/50rem;
+              line-height: 70/50rem;
+              text-align: center;
+              font-size: 32/50rem;
+            }
+            .submit{
+              color: #fff;
+              background-color: #409EFF;
+            }
+          }
+        }
+      }
     }
   }
 </style>
+

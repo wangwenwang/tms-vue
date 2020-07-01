@@ -384,17 +384,16 @@
               })
             }
           })
-
         })
       },
       // 司机确认货主
       driver_confirm_owner(){
+        var that = this
         if(this.$store.state.userInfo.driverBelong == "KDY-DRIVER"){
           that.$alert('暂时无法接单', '提示', {
             confirmButtonText: '确定',
           })
         }else{
-          var that = this
           var postData = {
             sourceNo: that.sourceInfo.sourceNo,//货源单号
             shipDriverId: that.$store.state.userInfo.user_id,//司机id

@@ -19,9 +19,10 @@
                           </el-radio-group></div>
                         </div> -->
                         <div><span>承运商</span>
-                        	<div><span>{{Carrier}}</span>
-                        		<i  class="iconfont icon-xiangshang" v-if="CarrierList.length>1"  @click='ChooseCarrier'></i>
+                        	<div v-if="$store.state.CarrierArr.length > 1" @click='ChooseCarrier'>
+                        		<span>{{Carrier}}</span><i  class="iconfont icon-xiangshang"></i>
                         	</div>
+                        	<div v-if="$store.state.CarrierArr.length == 1 "><span>{{Carrier}}</span></div>
                         </div>
     
     

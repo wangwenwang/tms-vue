@@ -57,5 +57,8 @@ export default new vuex.Store({
 		},
 		sourceInfo:{},//货源详情
 		CarrierArr:[],//承运商列表(注册)
+		choose_carIdx:'',
+		choose_weightIdx:'',
+		choose_volumeIdx:'',
 	}
 })
