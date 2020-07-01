@@ -83,18 +83,20 @@
         </div>
 
         <div v-if='$store.state.userInfo.userType == "driver" && data.driverInfo.driver_id == undefined' class="price">
-          <span v-if="!shipmentMoney">当前报价：</span>
+          <span v-if="!shipmentMoney && $store.state.userInfo.driverBelong != 'KDY-DRIVER'">当前报价：</span>
           <span v-if="shipmentMoney">我的竞价：</span>
-          <span v-if="sourceInfo.expectedCost">￥{{ sourceInfo.expectedCost }}</span>
-          <span v-if="shipmentMoney == '' && sourceInfo.expectedCost == ''" class="none">暂无报价</span>
+          <span v-if="sourceInfo.expectedCost && $store.state.userInfo.driverBelong != 'KDY-DRIVER'">￥{{ sourceInfo.expectedCost }}</span>
+          <span v-if="shipmentMoney == '' && sourceInfo.expectedCost == '' && $store.state.userInfo.driverBelong != 'KDY-DRIVER'" class="none">暂无报价</span>
           <span v-if="shipmentMoney != '' && sourceInfo.expectedCost == ''">￥{{shipmentMoney}}</span>
         </div>
 
         <!-- 司机端，货源未被承运 -->
         <div v-if='$store.state.userInfo.userType == "driver" && data.driverInfo.driver_id == undefined' class="btnList">
           <div class="call" @click="callPhone(data.ownerInfo.owner_tel)"><i class="iconfont icon-dianhua"></i>电话联系</div>
-          <div class="biddingPrice" v-if="sourceInfo.expectedCost"><i class="iconfont icon-xuanzhong" @click="driver_confirm_owner()"></i>确 认</div>
-          <div class="biddingPrice" v-if="!sourceInfo.expectedCost" @click="DialogVisible = true"><i class="iconfont icon-jingjia"></i>竞 价</div>
+          <div class="biddingPrice" v-if="sourceInfo.expectedCost && $store.state.userInfo.driverBelong != 'KDY-DSC'"><i class="iconfont icon-xuanzhong" @click="driver_confirm_owner()"></i>确 认</div>
+          <div class="biddingPrice" v-if="!sourceInfo.expectedCost" @click="biddingPrice_click()"><i class="iconfont icon-jingjia"></i>竞 价</div>
+          <div class="biddingPrice" v-if="sourceInfo.expectedCost && $store.state.userInfo.driverBelong == 'KDY-DSC'"  @click="submit_driver()"><i class="iconfont icon-xuanzhong"></i>指定司机</div>
+
           <el-dialog title="竞 价" :visible.sync="DialogVisible"  :close-on-click-modal="false"  width="80%" top="50%" center>
             <span>请输入承运费用：</span>
             <el-input v-model="v_shipmentMoney" auto-complete="off"></el-input>
@@ -387,29 +389,107 @@
       },
       // 司机确认货主
       driver_confirm_owner(){
-        
+        if(this.$store.state.userInfo.driverBelong == "KDY-DRIVER"){
+          that.$alert('暂时无法接单', '提示', {
+            confirmButtonText: '确定',
+          })
+        }else{
+          var that = this
+          var postData = {
+            sourceNo: that.sourceInfo.sourceNo,//货源单号
+            shipDriverId: that.$store.state.userInfo.user_id,//司机id
+            expectedCost: that.sourceInfo.expectedCost,//货主报价
+          }
+          // 货主提供报价，司机确定接单
+          that.httpRequest_ygy("toTms.do",postData,function(res){
+            if(res.status == 1){
+              that.ifTips = true;
+              that.tips_Msg = "确认成功";
+              setTimeout(function(){
+                that.$store.state.Waybill_needRefresh = true
+                that.$router.push({
+                  name:"Waybill",
+                })
+              },2000)
+            }else{
+              that.$alert('确认失败', '提示', {
+                confirmButtonText: '确定',
+              })
+            }
+          })
+        }
+      },
+      //点击竞价
+      biddingPrice_click(){
+        if(this.$store.state.userInfo.driverBelong == "KDY-DRIVER"){
+          that.$alert('暂时无法竞价', '提示', {
+              confirmButtonText: '确定',
+          })
+        }else{
+          this.DialogVisible = true;
+        }
+      },
+      //调度指定司机接单
+      submit_driver(){
+
+        this.$prompt('请输入司机号码', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPattern: /^1[3456789]\d{9}$/,
+          inputErrorMessage: '请输入正确的手机号码',
+          closeOnClickModal: false, 
+        }).then(({ value }) => {
+
+          this.search(value)
+        }).catch(() => { })
+      },
+      // 调度指定司机接单
+      search(cellPhone){
+
         var that = this
         var postData = {
-          sourceNo: that.sourceInfo.sourceNo,//货源单号
-          shipDriverId: that.$store.state.userInfo.user_id,//司机id
-          expectedCost: that.sourceInfo.expectedCost,//货主报价
+          cellPhone : cellPhone,//司机电话
         }
-        // 货主提供报价，司机确定接单
-        that.httpRequest_ygy("toTms.do",postData,function(res){
-          if(res.status == 1){
+        this.httpRequest_ygy("queryInfoByPhone.do", postData, function(res){
+          if(res.data == ""){
             that.ifTips = true;
-            that.tips_Msg = "确认成功";
+            that.tips_Msg = "没有找到该司机";//res.Msg;
+
             setTimeout(function(){
-              that.$store.state.Waybill_needRefresh = true
-              that.$router.push({
-                name:"Waybill",
-              })
-            },2000)
-          }else{
-            that.$alert('确认失败', '提示', {
-              confirmButtonText: '确定',
-            })
+              that.ifTips = false;
+            },1800)
+            return;
           }
+          that.$prompt('确定要指定给' + res.data.driver_name + "吗？", '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            showInput: false,
+            closeOnClickModal: false, 
+          }).then(({ value }) => { 
+
+            var postData = {
+              sourceNo: that.sourceInfo.sourceNo,//货源单号
+              shipDriverId: res.data.driver_id,//司机id
+              expectedCost: that.sourceInfo.expectedCost,//货主报价
+            }
+            // 货主提供报价，司机确定接单
+            that.httpRequest_ygy("toTms.do",postData,function(res){
+              if(res.status == 1){
+                that.ifTips = true;
+                that.tips_Msg = "确认成功";
+                setTimeout(function(){
+                  that.$store.state.Waybill_needRefresh = true
+                  that.$router.push({
+                    name:"Waybill",
+                  })
+                },2000)
+              }else{
+                that.$alert('确认失败', '提示', {
+                  confirmButtonText: '确定',
+                })
+              }
+            })
+          }).catch(() => { })
         })
       },
 
