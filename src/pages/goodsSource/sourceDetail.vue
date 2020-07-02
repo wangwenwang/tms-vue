@@ -11,7 +11,7 @@
             <span> → </span>
             <span>{{sourceInfo.c_city}} </span><span> {{sourceInfo.c_address3}}</span>
           </div>
-          <div class="distance">最短里程约{{sourceInfo.mileage}}km</div>
+          <div class="distance">订单总里程约{{data.totalDistance}}km</div>
         </div>
         <div class="carInfo"> 
           <div class="title">车货信息</div>
