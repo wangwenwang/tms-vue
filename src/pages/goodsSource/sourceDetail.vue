@@ -93,7 +93,7 @@
         <!-- 司机端，货源未被承运 -->
         <div v-if='$store.state.userInfo.userType == "driver" && data.driverInfo.driver_id == undefined' class="btnList">
           <div class="call" @click="callPhone(data.ownerInfo.owner_tel)"><i class="iconfont icon-dianhua"></i>电话联系</div>
-          <div class="biddingPrice" v-if="sourceInfo.expectedCost && $store.state.userInfo.driverBelong != 'KDY-DSC'"><i class="iconfont icon-xuanzhong" @click="driver_confirm_owner()"></i>确 认</div>
+          <div class="biddingPrice" v-if="sourceInfo.expectedCost && $store.state.userInfo.driverBelong != 'KDY-DSC'" @click="driver_confirm_owner()"><i class="iconfont icon-xuanzhong"></i>确 认</div>
           <div class="biddingPrice" v-if="!sourceInfo.expectedCost" @click="biddingPrice_click()"><i class="iconfont icon-jingjia"></i>竞 价</div>
           <div class="biddingPrice" v-if="sourceInfo.expectedCost && $store.state.userInfo.driverBelong == 'KDY-DSC'"  @click="submit_driver()"><i class="iconfont icon-xuanzhong"></i>指定司机</div>
 
@@ -716,10 +716,11 @@
             }
             .shipperInfo{
               display: flex;
-              justify-content: space-between;
-              width: 60%;
+              justify-content: flex-start;
+              // width: 90%;
               &>span{
                 font-size: 24/50rem;
+                margin-right: 50/50rem;
                 &>i{
                 color: #5965D8;
                 }

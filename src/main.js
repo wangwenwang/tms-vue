@@ -42,8 +42,8 @@ Vue.prototype.$prompt = MessageBox.prompt;
 Vue.config.productionTip = false;
 
 
-Vue.prototype.HOST = "http://k56.kaidongyuan.com/tmsApp/"                       //正式
-Vue.prototype.HOST_ygy = "http://k56.kaidongyuan.com/vehicleGoods/"             //正式
+Vue.prototype.HOST = "http://k56.kaidongyuan.com:8857/tmsApp/"                       //正式
+Vue.prototype.HOST_ygy = "http://k56.kaidongyuan.com:8857/vehicleGoods/"             //正式
 
 // Vue.prototype.HOST = "http://192.168.20.113:8880/cyscm/tmsApp/"              //许三晏
 // Vue.prototype.HOST = "http://192.168.20.131:8880/cyscm/tmsApp/"              //黄伟雄
@@ -53,8 +53,8 @@ Vue.prototype.HOST_ygy = "http://k56.kaidongyuan.com/vehicleGoods/"             
 // Vue.prototype.HOST = "http://j30186f037.qicp.vip/cyscm/tmsApp/"            //袁功谊 配货易司机S
 // Vue.prototype.HOST_ygy = "http://j30186f037.qicp.vip/cyscm/vehicleGoods/"  //袁功谊 车货匹配
 
-// Vue.prototype.HOST = "http://192.168.20.96:8880/cyscm/tmsApp/"            //袁功谊 配货易司机S
-// Vue.prototype.HOST_ygy = "http://192.168.20.96:8880/cyscm/vehicleGoods/"  //袁功谊 车货匹配
+Vue.prototype.HOST = "http://192.168.20.111:8880/cyscm/tmsApp/"            //袁功谊 配货易司机S
+Vue.prototype.HOST_ygy = "http://192.168.20.111:8880/cyscm/vehicleGoods/"  //袁功谊 车货匹配
 
 // Vue.prototype.HOST = "http://kdynnjk.3322.org:8770/tmsApp/"            //测试服务器 配货易司机S
 // Vue.prototype.HOST_ygy = "http://kdynnjk.3322.org:8770/vehicleGoods/"  //测试服务器 车货匹配

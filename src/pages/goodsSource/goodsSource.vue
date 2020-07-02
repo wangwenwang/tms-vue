@@ -25,8 +25,9 @@
           </div>
           <div class="Sort">
             <template>
-              <el-select v-model="value" placeholder="智能排序">
-                <el-option v-for="item in optionsSort" :key="item.value" :label="item.label" :value="item.value"> 
+              <el-select v-model="SortType" placeholder="默认排序" @change = "Sort_click">
+                <el-option v-for="item in optionsSort" :key="item.value" :label="item.label" :value="item.value"
+                > 
                 </el-option>
               </el-select>
             </template>
@@ -89,11 +90,11 @@
           </div>
           <div>
             <div class="item">重量(吨)</div>
-            <div class="taglist"><div class="weighttag" v-for="(tag,idx) in Weight" :key="tag.idx" @click="getweight(idx)">  {{tag.minWeight}} - {{tag.maxWeight}}  </div></div>
+            <div class="taglist"><div class="weighttag" v-for="(tag,idx) in Weight" :key="tag.idx" @click="getweight(idx)">  {{tag.name}} </div></div>
           </div>
           <div>
             <div class="item">体积(方)</div>
-            <div class="taglist"><div class="volumetag" v-for="(tag,idx) in Volume" :key="tag.idx" @click="getvolume(idx)">  {{tag.minVolume}} - {{tag.maxVolume}}   </div></div>
+            <div class="taglist"><div class="volumetag" v-for="(tag,idx) in Volume" :key="tag.idx" @click="getvolume(idx)">  {{tag.name}} </div></div>
           </div>
           <div class="button">
             <div  class="cacel"  @click="cacel_click()">重置</div>
@@ -132,13 +133,13 @@ import $ from 'jquery'
         AddressInfo:'',//地址信息
         AddressShow:true,//地址选择栏
         optionsSort: [{
-          value: '选项1',
-          label: '时间排序'
-        }, {
-          value: '选项2',
+          value: '1',
           label: '距离排序'
+        }, {
+          value: '2',
+          label: '时间排序'
         }],
-        value: '',//排序选择
+        SortType: '',//排序选择
         AddressStart:[],//起点
         AddressEnd:[],//终点
         startProvince:'',//起点省份 
@@ -169,18 +170,18 @@ import $ from 'jquery'
           { name: '其他' ,unit: ''}
         ],
         Weight: [
-          { minWeight: '0',maxWeight: '5' },
-          { minWeight: '5',maxWeight: '10' },
-          { minWeight: '10',maxWeight: '15' },
-          { minWeight: '15',maxWeight: '20' },
-          { minWeight: '20',maxWeight: '99' }
+          { name : "5以下", minWeight: '0',maxWeight: '5' },
+          { name : "5 - 10", minWeight: '5',maxWeight: '10' },
+          { name : "10 - 15", minWeight: '10',maxWeight: '15' },
+          { name : "15 - 20", minWeight: '15',maxWeight: '20' },
+          { name : "20以上", minWeight: '20',maxWeight: '99' }
         ],
         Volume: [
-          { minVolume: '0',maxVolume: '5' },
-          { minVolume: '5',maxVolume: '10' },
-          { minVolume: '10',maxVolume: '15' },
-          { minVolume: '15',maxVolume: '20' },
-          { minVolume: '20',maxVolume: '99' }
+          { name : "5以下", minVolume: '0',maxVolume: '5' },
+          { name : "5 - 10", minVolume: '5',maxVolume: '10' },
+          { name : "10 - 15", minVolume: '10',maxVolume: '15' },
+          { name : "15 - 20", minVolume: '15',maxVolume: '20' },
+          { name : "20以上", minVolume: '20',maxVolume: '99' }
         ]
       }
     },
@@ -252,7 +253,12 @@ import $ from 'jquery'
             if($('.cartag').eq(idx).css("color") == "rgb(0, 0, 0)"){
 
               $('.cartag').eq(idx).css({"background-color":"#C4CAEF", "color":"white"})
-              this.choose_car = this.Cartags[idx].name;
+              if(this.Cartags[idx].name == "其他"){
+                this.choose_car = "4.2,7.6,9.6,13.5"
+              }else{
+                this.choose_car = this.Cartags[idx].name;
+              }
+              
             }else{
 
               $('.cartag').eq(idx).css({"background-color":"transparent", "color":"black"})
@@ -320,11 +326,15 @@ import $ from 'jquery'
       },
       //重置条件查询
       cacel_click(){
-        this.$store.state.choose_carIdx = "";
-        this.$store.state.choose_weightIdx = "";
-        this.$store.state.choose_volumeIdx = "";
-        this.visibles = false;
-        this. getAroundGoodsData();
+        if(this.$store.state.choose_carIdx || this.$store.state.choose_weightIdx || this.$store.state.choose_weightIdx){
+          this.$store.state.choose_carIdx = "";
+          this.$store.state.choose_weightIdx = "";
+          this.$store.state.choose_volumeIdx = "";
+          this.visibles = false;
+          this. getAroundGoodsData();
+        }else{
+          this.visibles = false;
+        }
       },
       //获取当前位置经纬度
       SetCurrAddress:function(address, lng, lat) {
@@ -385,12 +395,18 @@ import $ from 'jquery'
         }
         this.getGoodsData()
       },
+      //排序查询
+      Sort_click(value){
+        this.SortType = value;
+        this.getGoodsData();
+
+      },
       getGoodsData(){
 
-        this.request_list_data(this.longitude, this.latitude, this.startProvince, this.startCity, this.startDistrict, this.endProvince, this.endCity, this.endDistrict, this.choose_car, this.choose_minWeight, this.choose_maxWeight, this.choose_minVolume, this.choose_maxVolume)
+        this.request_list_data(this.longitude, this.latitude, this.startProvince, this.startCity, this.startDistrict, this.endProvince, this.endCity, this.endDistrict, this.choose_car, this.choose_minWeight, this.choose_maxWeight, this.choose_minVolume, this.choose_maxVolume, this.SortType)
       },
       // 请求列表数据
-      request_list_data(longitude, latitude, startProvince, startCity, startDistrict, endProvince, endCity, endDistrict, vehicleType, minWeight, maxWeight, minVolume, maxVolume){
+      request_list_data(longitude, latitude, startProvince, startCity, startDistrict, endProvince, endCity, endDistrict, vehicleType, minWeight, maxWeight, minVolume, maxVolume, SortType){
 
         var that = this
 
@@ -408,6 +424,7 @@ import $ from 'jquery'
           "maxWeight": maxWeight,
           "minVolume": minVolume,            //体积
           "maxVolume": maxVolume, 
+          "SortType": SortType,
         }
         // 获取货源列表
         that.httpRequest_ygy("peripheralResourcesList.do", posDate, function(res){
@@ -448,7 +465,7 @@ import $ from 'jquery'
       //周边资源
       getAroundGoodsData(){
 
-        this.request_list_data(this.longitude, this.latitude, "", "", "", "", "", "", "", "", "", "", "")
+        this.request_list_data(this.longitude, this.latitude, "", "", "", "", "", "", "", "", "", "", "", "")
       },
 
       // 跳转到 货源详情 页面
