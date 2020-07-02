@@ -421,7 +421,7 @@
       //点击竞价
       biddingPrice_click(){
         if(this.$store.state.userInfo.driverBelong == "KDY-DRIVER"){
-          that.$alert('暂时无法竞价', '提示', {
+          this.$alert('暂时无法竞价', '提示', {
               confirmButtonText: '确定',
           })
         }else{
