@@ -25,8 +25,8 @@
 					<div>
 						<span>货&nbsp;&nbsp;&nbsp;量：</span>
 						<span>{{dataItem.orderNum}} 单 &nbsp; </span>
-						<span>{{(dataItem.vol * 0.000001).toFixed(1)}} 方 &nbsp; </span>
-						<span>{{(dataItem.wt * 0.000001).toFixed(1)}} 吨 &nbsp; </span>
+						<span>{{(dataItem.vol * 0.000001).toFixed(2)}} 方 &nbsp; </span>
+						<span>{{(dataItem.wt * 0.000001).toFixed(2)}} 吨 &nbsp; </span>
 						<span>{{parseInt(dataItem.qty)}}箱</span>
 					</div>
 					<div>
