@@ -246,6 +246,7 @@
 					that.$store.state.WaybillData = [];//我的任务页面数据清空
 					that.$store.state.Waybill_NoSearchFrom = true; // 不是从搜索页面到我的任务页面
 					that.$store.state.Waybill_needRefresh = true;//我的任务 页面数据是否需要刷新
+                    that.$store.state.goodsSource_needRefresh = true;//货源详情  页面数据是否需要刷新
 
 					that.$store.state.CostCount_StoreData = [];//费用统计页面数据清空
 					that.$store.state.CostCount_NoSearchFrom = true; // 不是从搜索页面到费用查询页面

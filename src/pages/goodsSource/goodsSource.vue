@@ -13,7 +13,6 @@
       </div>
     </header>
     <div class="container">
-
       <div class="slectItem">
       	<div class="Msg" v-if="AddressShow">以下是为您推荐的周边货源</div>
         <div class="choose" v-if="!AddressShow">
@@ -35,74 +34,77 @@
         </div>
         <div class="Screen" @click="openChoose()">筛选</div>  
       </div>
+     
       <div class="dataContent">
-        <div class="dataItem" v-for='(dataItem,index) in goodsSourcedata' :id="index"  :key='index'  @click="tosourceDetail(index)" >
-          <div class="userImage">
-            <img  v-if="dataItem.pictures"  class="userinfo-avatar" :src="dataItem.pictures" alt="">
-            <img  v-if="!dataItem.pictures"  class="userinfo-avatar"  src="../../assets/images/defaultHead.png" alt="">
-            <!-- <img  class="userinfo-avatar"  :src="dataItem.pictures ? dataItem.pictures : '{{pictures}}'"> -->
-            
+          <mt-loadmore style="text-align: center; "  topDropText="下拉刷新"   topLoadingText=""  topPullText='' bottomPullText="" bottomDropText="上拉加载" bottomLoadingText="" :top-method="loadTop"  :bottom-method="loadBottom"  ref="loadmore"  :autoFill="autoFill" >
+          <div class="dataItem" v-for='(dataItem,index) in goodsSourcedata' :id="index"  :key='index'  @click="tosourceDetail(index)" >
+            <div class="userImage">
+              <img  v-if="dataItem.pictures"  class="userinfo-avatar" :src="dataItem.pictures" alt="">
+              <img  v-if="!dataItem.pictures"  class="userinfo-avatar"  src="../../assets/images/defaultHead.png" alt="">
+              <!-- <img  class="userinfo-avatar"  :src="dataItem.pictures ? dataItem.pictures : '{{pictures}}'"> -->
+              
+            </div>
+            <div class="rightContent">
+              <div class="one">
+                <span>{{dataItem.carrierCity}} {{dataItem.carrierAddress3}} → {{dataItem.c_city}} {{dataItem.c_address3}}</span>
+                <span class="publishTime">{{dataItem.publishTime}}</span>
+              </div>
+              <div class="two">
+                <div class="left">
+                <!-- <span v-if='useType'>{{useType}}  </span>
+                <span v-if='conductor'>{{conductor}}  </span> -->
+                <span v-if='dataItem.vehicleType'>{{dataItem.vehicleType}}&nbsp;</span>
+                <span v-if='!dataItem.weight'>{{dataItem.min_weight}}~{{dataItem.max_weight}}吨&nbsp;</span>
+                <span v-if='dataItem.weight'>{{dataItem.max_weight}}吨&nbsp;</span>
+                <span v-if='!dataItem.volume'>{{dataItem.min_volume}}~{{dataItem.max_volume}}方&nbsp;</span>
+                <span v-if='dataItem.volume'>{{dataItem.max_volume}}方&nbsp;</span>
+                </div>
+                <!-- <span>{{endCity}} </span><span> {{endDistrict}}</span> -->
+                <div class="distance">约{{dataItem.distance}}km装货</div>
+              </div>
+              <div class="three">
+                <div>
+                  <div class="left">
+                    <span v-if='dataItem.cargoType'>{{dataItem.cargoType}} , </span>
+                    <span v-if='dataItem.productName'>{{dataItem.productName}} , </span>
+                    <span v-if='dataItem.loadingTime'>{{dataItem.loadingTime}}装货 , </span>
+                    <span v-if='dataItem.loadUnloadType'>{{dataItem.loadUnloadType}} </span>
+                  </div>
+                  <div class="left">
+                    <span v-if='dataItem.ownerName'>{{dataItem.ownerName}}</span>
+                  </div>
+                </div>
+                <div class="call">
+                  <i v-if='dataItem.ownerPhone' @click="callPhone(dataItem.ownerPhone)" class="iconfont icon-dianhua-copy"></i>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="rightContent">
-            <div class="one">
-              <span>{{dataItem.carrierCity}} {{dataItem.carrierAddress3}} → {{dataItem.c_city}} {{dataItem.c_address3}}</span>
-              <span class="publishTime">{{dataItem.publishTime}}</span>
+          </mt-loadmore>
+        </div>
+
+        <!-- 筛选框 -->
+        <div class="mask" v-if="visibles">
+          <div class="showChoose"  @touchmove.prevent>
+            <div>
+              <div class="item">车型</div>
+              <div class="taglist"><div class="cartag" v-for="(tag,idx) in Cartags" :key="tag.idx" @click="getcar(idx)">  {{tag.name}}{{tag.unit}}  </div></div>
             </div>
-            <div class="two">
-              <div class="left">
-              <!-- <span v-if='useType'>{{useType}}  </span>
-              <span v-if='conductor'>{{conductor}}  </span> -->
-              <span v-if='dataItem.vehicleType'>{{dataItem.vehicleType}}&nbsp;</span>
-              <span v-if='!dataItem.weight'>{{dataItem.min_weight}}~{{dataItem.max_weight}}吨&nbsp;</span>
-              <span v-if='dataItem.weight'>{{dataItem.max_weight}}吨&nbsp;</span>
-              <span v-if='!dataItem.volume'>{{dataItem.min_volume}}~{{dataItem.max_volume}}方&nbsp;</span>
-              <span v-if='dataItem.volume'>{{dataItem.max_volume}}方&nbsp;</span>
-              </div>
-              <!-- <span>{{endCity}} </span><span> {{endDistrict}}</span> -->
-              <div class="distance">约{{dataItem.distance}}km装货</div>
+            <div>
+              <div class="item">重量(吨)</div>
+              <div class="taglist"><div class="weighttag" v-for="(tag,idx) in Weight" :key="tag.idx" @click="getweight(idx)">  {{tag.name}} </div></div>
             </div>
-            <div class="three">
-              <div>
-                <div class="left">
-                  <span v-if='dataItem.cargoType'>{{dataItem.cargoType}} , </span>
-                  <span v-if='dataItem.productName'>{{dataItem.productName}} , </span>
-                  <span v-if='dataItem.loadingTime'>{{dataItem.loadingTime}}装货 , </span>
-                  <span v-if='dataItem.loadUnloadType'>{{dataItem.loadUnloadType}} </span>
-                </div>
-                <div class="left">
-                  <span v-if='dataItem.ownerName'>{{dataItem.ownerName}}</span>
-                </div>
-              </div>
-              <div class="call">
-                <i v-if='dataItem.ownerPhone' @click="callPhone(dataItem.ownerPhone)" class="iconfont icon-dianhua-copy"></i>
-              </div>
+            <div>
+              <div class="item">体积(方)</div>
+              <div class="taglist"><div class="volumetag" v-for="(tag,idx) in Volume" :key="tag.idx" @click="getvolume(idx)">  {{tag.name}} </div></div>
+            </div>
+            <div class="button">
+              <div  class="cacel"  @click="cacel_click()">重置</div>
+              <div  class="submit" @click="submit_click()">确定</div>
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- 筛选框 -->
-      <div class="mask" v-if="visibles">
-        <div class="showChoose"  @touchmove.prevent>
-          <div>
-            <div class="item">车型</div>
-            <div class="taglist"><div class="cartag" v-for="(tag,idx) in Cartags" :key="tag.idx" @click="getcar(idx)">  {{tag.name}}{{tag.unit}}  </div></div>
-          </div>
-          <div>
-            <div class="item">重量(吨)</div>
-            <div class="taglist"><div class="weighttag" v-for="(tag,idx) in Weight" :key="tag.idx" @click="getweight(idx)">  {{tag.name}} </div></div>
-          </div>
-          <div>
-            <div class="item">体积(方)</div>
-            <div class="taglist"><div class="volumetag" v-for="(tag,idx) in Volume" :key="tag.idx" @click="getvolume(idx)">  {{tag.name}} </div></div>
-          </div>
-          <div class="button">
-            <div  class="cacel"  @click="cacel_click()">重置</div>
-            <div  class="submit" @click="submit_click()">确定</div>
-          </div>
-        </div>
-      </div>
-
+        
       <!-- 页面数据为空时 -->
       <div  class="NoData"  v-if="noDataShow">
         <div>
@@ -110,8 +112,9 @@
           <div>没有数据</div>
         </div>
       </div>
+
     </div>
-    <FooterIndex/>
+    <FooterIndex/> 
   </div>
 </template>
 <script type="text/javascript">
@@ -156,6 +159,11 @@ import $ from 'jquery'
     		volume:false,
         whoPush:"",
         visibles: false,
+        numberPerPage: 15,//每页显示几条
+        loadPage: 1 ,//当前第几页
+        allLoaded:true,//上拉刷新还能上拉刷新
+        autoFill:false,//
+        whereSelect:false,//条件查询
         choose_car:'',
         choose_minWeight:"",
         choose_maxWeight:"",
@@ -191,6 +199,7 @@ import $ from 'jquery'
     mounted(){
   	  this.TelliOSORAndroidVueMounted("获取当前位置页面已加载");
   	  window.SetCurrAddress = this.SetCurrAddress;
+      this.allLoaded = false;
   	},
     created(){
       this.nowDate = this.getNowTime().substring(0,10);
@@ -211,7 +220,6 @@ import $ from 'jquery'
         this.AddressEnd = [this.sourceInfo.carrierState, this.endCity, this.endDistrict];
         console.log(this.AddressStart)
         console.log(this.AddressEnd)
-
         this.request_list_data(this.longitude, this.latitude, this.startCity, this.startDistrict, this.endCity, this.endDistrict)
 
       }else{
@@ -322,19 +330,17 @@ import $ from 'jquery'
       },
       submit_click(){
         this.visibles = false;
+        this.$store.state.goodsSource_needRefresh = true;
         this. getGoodsData();
       },
       //重置条件查询
       cacel_click(){
-        if(this.$store.state.choose_carIdx || this.$store.state.choose_weightIdx || this.$store.state.choose_weightIdx){
-          this.$store.state.choose_carIdx = "";
-          this.$store.state.choose_weightIdx = "";
-          this.$store.state.choose_volumeIdx = "";
-          this.visibles = false;
-          this. getAroundGoodsData();
-        }else{
-          this.visibles = false;
-        }
+        this.$store.state.choose_carIdx = "";
+        this.$store.state.choose_weightIdx = "";
+        this.$store.state.choose_volumeIdx = "";
+        this.visibles = false;
+        this.$store.state.goodsSource_needRefresh = true;
+        this. getGoodsData();
       },
       //获取当前位置经纬度
       SetCurrAddress:function(address, lng, lat) {
@@ -348,6 +354,7 @@ import $ from 'jquery'
     		}else {
     		  this.longitude = lng;
     		  this.latitude = lat;
+          this.$store.state.goodsSource_needRefresh = true;
           this.getAroundGoodsData();
     		}
   	  },
@@ -371,6 +378,8 @@ import $ from 'jquery'
           this.startCity = "";
           this.startDistrict = "";
         }
+        this.$store.state.goodsSource_needRefresh = true;
+        this.$store.state.goodsSourcedata = {};
         this.getGoodsData(); 
       },
       //获取终点城市、区
@@ -393,20 +402,45 @@ import $ from 'jquery'
           this.endCity = "";
           this.endDistrict = "";
         }
+        this.$store.state.goodsSource_needRefresh = true;
+        this.$store.state.goodsSourcedata = {};
         this.getGoodsData()
       },
       //排序查询
       Sort_click(value){
         this.SortType = value;
+        this.$store.state.goodsSource_needRefresh = true;
+        this.$store.state.goodsSourcedata = {};
         this.getGoodsData();
 
       },
-      getGoodsData(){
+      getGoodsData(load){
+        var that = this;
+        this.whereSelect = true;
+        var goodsSourcedata = that.$store.state.goodsSourcedata;
+        
+        if(that.$store.state.goodsSource_needRefresh || !goodsSourcedata.length){
 
-        this.request_list_data(this.longitude, this.latitude, this.startProvince, this.startCity, this.startDistrict, this.endProvince, this.endCity, this.endDistrict, this.choose_car, this.choose_minWeight, this.choose_maxWeight, this.choose_minVolume, this.choose_maxVolume, this.SortType)
+        this.request_list_data(this.longitude, this.latitude, this.startProvince, this.startCity, this.startDistrict, this.endProvince, this.endCity, this.endDistrict, this.choose_car, this.choose_minWeight, this.choose_maxWeight, this.choose_minVolume, this.choose_maxVolume, this.SortType,load)
+
+        }else{
+          that.goodsSourcedata = goodsSourcedata;
+
+          if(load){
+            if(load == "TopLoad"){
+
+              that.$refs.loadmore.onTopLoaded();
+
+            }else if(load == "BottomLoad"){
+
+              that.$refs.loadmore.onBottomLoaded();
+            }
+          }
+          this.$emit('isLoading', false);
+        }
       },
       // 请求列表数据
-      request_list_data(longitude, latitude, startProvince, startCity, startDistrict, endProvince, endCity, endDistrict, vehicleType, minWeight, maxWeight, minVolume, maxVolume, SortType){
+      request_list_data(longitude, latitude, startProvince, startCity, startDistrict, endProvince, endCity, endDistrict, vehicleType, minWeight, maxWeight, minVolume, maxVolume, SortType,load){
 
         var that = this
 
@@ -425,47 +459,154 @@ import $ from 'jquery'
           "minVolume": minVolume,            //体积
           "maxVolume": maxVolume, 
           "SortType": SortType,
+          "currentPage": that.loadPage,//当前第几页
+          "numberPerPage": that.numberPerPage,//每页显示几条
         }
         // 获取货源列表
         that.httpRequest_ygy("peripheralResourcesList.do", posDate, function(res){
 
-          if(res.data.length){
+          //上拉加载后 数据拼接
+          if (that.loadPage > 1) {
+            var data = res.data;
+            if(res.data.length){
+              that.noDataShow = false;
+              for( var i = 0; i < res.data.length; i++){
 
-            that.goodsSourcedata = res.data
-            that.noDataShow = false
+                if(res.data[i].publishTime.substring(0,10) == that.nowDate){
+                  
+                  res.data[i].publishTime = res.data[i].publishTime.substring(11,16)
+                }else{
+                  res.data[i].publishTime = res.data[i].publishTime.substring(5,10)
+                }
+                if(res.data[i].min_weight == res.data[i].max_weight){
+                  
+                  res.data[i].weight = true
+                }
+                if(res.data[i].min_volume == res.data[i].max_volume){
 
-            for( var i = 0; i < res.data.length; i++){
-
-              if(res.data[i].publishTime.substring(0,10) == that.nowDate){
-                
-                res.data[i].publishTime = res.data[i].publishTime.substring(11,16)
-              }else{
-                res.data[i].publishTime = res.data[i].publishTime.substring(5,10)
+                  res.data[i].volume = true
+                }
+                data[i].distance = res.data[i].distance/1000
+                let tempVal = parseFloat(data[i].distance).toFixed(2)
+                data[i].distance = tempVal.substring(0, tempVal.length - 1)
               }
-              if(res.data[i].min_weight == res.data[i].max_weight){
-                
-                res.data[i].weight = true
-              }
-              if(res.data[i].min_volume == res.data[i].max_volume){
-
-                res.data[i].volume = true
-              }
-              that.goodsSourcedata[i].distance = res.data[i].distance/1000
-              let tempVal = parseFloat(that.goodsSourcedata[i].distance).toFixed(2)
-              that.goodsSourcedata[i].distance = tempVal.substring(0, tempVal.length - 1)
             }
-          }else{
+            that.goodsSourcedata = that.goodsSourcedata.concat(data)
+          } else {
+            if(load){
+              if(load == "TopLoad"){
 
-            that.goodsSourcedata = []
-            that.noDataShow = true
+                that.$refs.loadmore.onTopLoaded();
+
+              }else if(load == "BottomLoad"){
+
+                that.$refs.loadmore.onBottomLoaded();
+              }
+            }
+            if(res.data.length){
+              that.goodsSourcedata = res.data;
+              that.noDataShow = false;
+              for( var i = 0; i < res.data.length; i++){
+
+                if(res.data[i].publishTime.substring(0,10) == that.nowDate){
+                  
+                  res.data[i].publishTime = res.data[i].publishTime.substring(11,16)
+                }else{
+                  res.data[i].publishTime = res.data[i].publishTime.substring(5,10)
+                }
+                if(res.data[i].min_weight == res.data[i].max_weight){
+                  
+                  res.data[i].weight = true
+                }
+                if(res.data[i].min_volume == res.data[i].max_volume){
+
+                  res.data[i].volume = true
+                }
+                that.goodsSourcedata[i].distance = res.data[i].distance/1000
+                let tempVal = parseFloat(that.goodsSourcedata[i].distance).toFixed(2)
+                that.goodsSourcedata[i].distance = tempVal.substring(0, tempVal.length - 1)
+              }
+            }else{
+              that.goodsSourcedata = [];
+              that.noDataShow = true;
+            }
+          }
+          that.$store.state.goodsSourcedata = that.goodsSourcedata;
+
+          // 判断是否能上拉加载
+          if (res.data.length < that.numberPerPage) {
+            that.allLoaded = true;
+          } else {
+            that.allLoaded = false;
           }
         })
+
       },
 
       //周边资源
-      getAroundGoodsData(){
+      getAroundGoodsData(load){
+        var that = this;
+        this.whereSelect = false;
+        var goodsSourcedata = that.$store.state.goodsSourcedata;
+        if(that.$store.state.goodsSource_needRefresh || !goodsSourcedata.length){
 
-        this.request_list_data(this.longitude, this.latitude, "", "", "", "", "", "", "", "", "", "", "", "")
+        this.request_list_data(this.longitude, this.latitude, "", "", "", "", "", "", "", "", "", "", "", "",load)
+
+        }else{
+          that.goodsSourcedata = goodsSourcedata;
+
+          if(load){
+            if(load == "TopLoad"){
+
+              that.$refs.loadmore.onTopLoaded();
+
+            }else if(load == "BottomLoad"){
+
+              that.$refs.loadmore.onBottomLoaded();
+            }
+          }
+          this.$emit('isLoading', false);
+        }
+      },
+      // 下拉刷新
+      loadTop() {
+        this.loadPage = 1;
+
+        this.allLoaded = false;
+
+        // 需要重新请求数据
+        this.$store.state.goodsSource_needRefresh = true;
+
+        if(this.whereSelect == true){
+
+          this.getGoodsData("TopLoad");
+        }else{
+
+          this.getAroundGoodsData("TopLoad");
+        }
+        
+      },
+      // 上拉加载
+      loadBottom(){
+        var that = this;
+        if (that.allLoaded){
+
+          that.$refs.loadmore.onBottomLoaded();
+            return;
+        }else{
+
+            that.loadPage += 1;
+        }
+        // 需要重新请求数据
+        this.$store.state.goodsSource_needRefresh = true;
+
+        if(this.whereSelect == true){
+
+          this.getGoodsData("BottomLoad");
+        }else{
+          
+          this.getAroundGoodsData("BottomLoad");
+        }
       },
 
       // 跳转到 货源详情 页面
@@ -664,6 +805,7 @@ import $ from 'jquery'
                 overflow: hidden;
                 text-overflow:ellipsis;
                 white-space: nowrap;
+                text-align: left;
               }
               .distance{
                 font-size: 24/50rem;
@@ -678,6 +820,7 @@ import $ from 'jquery'
                 overflow: hidden;
                 text-overflow:ellipsis;
                 white-space: nowrap;
+                text-align: left;
               }
               .call{
                 width: 50/50rem;

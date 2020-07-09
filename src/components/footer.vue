@@ -126,6 +126,7 @@ export default {
         
         //不需要重新请求数据
         this.$store.state.Waybill_needRefresh = false;
+        this.$store.state.goodsSource_needRefresh = false;
 
         this.active =  this.footList[index].title;
 

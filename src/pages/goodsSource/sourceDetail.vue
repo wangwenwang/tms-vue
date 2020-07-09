@@ -598,6 +598,9 @@
 
       // 返回上一页
       goPrev(){
+        if(this.whoPush == "goodsSource"){
+          this.$store.state.goodsSource_needRefresh = false;
+        }
         this.$router.push({
           name:this.whoPush,
           query:{
