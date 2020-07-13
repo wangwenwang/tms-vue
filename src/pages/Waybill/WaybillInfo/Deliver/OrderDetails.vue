@@ -7,13 +7,37 @@
 		 		<div>配载单号：<span>{{WaybillInfo.shipmentCode}}</span></div>
 		    	<div>货&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：
 		    		<span>{{WaybillInfo.orderNum}} 单 &nbsp;&nbsp; </span>
-		    		<span>{{(WaybillInfo.vol * 0.000001).toFixed(1)}}方&nbsp;&nbsp;&nbsp; </span>
-		    		<span>{{(WaybillInfo.wt * 0.000001).toFixed(1)}}吨 &nbsp;&nbsp;&nbsp; </span>
+		    		<span>{{(WaybillInfo.vol * 0.000001).toFixed(2)}}方&nbsp;&nbsp;&nbsp; </span>
+		    		<span>{{(WaybillInfo.wt * 0.000001).toFixed(2)}}吨 &nbsp;&nbsp;&nbsp; </span>
 		    		<span>{{parseInt(WaybillInfo.qty)}}箱</span>
 		    	</div>
 		    	<div>物流公司：<span>{{WaybillInfo.transPartyName}}</span></div>
 			</div>
-			<OrderInfo_template   v-bind:_orderInfo="orderList,selectAddr,shipmentListDataNo" />
+			<div class="OrderList">
+				<el-table ref="multipleTable" :data="orderList"  tooltip-effect="dark" style="width: 100%" border 
+				:header-cell-style="{'background-color': '#D6E9F9',  'font-weight': '600' }" 
+				@selection-change="handleSelectionChange" refs="multipleTable"> 
+				    <el-table-column type="selection"  width="45"> </el-table-column>
+                    <el-table-column prop="orderList.omsNo" label="客户单号"  width="140">
+                        <template slot-scope="scope">{{ scope.row.clientOrderNo }}</template>
+                    </el-table-column>
+
+                    <el-table-column  prop="orderList.omsNo" label="商品明细" fit="true" width="360"> 
+                    	<template slot-scope="scope">
+                    		<div v-for='(Item,idx) in scope.row.deliveryDetailList' :id="idx" :key='idx'>{{Item.productName}}&nbsp;&nbsp;&nbsp;      {{Item.poOrderQty}}{{Item.poUom}}
+                    		</div>
+					    </template>
+                    </el-table-column>
+				</el-table>
+			    <div style="margin-top: 20px">
+			        <el-button @click="chooseAll()">全选</el-button>
+			        <el-button @click="toggleSelection()">取消全选</el-button>
+			    </div>
+
+			    <div  class="g_doubleBtn bottomBtn"> 
+			        <div  @click="toOrderDeliver('chooseAll')">批量交付</div>
+			    </div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -28,8 +52,8 @@
 			return{
 				WaybillInfo:[],//头部总信息
 				orderList:[],//订单信息 数据
-				selectAddr:true,//是否是选择地址页面跳转来
 				shipmentListDataNo:"",//装运编号
+			    multipleSelection: [],//选择的订单
 			}
 		},
 		components:{
@@ -52,48 +76,81 @@
 				if(res.data[1].length){
 
 					that.orderList = res.data[1];
-
-					// that.$store.state.orderList =  res.data;
-
-					for(var m = 0; m < that.orderList.length; m++){
-			
-						// 判断订单是否可以进行交付动作
-						if( that.orderList[m].status == "未交付" && that.WaybillInfo.status != "新建"){
-							// 可交付
-							that.orderList[m].ifDeliver = true;
-
-						}else{
-							// 不可交付
-							that.orderList[m].ifDeliver = false;
+					that.$nextTick(() => {
+						for(var i=0; i<that.orderList.length; i++){
+							that.$refs.multipleTable.toggleRowSelection(that.orderList[i],true)
 						}
-					}
-				}else{
-					//不需要弹出框提示，页面显示“没有数据”
+					})
 				}
 			})
-
-
-
-			// var defualtValue = [1,1,1,12,2,33,4]
-			// var ResultFieldName = ["sds",1,1,12,2,33,3]
-			// var odValue={};
-
-		 //    for(var ii=0;ii<defualtValue.length;ii++){
-
-		 //        if(defualtValue[ii]!==""){
-
-		 //            odValue[ResultFieldName[ii]]= defualtValue[ii]
-
-		 //              console.log(odValue)
-		 //        }
-		 //    }
-
-
-
 		},
 		methods:{
+			//全选
+			chooseAll(){
+				for(var i=0; i<this.orderList.length; i++){
+					this.$refs.multipleTable.toggleRowSelection(this.orderList[i],true)
+				}
+			},
+			//批量交付
+			toOrderDeliver(index){
 
+				event.stopPropagation();
+				var that = this;
 
+				var orderSum = that.orderList.length;
+				var submitSum = that.multipleSelection.length;
+				var deliverNo_list = [];
+				for(var i = 0 ; i < that.multipleSelection.length;i++){
+
+					deliverNo_list[deliverNo_list.length] = that.multipleSelection[i].deliveryId;
+			    }
+			    if(submitSum != orderSum){
+			    	if(!submitSum){
+				    	that.$alert("请选择订单！", '提示', {
+	    
+				   		    confirmButtonText: '确定',
+			  			})
+				    }else{
+				    	that.$confirm('该地址共有'+orderSum+'个订单需交付，本次共交付'+submitSum+'个订单', '提示', {
+				            confirmButtonText: '确定',
+				            cancelButtonText: '取消',
+				            type: 'warning',
+				            closeOnClickModal: false,
+				        }).then(() => {
+				            // 按地址交付
+	                        that.$router.push({
+								name:"orderDeliver",
+								query:{
+									deliverNo_list:deliverNo_list,
+									shipmentListDataNo:that.shipmentListDataNo
+								}
+							})
+				        }).catch(() => { })
+				    }
+				}else{
+                    that.$router.push({
+						name:"orderDeliver",
+						query:{
+							deliverNo_list:deliverNo_list,
+							shipmentListDataNo:that.shipmentListDataNo
+						}
+					})
+				}
+			},
+
+		    toggleSelection(rows) {
+		        if (rows) {
+		          rows.forEach(row => {
+		            this.$refs.multipleTable.toggleRowSelection(row);
+		          });
+		        } else {
+		          this.$refs.multipleTable.clearSelection();
+		        }
+		    },
+
+		    handleSelectionChange(val) {
+		        this.multipleSelection = val;
+		    },
 
 		}
 	}
@@ -111,6 +168,7 @@
 				box-sizing: border-box;
 				background-color: #fff;
 			  	overflow: hidden;
+			  	padding-bottom: 50/50rem;
 			  	&>div{
 				  	overflow: hidden;
 				  	line-height: 60/50rem;

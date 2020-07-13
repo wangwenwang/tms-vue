@@ -144,21 +144,52 @@ export default {
 			if(index != "selectAll"){
 
 				deliverNo_list[0] = that._orderInfo[index].deliveryId;
+				var receiveAddr = that._orderInfo[index].receivePartyAddr1;
+				var j = 0;
+				for(var i = 0; i < that._orderInfo.length; i++){
 
-				that.$router.push({
-					name:"orderDeliver",
-					query:{
-						deliverNo_list:deliverNo_list,
-						shipmentListDataNo:that.shipmentListDataNo
-
+					if(receiveAddr == that._orderInfo[i].receivePartyAddr1) {
+						j+=1;
 					}
-				})
+				}
+				if(j>1){
+					that.$confirm('有同收货地址订单可交付, 是否按地址交付?', '提示', {
+			          confirmButtonText: '按地址交付',
+			          cancelButtonText: '单独交付',
+			          type: 'warning',
+			          closeOnClickModal: false,
+			        }).then(() => {
+			            // 按地址交付
 
-				return;
-
+			            that.$router.push({
+							name:"OrderDetails",
+							query:{
+								shipmentID:that.shipmentID,//配载单id
+								shipmentListDataNo:that.shipmentListDataNo,//配载单号
+								receiveAddr:receiveAddr,//收货地址
+							}
+						}) 
+			        }).catch(() => {
+			          //单独交付
+			            that.$router.push({
+							name:"orderDeliver",
+							query:{
+								deliverNo_list:deliverNo_list,
+								shipmentListDataNo:that.shipmentListDataNo
+							}
+						})
+			        })
+				}else{
+					that.$router.push({
+						name:"orderDeliver",
+						query:{
+							deliverNo_list:deliverNo_list,
+							shipmentListDataNo:that.shipmentListDataNo
+						}
+					})
+				}
 			// 批量交付
 			}else{
-
 				for(var i = 0 ; i < that._orderInfo.length;i++){
 
 					if($(".goodsInfo").eq(i).children(".goodsHead").children("span.iconfont").hasClass("icon-xuanzhong")){
@@ -176,7 +207,6 @@ export default {
 				   	})
 
 				}else{
-
 					that.$router.push({
 						name:"orderDeliver",
 						query:{

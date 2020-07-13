@@ -55,6 +55,8 @@ export default new vuex.Store({
 			other_info:{goods_name:"", min_weight:"",max_weight:"",min_volume:"",max_volume:"",vehicle_type:"",orderType:"",load_time:"",remark:"",expected_cost:""},
 			car_info:{vehicleLoad:"",vehicleVolume:"",vehicle_type:"",orderType:"",load_time:"",remark:"",expected_cost:""},
 		},
+		goodsSourcedata:{},//货源列表
+		goodsSource_needRefresh:true,//货源列表 页面数据是否需要刷新
 		sourceInfo:{},//货源详情
 		CarrierArr:[],//承运商列表(注册)
 		choose_carIdx:'',
