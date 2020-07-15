@@ -37,7 +37,7 @@
   	   	  <div  @click="toPassword"><i class="iconfont icon-xiugaimima" ></i><span>修改密码</span>
   	   	  	<i  class="iconfont icon-xiangshang" ></i></div>
   	   	  <div  @click="toCheckVersion"><i class="iconfont icon-guanyu" ></i><span>版本更新</span>
-  	   	  	<span>{{VersionNum}}.55</span></div>
+  	   	  	<span>{{VersionNum}}.56</span></div>
   	   	</div>
   	    <div class='Exit_logon' >
   	      <i class="iconfont icon-icon-yxj-switch-account"  @click="exit" ></i>
