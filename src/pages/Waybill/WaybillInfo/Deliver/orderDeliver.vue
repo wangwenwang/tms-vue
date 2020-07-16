@@ -121,6 +121,16 @@
 
 			this.shipmentListDataNo = this.$route.query.shipmentListDataNo;
 
+			this.$nextTick(() => {
+				if(process.env.NODE_ENV != "development"){
+					$(".el-upload--picture-card:first").css("background-image", "url(./images/1.png)")
+					$(".el-upload--picture-card:last").css("background-image",  "url(./images/2.png)")
+				}else{
+					$(".el-upload--picture-card:first").css("background-image", "url(/static/images/1.png)")
+					$(".el-upload--picture-card:last").css("background-image",  "url(/static/images/2.png)")
+				}
+			})
+
 		},
 		methods:{
 			// 定位

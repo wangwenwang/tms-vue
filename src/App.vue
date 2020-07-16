@@ -575,12 +575,10 @@ header>.icon-huabanfuben::before{
   }
 }
 .Upload>.uploadImg:nth-child(1)  .el-upload--picture-card{
-  background-image:url('/static/images/1.png');
   background-size: cover;
   border: 1px dashed #000;
 }
 .Upload>.uploadImg:nth-child(2)  .el-upload--picture-card{
-  background-image:url('/static/images/2.png');
   background-size: cover;
   border: 1px dashed #000;
 }
