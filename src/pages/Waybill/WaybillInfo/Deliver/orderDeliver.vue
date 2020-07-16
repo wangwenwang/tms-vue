@@ -104,6 +104,8 @@
    			var currentdate = this.getNowTime();
 			this.canvasTxt.font="15px Microsoft JhengHei";
 			this.canvasTxt.fillText(currentdate, 5, canvas.height - 35);
+
+			this.canvasTxt.fillText("司机在此签名", canvas.width - 100, canvas.height - 35)
 		},
 		created(){
 
@@ -421,6 +423,8 @@
 	   			var currentdate = this.getNowTime();
 				this.canvasTxt.font="15px Microsoft JhengHei";
 				this.canvasTxt.fillText(currentdate, 5, this.$refs.canvasF.height - 35);
+
+				this.canvasTxt.fillText("司机在此签名", this.$refs.canvasF.width - 100, this.$refs.canvasF.height - 35)
 	        },
 			// 文件上传成功时的钩子
 			uploadSuccessInCurrVue(response, file, fileList){
