@@ -141,6 +141,18 @@
         <p>{{tips_Msg}}</p>
     </div>
     </div>
+
+    <div class="selfconfirm" v-if="selfconfirm_show">
+      <div class="selfconfirm_contianer">
+        <div class="selfconfirm_head">提示</div>
+        <div class="selfconfirm_content">{{confirmcontent}}</div>
+        <div class="selfconfirm_btn">
+          <div @click='selfconfirm_cancel()'>取消</div>
+          <div @click='selfconfirm_confirm_()'>确认</div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 <script type="text/javascript">
@@ -171,6 +183,7 @@
         tips_Msg:"",//提示信息
         ifTips:false,
         orderType:'',//订单类型
+        selfconfirm_show:false,//自建confirm是否显示提示框
         pickerOptions: {
           shortcuts: [{
             text: '今天',
@@ -497,13 +510,7 @@
             },1800)
             return;
           }
-
-          that.$prompt('确定要指定给' + res.data.driver_name + "吗？", '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            showInput: false,
-            closeOnClickModal: false, 
-          }).then(({ value }) => {
+          that.selfconfirm('确定要指定给' + res.data.driver_name + "吗？",function(){
 
             // 装货点
             var LoadingPoint = []
@@ -563,8 +570,7 @@
                 })
               },2000)
             })
-
-          }).catch(() => { })
+          })
         })
       },
       submit_driver(){
@@ -659,6 +665,21 @@
             })
           },2000)
         })
+      },
+      // 自建confirm取消事件
+      selfconfirm_cancel (){
+        this.selfconfirm_show = false;
+      },
+      // 自建confirm确认事件
+      selfconfirm_confirm_ (){
+
+        this.selfconfirm_show = false;
+        this.selfconfirm_confirm();
+      },
+      selfconfirm(text,selfconfirm_confirm){
+        this.selfconfirm_show = true;
+        this.confirmcontent = text;
+        this.selfconfirm_confirm = selfconfirm_confirm;
       },
     }
   }
