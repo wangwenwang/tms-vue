@@ -225,7 +225,7 @@
 
         this.ifCancel = true;
       }
-      if(status != "NEW" && status !="NON-CONFIRM"){
+      if(status != "NEW" && status !="NON-CONFIRM" && status !="CANCEL"){
 
         this.ifInfo = true;
       }

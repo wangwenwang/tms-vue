@@ -4,8 +4,19 @@
 
     <div class="container" id="container"></div>
 
-    <div class="pickerBox">
+    <div class="pickerBox" v-show='!InputShow'>
       <input id="pickerInput" placeholder="输入关键字选取地点" />
+      <i class="iconfont icon-lishijilu" v-show='!InputShow' @click="search_click"></i>
+    </div>
+
+    <div class="pickerBox" v-show='InputShow'>
+      <el-autocomplete popper-class="my-autocomplete" v-model="s_address" :fetch-suggestions="querySearch"
+       placeholder="输入关键字选取地点"  @select="handleSelect" >
+        <template slot-scope="props">
+          <div style="line-height:20px; white-space:normal;padding: 4px 0;">{{ props.item.s_address }}</div>
+        </template>
+      </el-autocomplete>
+      <i class="iconfont icon-huabanfuben" v-show='InputShow' @click="history_click"></i>
     </div>
 
     <div class="resultView">
@@ -51,6 +62,11 @@
         p_c_d:[],           //["广东省","深圳市","龙华区"]
         shipper:'',         //联系人
         shipper_tel:'',     //联系电话
+        s_address: '',
+        map: '',
+        InputShow:false,
+        historyList:[],
+        If_once:true,
       }
     },
     mounted(){
@@ -80,12 +96,25 @@
       this.$nextTick(() => {
         $(".amap-copyright").css("visibility","hidden")
       })
+
+      //请求历史发布地址
+      var that = this
+      this.httpRequest_ygy("ownerHistoryRecord.do","",function(HistoryRes){ 
+        console.log(HistoryRes.Msg)
+
+        if(HistoryRes.Msg == "获取成功!"){
+
+          that.$store.state.history_address = HistoryRes.data;
+        }else{
+          that.$store.state.history_address = {};
+        }
+      })
     },
     mounted(){
 
       var that = this
 
-      var map = new AMap.Map('container', {
+      this.map = new AMap.Map('container', {
         resizeEnable: true,
       })
 
@@ -98,12 +127,12 @@
           buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)、
           zoomToAccuracy: true,    //定位成功后是否自动调整地图视野到定位点
         })
-        map.addControl(geolocation)
+        that.map.addControl(geolocation)
         geolocation.getCurrentPosition(function(status,result){
           if(status=='complete'){
-            that.onComplete(result, map)
+            that.onComplete(result, that.map)
           }else{
-            that.onError(result, map)
+            that.onError(result, that.map)
           }
         })
       })
@@ -119,6 +148,53 @@
 
         this.$router.go(-1)
       },
+      search_click(){
+        this.InputShow = true;
+        this.s_address = '';
+      },
+      history_click(){
+        this.InputShow = false;
+      },
+
+      querySearch(queryString, cb) {
+
+        var historyList = this.loadAll(); 
+        var results = queryString ? historyList.filter(this.createFilter(queryString)) : historyList;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+      },
+      createFilter(queryString) {
+        return (historyList) => {
+          return (historyList.s_address.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+      loadAll() {
+        if(this.type == "装货点"){
+
+          this.historyList = this.$store.state.history_address.start;
+
+        }else if(this.type == "卸货点"){
+
+          this.historyList = this.$store.state.history_address.end;
+        }
+        if(this.historyList.length && this.If_once){
+          //列表显示地址，去掉省、市、区
+          for(var i = 0; i < this.historyList.length; i++){
+            var s_address = this.historyList[i].s_address;
+            var s_city =this.historyList[i].s_city;
+            let index = s_address.lastIndexOf(s_city);
+            this.historyList[i].s_address =s_address.substring(index+s_city.length,s_address.length);
+          }
+        }
+        this.If_once = false;
+        return this.historyList;
+      },
+      handleSelect(item) {
+          
+        this.loadMap(this.map, {"lat":item.s_lat,"lng":item.s_lon})
+        this.s_address = item.s_address;
+      },
+
       submit(){
 
         if(this.address == ""){
@@ -135,7 +211,6 @@
           this.$store.state.pg_publish.load_pointList[this.index].p_c_d = this.p_c_d
           this.$store.state.pg_publish.load_pointList[this.index].shipper = this.shipper
           this.$store.state.pg_publish.load_pointList[this.index].shipper_tel = this.shipper_tel
- console.log(this.$store.state.pg_publish.load_pointList[this.index].detail)
         }else if(this.type == "卸货点"){
           this.$store.state.pg_publish.unload_pointList[this.index].detail = this.address
           this.$store.state.pg_publish.unload_pointList[this.index].lng = this.lng
@@ -222,9 +297,11 @@
           })
           positionPicker.start([p.lng, p.lat])
 
+          if('pickerInput' && !that.s_address){
+            that.s_address = 'pickerInput';
+          }
           var poiPicker = new PoiPicker({
-            //city:'北京',
-            input: 'pickerInput'
+            input: that.s_address
           })
           //初始化poiPicker
           poiPickerReady(poiPicker)
@@ -298,15 +375,22 @@
     .pickerBox{
       position: absolute;
       z-index: 9999;
-      top: 50px;
+      top: 66px;
       right: 30px;
       width: 300px;
       #pickerInput {
-        width: 200px;
-        padding: 5px 5px;
+        width: 202px;
+        height: 40px;
+        padding: 0 15px;
+      }
+      i{
+        font-size: 45/50rem;
+        color:#5965D8;
+        font-weight: 550;
+        background-color: #ffff;
+        border-radius: 25%;
       }
     }
-
     .resultView{
       height: calc(36% - 1.8rem);
       overflow: scroll;
