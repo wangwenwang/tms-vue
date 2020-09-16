@@ -20,7 +20,7 @@
 				    </el-carousel>
 				</div>
 			</div>
-			<div class="noticeHeader">通知：</div>
+			<div class="noticeHeader"><span>通知：</span><span @click="accusation_click">举报中心</span></div>
 			<div class="noticeContent"  style="overflow:scroll;height: calc(100% - 310px);">
 				<mt-loadmore style="text-align: center; "  topDropText="下拉刷新"   topLoadingText=""  topPullText='' bottomPullText="" bottomDropText="上拉加载" bottomLoadingText="" :top-method="loadTop"  :bottom-method="loadBottom"  ref="loadmore"  :autoFill="autoFill" >
 			
@@ -71,6 +71,12 @@ import FooterIndex from '../../components/footer.vue'
 
 		},
 		methods:{
+			//跳转举报中心页面
+			accusation_click(){
+				this.$router.push({
+					name:"AccusationCenter",
+				})
+			},
 			// 加载页面数据
 			loadData(load){
 
@@ -175,11 +181,23 @@ import FooterIndex from '../../components/footer.vue'
 			overflow: scroll;
 			.noticeHeader{
 				background-color: #f0f0f0;
-				height: 40px;
-				line-height: 40px;
-				padding:0 20/50rem;
+				line-height: 40/50rem;
+				padding:10/50rem 20/50rem;
 				box-sizing: border-box;
 				color: #999;
+				display: flex;
+				justify-content: space-between;
+				&>span{
+					padding: 4/50rem;
+				}
+				&>span:last-child{
+					border:1/50rem solid red;
+					background-color: red;
+					border-radius: 5/50rem;
+					color: #fff;
+					font-size: 22/50rem;
+					padding:0 20/50rem;
+				}
 			}
 			.noticeContent{
 				font-size: 30/50rem;

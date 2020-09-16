@@ -102,6 +102,7 @@ import car_publish_create from '@/pages/home/car_publish_create'  //我的发布
 import car_publish_list from '@/pages/home/car_publish_list'  //车源发布列表
 import ToEvaluate from '@/pages/home/ToEvaluate'  //评价
 import UserIntroduction from '@/pages/home/UserIntroduction'  //货主/司机简介
+import AccusationCenter from '@/pages/home/AccusationCenter'  //举报中心
 
 
 
@@ -267,6 +268,12 @@ export default new Router({
       path: '/HistoricalTrack',
       name: 'HistoricalTrack',
       component: HistoricalTrack
+    },
+     // 历史轨迹
+    {
+      path: '/AccusationCenter',
+      name: 'AccusationCenter',
+      component: AccusationCenter
     },
     // 个人资料
     {
