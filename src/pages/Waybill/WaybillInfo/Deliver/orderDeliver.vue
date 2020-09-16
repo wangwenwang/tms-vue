@@ -106,6 +106,8 @@
 			this.canvasTxt.fillText(currentdate, 5, canvas.height - 35);
 
 			this.canvasTxt.fillText("司机在此签名", canvas.width - 100, canvas.height - 35)
+
+	        $('.el-upload__input').attr('capture','camera');
 		},
 		created(){
 
