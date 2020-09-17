@@ -2,16 +2,22 @@
 	<div class="AccusationCenter">
 		<header><i class="iconfont icon-xiangzuo1"  @click="goPrev"></i><span>举报中心</span></header>
 		<div class="container">
-			<div class="accusation_tel">举报电话：0755-29496953  &nbsp;&nbsp;  18664905470</div>
+			<div class="accusation_tel">
+				<span class="icon">&nbsp;&nbsp;</span>举报电话：
+				<span @click="callPhone('0755-29496953')">0755-29496953 &nbsp;&nbsp;</span>
+				<span @click="callPhone('18664905470')">18664905470</span>
+			</div>
 			<div class="Accusation">
-				<div><span>举报对象：</span><input v-model='Informants'></input></div>
+				<div><span class="icon">*&nbsp;</span><span>举报对象：</span><input v-model='Informants'></input></div>
 				<div class="two">
+					<span class="icon">*&nbsp;</span>
 					<span>举报事项：</span>
 					<textarea type='text' placeholder="内容说明" v-model='content'></textarea>
 				</div>
 
 				<div class="uploadImg">
-					<div class="LoadImg_head">举报图片：</div>
+					<span class="icon">&nbsp;&nbsp;</span>
+					<span class="LoadImg_head">举报图片：</span>
 					<div class="upload">
 						<el-upload :action = " HOST_ygy+'reportingCenterPicture.do'"  :limit="6" :multiple="true"  :data="uploadParams" ref='upload_ref' :auto-upload="false" list-type="picture-card" :before-upload="beforeUpload"   :on-error="uploadErrorInCurrVue" :on-success="uploadSuccessInCurrVue"   :on-preview="handlePictureCardPreview" >
 						  <i class="el-icon-plus"></i>
@@ -142,22 +148,25 @@
 			overflow: hidden;
 			.accusation_tel{
 				background-color: #ECF5FF; 
-				padding-left: 20/50rem;
+				padding-left: 22/50rem;
 				line-height: 60/50rem;
 				color: #757575;
 			}
+			.icon{
+				color: red;
+			}
 			.Accusation{
-				padding:10/50rem 20/50rem;
+				padding:10/50rem 18/50rem;
 				.two{
 					display: flex;
 					textarea{
-						width: 530/50rem;
+						width: 450/50rem;
 						margin-top: 12/50rem;
 						height: 230/50rem;
 						outline: none;
 						border-radius: 5/50rem;
 						padding: 10/50rem;
-						box-sizing: border-box;
+						// box-sizing: border-box;
 						border-color: #9999;
 					}
 				}
@@ -169,7 +178,7 @@
 			}
 			&>div{
 				line-height: 80/50rem;
-				:nth-child(1){
+				:nth-child(2){
 					color:#757575;
 				}
 			}

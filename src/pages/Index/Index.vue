@@ -181,15 +181,12 @@ import FooterIndex from '../../components/footer.vue'
 			overflow: scroll;
 			.noticeHeader{
 				background-color: #f0f0f0;
-				line-height: 40/50rem;
+				line-height: 50/50rem;
 				padding:10/50rem 20/50rem;
 				box-sizing: border-box;
 				color: #999;
 				display: flex;
 				justify-content: space-between;
-				&>span{
-					padding: 4/50rem;
-				}
 				&>span:last-child{
 					border:1/50rem solid red;
 					background-color: red;
