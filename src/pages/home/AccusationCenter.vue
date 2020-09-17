@@ -8,7 +8,7 @@
 				<span @click="callPhone('18664905470')">18664905470</span>
 			</div>
 			<div class="Accusation">
-				<div><span class="icon">*&nbsp;</span><span>举报对象：</span><input v-model='Informants'></input></div>
+				<div><span class="icon">*&nbsp;</span><span>举报对象：</span><input class="input-i" v-model='Informants'></input></div>
 				<div class="two">
 					<span class="icon">*&nbsp;</span>
 					<span>举报事项：</span>
@@ -174,6 +174,9 @@
 					box-sizing: border-box;
 					overflow: hidden;
 					margin-top: 16/50rem;
+				}
+				.input-i{
+					border: 2/50rem solid #ccc;
 				}
 			}
 			&>div{
