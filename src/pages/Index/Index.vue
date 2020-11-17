@@ -21,7 +21,21 @@
 				</div>
 			</div>
 			<div class="noticeHeader"><span>通知：</span><span @click="accusation_click">举报中心</span></div>
-			<div class="noticeContent"  style="overflow:scroll;height: calc(100% - 310px);">
+			<div class="toPage">
+				<div @click="toFillingStation">
+					<i class="iconfont icon-ziyuan" style="color: #D9231F; font-size:30px;"></i>
+					<div class="grid-text">加油</div>
+				</div>
+				<div @click="toChargingPile">
+					<i class="iconfont icon-chongdianzhuang" style="color: #06C601; font-size:30px;"></i>
+					<div class="grid-text">充电</div>
+				</div>
+				<div @click="toViolation">
+					<i class="iconfont icon-weixiu" style="color: #777777; font-size:30px;"></i>
+			    	<div class="grid-text">维修</div>
+				</div>
+			</div>
+			<div class="noticeContent">
 				<mt-loadmore style="text-align: center; "  topDropText="下拉刷新"   topLoadingText=""  topPullText='' bottomPullText="" bottomDropText="上拉加载" bottomLoadingText="" :top-method="loadTop"  :bottom-method="loadBottom"  ref="loadmore"  :autoFill="autoFill" >
 			
 					<div class="noticeItem" @click="toWaybillInfo(itemData.shipmentID,itemData.appointLoadingSite)" v-for='(itemData,idx) in noticeList'  :id="idx"  :key='idx'>
@@ -168,6 +182,28 @@ import FooterIndex from '../../components/footer.vue'
 			    that.loadPage += 1;
 
 				this.loadData("BottomLoad");
+			},
+			toFillingStation(){
+				this.$router.push({
+					name:"FillingStation",
+				})
+			},
+			toChargingPile(){
+				this.$router.push({
+					name:"ChargingPile",
+					// query:{
+					// 	shipmentID:shipmentID
+					// }
+				})
+
+			},
+			toViolation(){
+				this.$router.push({
+					name:"Violation",
+					// query:{
+					// 	shipmentID:shipmentID
+					// }
+				})
 			}
 		}
 	}
@@ -199,6 +235,7 @@ import FooterIndex from '../../components/footer.vue'
 			.noticeContent{
 				font-size: 30/50rem;
 				overflow: scroll;
+				height:620/50rem;
 				div.noticeItem{
 					&>div{
 						overflow: hidden;
@@ -229,6 +266,13 @@ import FooterIndex from '../../components/footer.vue'
 						}
 					}
 				}
+			}
+			.toPage{
+				height:130/50rem;
+				display:flex; 
+				justify-content:space-around;
+				text-align:center;
+				padding:40/50rem 20/50rem 0 20/50rem;
 			}
 		}
 	}

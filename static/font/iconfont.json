@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "7791034",
+      "name": "维修",
+      "font_class": "weixiu",
+      "unicode": "e7f2",
+      "unicode_decimal": 59378
+    },
+    {
+      "icon_id": "13700281",
+      "name": "加油",
+      "font_class": "ziyuan",
+      "unicode": "e64f",
+      "unicode_decimal": 58959
+    },
+    {
+      "icon_id": "16526794",
+      "name": "充电桩",
+      "font_class": "chongdianzhuang",
+      "unicode": "e653",
+      "unicode_decimal": 58963
+    },
+    {
       "icon_id": "5387596",
       "name": "箭头_左右切换",
       "font_class": "jiantou_zuoyouqiehuan",

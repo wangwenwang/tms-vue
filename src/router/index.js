@@ -19,6 +19,12 @@ import Binding from "@/pages/Login/Binding" // 微信openid关联到帐号
 
 // 首页
 import Index from "@/pages/Index/Index"
+//加油
+import FillingStation from "@/pages/Index/FillingStation"
+//充电
+import ChargingPile from "@/pages/Index/ChargingPile"
+//违章
+import Violation from "@/pages/Index/Violation"
 
 // ——————————————————————————————————————任务——————————————————————————————————————————
 
@@ -154,6 +160,25 @@ export default new Router({
       name: 'Index',
       component: Index
     },
+    // 加油
+    {
+      path: '/FillingStation',
+      name: 'FillingStation',
+      component: FillingStation
+    },
+    // 充电
+    {
+      path: '/ChargingPile',
+      name: 'ChargingPile',
+      component: ChargingPile
+    },
+    // 充电
+    {
+      path: '/Violation',
+      name: 'Violation',
+      component: Violation
+    },
+    
     // 我的任务
     {
       path: '/Waybill',
