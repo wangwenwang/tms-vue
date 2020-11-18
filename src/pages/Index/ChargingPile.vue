@@ -70,19 +70,13 @@ export default{
                     //panel列表点击事件
 			        AMap.event.addListener(placeSearch,"listElementClick",function(e) {
 					    // 安卓
-						try {
-							CallAndroidOrIOS.callAndroid("导航", e.data.location.lng,e.data.location.lat);
-						} 
-						catch(error) {
-							console.log("没有CallAndroidOrIOS.callAndroid方法")
-						}
+						try { CallAndroidOrIOS.callAndroid("导航", e.data.location.lng,e.data.location.lat) } 
+						catch(error) { }
 						// 苹果
-						try {
-							CallAndroidOrIOS("导航", e.data.address);
-						}
-						catch(error) {
-							console.log("没有CallAndroidOrIOS方法")
-						}
+						try { CallAndroidOrIOS("导航", e.data.address) }
+						catch(error) { }
+                        try { window.webkit.messageHandlers.messageSend.postMessage({a:'导航',b:e.data.address}) }
+                        catch(error) { }
 					})
 			    })
 	            if(status=='complete'){

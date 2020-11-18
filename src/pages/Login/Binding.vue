@@ -41,25 +41,14 @@
 			KeepUserNameAndPassord:function(u, p){
 
 			// 安卓
-			try {
-
-				CallAndroidOrIOS.callAndroid("记住帐号密码", u, p);
-
-			} 
-			catch(error) {
-
-				console.log("没有CallAndroidOrIOS.callAndroid方法")
-			}
+			try { CallAndroidOrIOS.callAndroid("记住帐号密码", u, p) } 
+			catch(error) { }
 
 			// 苹果
-			try {
-
-				CallAndroidOrIOS("记住帐号密码", u, p);
-			}
-			catch(error) {
-
-				console.log("没有CallAndroidOrIOS方法")
-				}
+			try { CallAndroidOrIOS("记住帐号密码", u, p)  }
+			catch(error) { }
+			try { window.webkit.messageHandlers.messageSend.postMessage({a:'记住帐号密码',b:u,c:p}) }
+			catch(error) { }
 			},
 
 			bind:function(){

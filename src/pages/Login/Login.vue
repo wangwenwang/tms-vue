@@ -74,25 +74,14 @@
 			loginVueMounted:function(){
 
 				// 安卓
-				try {
-
-					CallAndroidOrIOS.callAndroid("登录页面已加载", "");
-
-				} 
-				catch(error) {
-
-					// console.log("没有CallAndroidOrIOS.callAndroid方法")
-				}
+				try { CallAndroidOrIOS.callAndroid("登录页面已加载", "") } 
+				catch(error) { }
 
 				// 苹果
-				try {
-
-						CallAndroidOrIOS("登录页面已加载");
-				}
-				catch(error) {
-
-					// console.log("没有CallAndroidOrIOS方法")
-				}
+				try { CallAndroidOrIOS("登录页面已加载") }
+				catch(error) { }
+				try { window.webkit.messageHandlers.messageSend.postMessage({a:'登录页面已加载'}) }
+				catch(error) { }
 			},
 
 			tellServerAddress:function(a){
@@ -100,64 +89,35 @@
 				console.log("tellServerAddress：");
 
 				// 安卓
-				try {
-
-					CallAndroidOrIOS.callAndroid("服务器地址", a);
-
-				} 
-				catch(error) {
-
-					// console.log("没有CallAndroidOrIOS.callAndroid方法")
-				}
+				try { CallAndroidOrIOS.callAndroid("服务器地址", a) } 
+				catch(error) { }
 
 				// 苹果
-				try {
-
-					CallAndroidOrIOS("服务器地址", a);
-				}
-				catch(error) {
-
-					// console.log("没有CallAndroidOrIOS方法")
-				}
+				try { CallAndroidOrIOS("服务器地址", a) }
+				catch(error) { }
+				try { window.webkit.messageHandlers.messageSend.postMessage({a:'服务器地址',b:a}) }
+				catch(error) { }
 			},
 
 			KeepUserNameAndPassord:function(u, p){
 
 				// 安卓
-				try {
-
-					CallAndroidOrIOS.callAndroid("记住帐号密码", u, p);
-
-				} 
-				catch(error) {
-
-					console.log("没有CallAndroidOrIOS.callAndroid方法")
-				}
+				try { CallAndroidOrIOS.callAndroid("记住帐号密码", u, p) } 
+				catch(error) { }
 
 				// 苹果
-				try {
-
-					CallAndroidOrIOS("记住帐号密码", u, p);
-				}
-				catch(error) {
-					
-					console.log("没有CallAndroidOrIOS方法")
-				}
+				try { CallAndroidOrIOS("记住帐号密码", u, p) }
+				catch(error) { }
+				try { window.webkit.messageHandlers.messageSend.postMessage({a:'记住帐号密码',b:u,c:p}) }
+				catch(error) { }
 			},
 
 		    // 用于安卓自带返回键，当用户类型是货主时，'订单'页面位于主菜单，禁用安卓自带返回键	
 			KeepUserType:function(type){
 
 				// 安卓
-				try {
-
-					CallAndroidOrIOS.callAndroid("用户类型", type);
-
-				} 
-				catch(error) {
-
-					console.log("没有CallAndroidOrIOS.callAndroid方法")
-				}
+				try { CallAndroidOrIOS.callAndroid("用户类型", type) } 
+				catch(error) { }
 			},
 
 			WXBind_NO_Ajax:function(openid) {
@@ -290,26 +250,14 @@
 			ThirdPartyLogin:function(){
 
 				// 安卓
-				try {
-
-					CallAndroidOrIOS.callAndroid("微信登录","");
-
-				} 
-				catch(error) {
-
-					//console.log("没有CallAndroidOrIOS.callAndroid方法")
-				}
+				try {CallAndroidOrIOS.callAndroid("微信登录","")} 
+				catch(error) { }
 
 				// 苹果
-				try {
-
-						CallAndroidOrIOS("微信登录");
-
-				}
-				catch(error) {
-
-						//console.log("没有CallAndroidOrIOS方法")
-				}
+				try { CallAndroidOrIOS("微信登录") }
+				catch(error) { }
+				try { window.webkit.messageHandlers.messageSend.postMessage({a:'微信登录'}) } 
+				catch(error) { }
 			},
 		}
 	}

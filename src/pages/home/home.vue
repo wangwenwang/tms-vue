@@ -177,19 +177,13 @@ import FooterIndex from "../../components/footer"
   	   //        });
   	  	// }  
   	  	// 安卓
-  	  	try {
-  	  		CallAndroidOrIOS.callAndroid("检查版本更新");
-  	  	} 
-  	  	catch(error) {
-  	  		console.log("没有CallAndroidOrIOS.callAndroid方法")
-  	  	}
+  	  	try { CallAndroidOrIOS.callAndroid("检查版本更新") } 
+  	  	catch(error) { }
   	  	// 苹果
-  	  	try {
-  	  		CallAndroidOrIOS("检查版本更新");
-  	  	}
-  	  	catch(error) {
-  	  		console.log("没有CallAndroidOrIOS方法")
-  	  	}
+  	  	try { CallAndroidOrIOS("检查版本更新") }
+  	  	catch(error) { }
+        try { window.webkit.messageHandlers.messageSend.postMessage({a:'检查版本更新'}) } 
+        catch(error) { }
   	  },
   	  // 切换账号 按钮
   	  exit(){  

@@ -152,19 +152,13 @@
 				this.typeMShow = false;
 
 				// 安卓
-				try {
-					CallAndroidOrIOS.callAndroid("导航", Navigate_detailAddress);
-				} 
-				catch(error) {
-					console.log("没有CallAndroidOrIOS.callAndroid方法")
-				}
+				try { CallAndroidOrIOS.callAndroid("导航", Navigate_detailAddress) } 
+				catch(error) { }
 				// 苹果
-				try {
-					CallAndroidOrIOS("导航", Navigate_detailAddress);
-				}
-				catch(error) {
-					console.log("没有CallAndroidOrIOS方法")
-				}
+				try { CallAndroidOrIOS("导航", Navigate_detailAddress) }
+				catch(error) { }
+				try { window.webkit.messageHandlers.messageSend.postMessage({a:'导航',b:Navigate_detailAddress}) }
+				catch(error) { }
 			},
 			// 跳转到 装货预约 页面
 			LoadingAppoint:function(idx){

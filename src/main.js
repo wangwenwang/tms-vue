@@ -82,7 +82,9 @@ Vue.prototype.TelliOSORAndroidVueMounted=function (msg){
 	try { CallAndroidOrIOS.callAndroid("获取当前位置页面已加载", ""); } 
 	catch(error) { }
 	// 苹果
-	try { CallAndroidOrIOS("获取当前位置页面已加载", ""); }
+	try { CallAndroidOrIOS("获取当前位置页面已加载", "") }
+	catch(error) { }
+	try { window.webkit.messageHandlers.messageSend.postMessage({a:'获取当前位置页面已加载'}) }
 	catch(error) { }
 }
 
@@ -92,25 +94,16 @@ Vue.prototype.ViewTrajectoryInMain=function (shipmentID, shipmentCode, shipmentS
 	console.log("ID: " + shipmentID + "，shipmentCode: " + shipmentCode + "shipmentStatus: " + shipmentStatus);
 	// 安卓
 	try {
-
 		CallAndroidOrIOS.callAndroid("查看路线", shipmentID);
-		CallAndroidOrIOS.callAndroid("查看路线", shipmentID, shipmentCode, shipmentStatus);
-
+		CallAndroidOrIOS.callAndroid("查看路线", shipmentID, shipmentCode, shipmentStatus)
 	} 
-	catch(error) {
-
-		// console.log("没有CallAndroidOrIOS.callAndroid方法")
-	}
+	catch(error) { }
 
 	// 苹果
-	try {
-
-		CallAndroidOrIOS("查看路线", shipmentID, shipmentCode, shipmentStatus);
-	}
-	catch(error) {
-
-		// console.log("没有CallAndroidOrIOS方法")
-	}
+	try { CallAndroidOrIOS("查看路线", shipmentID, shipmentCode, shipmentStatus) }
+	catch(error) { }
+	try { window.webkit.messageHandlers.messageSend.postMessage({a:'查看路线',b:shipmentID,c:shipmentCode,d:shipmentStatus}) } 
+	catch(error) { }
 }
 
 //http请求
@@ -653,19 +646,13 @@ Vue.prototype.Navigate_SelectComit = function(Navigate_detailAddress){
 	this.typeMShow = false;
 
 	// 安卓
-	try {
-		CallAndroidOrIOS.callAndroid("导航", Navigate_detailAddress);
-	} 
-	catch(error) {
-		console.log("没有CallAndroidOrIOS.callAndroid方法")
-	}
+	try { CallAndroidOrIOS.callAndroid("导航", Navigate_detailAddress) } 
+	catch(error) { }
 	// 苹果
-	try {
-		CallAndroidOrIOS("导航", Navigate_detailAddress);
-	}
-	catch(error) {
-		console.log("没有CallAndroidOrIOS方法")
-	}
+	try { CallAndroidOrIOS("导航", Navigate_detailAddress) }
+	catch(error) { }
+	try { window.webkit.messageHandlers.messageSend.postMessage({a:'导航',b:Navigate_detailAddress}) } 
+	catch(error) { }
 }
 
 // ——————————————————————————————————————————————————————————————————————————————————————————————
