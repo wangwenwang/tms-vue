@@ -20,7 +20,6 @@
 				    </el-carousel>
 				</div>
 			</div>
-			<div class="noticeHeader"><span>通知：</span><span @click="accusation_click">举报中心</span></div>
 			<div class="toPage">
 				<div @click="toFillingStation">
 					<i class="iconfont icon-ziyuan" style="color: #D9231F; font-size:30px;"></i>
@@ -33,6 +32,10 @@
 				<div @click="toViolation">
 					<i class="iconfont icon-weixiu" style="color: #777777; font-size:30px;"></i>
 			    	<div class="grid-text">维修</div>
+				</div>
+				<div @click="accusation_click">
+					<i class="iconfont icon-jubao" style="color: #F0C900; font-size:30px;"></i>
+			    	<div class="grid-text">举报</div>
 				</div>
 			</div>
 			<div class="noticeContent">
@@ -105,6 +108,12 @@ import FooterIndex from '../../components/footer.vue'
 				
 				this.httpRequest( "deriverAueryShipmentData",postData,function(res){
 
+					if(res.data.length){
+						for (var i = res.data.length - 1; i >= 0; i--) {
+							res.data[i].addDate = res.data[i].addDate.substring(5,16)
+						}
+					}
+
 					if(load){
 						if(load == "TopLoad"){
 
@@ -166,8 +175,6 @@ import FooterIndex from '../../components/footer.vue'
 			// 下拉刷新
 			loadTop() {
 
-				console.log(8888)
-
 		        this.loadPage = 1;
 
 		        this.allLoaded = false;
@@ -191,18 +198,12 @@ import FooterIndex from '../../components/footer.vue'
 			toChargingPile(){
 				this.$router.push({
 					name:"ChargingPile",
-					// query:{
-					// 	shipmentID:shipmentID
-					// }
 				})
 
 			},
 			toViolation(){
 				this.$router.push({
 					name:"Violation",
-					// query:{
-					// 	shipmentID:shipmentID
-					// }
 				})
 			}
 		}
@@ -214,38 +215,27 @@ import FooterIndex from '../../components/footer.vue'
 		overflow: hidden;
 		.container{
 			height: 100%;
-			overflow: scroll;
-			.noticeHeader{
-				background-color: #f0f0f0;
-				line-height: 50/50rem;
-				padding:10/50rem 20/50rem;
-				box-sizing: border-box;
-				color: #999;
-				display: flex;
-				justify-content: space-between;
-				&>span:last-child{
-					border:1/50rem solid red;
-					background-color: red;
-					border-radius: 5/50rem;
-					color: #fff;
-					font-size: 22/50rem;
-					padding:0 20/50rem;
-				}
-			}
+			background-color:#E5E8FA;
 			.noticeContent{
 				font-size: 30/50rem;
 				overflow: scroll;
-				height:620/50rem;
-				div.noticeItem{
+				height:calc(100% - 14.6rem);
+				margin:0 15/50rem 15/50rem 10/50rem;
+				border:1/50rem solid #E5E8FA;
+	            border-radius:20/50rem;
+
+				.noticeItem{
+					background-color:#fff;
 					&>div{
 						overflow: hidden;
 						height: 100/50rem;
 						line-height: 100/50rem;
-						border-bottom: 5/50rem solid #EDEFF3;
+						border-bottom: 1/50rem solid #E5E8FA;
+						display:flex;
+						padding:0 10/50rem;
 						i{
 							font-size: 60/50rem;
 							width: 60/50rem;
-							float: left;
 							margin-right: 10/50rem;
 							color: #777;
 							text-align: center;
@@ -256,23 +246,29 @@ import FooterIndex from '../../components/footer.vue'
 						i.icon-yiduxiaoxi-{
 							font-size: 48/50rem;
 						}
-						&>span:nth-child(2){
-							float: left;
-						}
 						&>span:nth-child(4){
-							float: right;
-							color: #333;
+							color: #666;
 							font-size: 26/50rem;
+							margin-left:60/50rem;
 						}
 					}
 				}
 			}
 			.toPage{
-				height:130/50rem;
 				display:flex; 
 				justify-content:space-around;
 				text-align:center;
-				padding:40/50rem 20/50rem 0 20/50rem;
+				padding: 30/50rem 0;
+				background-color:#E5E8FA;
+				&>div{
+					color:#757575;
+					border:1/50rem solid #E5E8FA;
+					background-color:#fff;
+					border-radius:20/50rem;
+					width:150/50rem;
+					height:120/50rem;
+					padding-top:20/50rem;
+				}
 			}
 		}
 	}
