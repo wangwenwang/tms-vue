@@ -249,7 +249,8 @@ import FooterIndex from '../../components/footer.vue'
 						&>span:nth-child(4){
 							color: #666;
 							font-size: 26/50rem;
-							margin-left:60/50rem;
+							text-align: right;
+							width: 32%;
 						}
 					}
 				}
