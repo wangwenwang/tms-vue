@@ -787,4 +787,9 @@ header>.icon-huabanfuben::before{
   }
 }
 
+// 不显示详情图标，不然APP里跳转到详情页面，回不去vue了
+.poi-more{
+  visibility: hidden;
+}
+
 </style>

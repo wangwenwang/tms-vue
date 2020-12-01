@@ -75,8 +75,8 @@ export default{
 						// 苹果
 						try { CallAndroidOrIOS("导航", e.data.address) }
 						catch(error) { }
-						try { window.webkit.messageHandlers.messageSend.postMessage({a:'导航',b:e.data.address}) }
-						catch(error) { }
+                        try { window.webkit.messageHandlers.messageSend.postMessage({a:'导航', b:e.data.address, c_lng:e.data.location.lng, d_lat:e.data.location.lat,e_name:e.data.name}) }
+                        catch(error) { }
 					})
 			    })
 	            if(status=='complete'){
@@ -118,17 +118,20 @@ export default{
 	width: 100%; 
 	height: 100%;
 	overflow: hidden;
-	#panel {
-	    position: absolute;
-	    background-color: white;
-	    max-height: 90%;
-	    overflow-y: auto;less
-	    top: 200/50rem;
-	    width: 100%;
-	}
-	.container{
-	    width: 100%; 
-	    height: 64%;
-	}
+    #panel {
+        position: fixed;
+        background-color: white;
+        max-height: 40%;
+        overflow-y: auto;
+        bottom: 0;
+        width: 100%;
+    }
+    .container{
+        width: 100%; 
+        height: calc(60% - 1.8rem);
+        margin-top: 90/50rem;
+        position: absolute;
+        padding-bottom: -150px;
+    }
 }
 </style>

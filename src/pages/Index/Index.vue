@@ -41,13 +41,13 @@
 			<div class="noticeContent">
 				<mt-loadmore style="text-align: center; "  topDropText="下拉刷新"   topLoadingText=""  topPullText='' bottomPullText="" bottomDropText="上拉加载" bottomLoadingText="" :top-method="loadTop"  :bottom-method="loadBottom"  ref="loadmore"  :autoFill="autoFill" >
 			
-					<div class="noticeItem" @click="toWaybillInfo(itemData.shipmentID,itemData.appointLoadingSite)" v-for='(itemData,idx) in noticeList'  :id="idx"  :key='idx'>
-						<div>
+					<div @click="toWaybillInfo(itemData.shipmentID,itemData.appointLoadingSite)" v-for='(itemData,idx) in noticeList'  :id="idx"  :key='idx'>
+						<div class="v-f-cell-content">
 							<i v-if="itemData.daoDaPlace == '未查看'" class="iconfont icon-weiduxiaoxi  red" ></i>
 							<i v-else class="iconfont icon-yiduxiaoxi-" ></i>
-							<span>配载单号：</span>
-							<span>{{itemData.code}}</span>
-							<span>{{itemData.addDate}}</span>
+							<div>配载单号：</div>
+							<div>{{itemData.code}}</div>
+							<div>{{itemData.addDate}}</div>
 						</div>
 					</div>
 				
@@ -64,7 +64,7 @@ import FooterIndex from '../../components/footer.vue'
 		data(){
 			return{
 				noticeList:[],//通知列表
-				numberPerPage: 10,//每页显示几条
+				numberPerPage: 50,//每页显示几条
 				loadPage: 1 ,//当前第几页
 				allLoaded:true,//上拉刷新还能上拉刷新
 				autoFill:false,//
@@ -220,40 +220,44 @@ import FooterIndex from '../../components/footer.vue'
 				font-size: 30/50rem;
 				overflow: scroll;
 				height:calc(100% - 14.6rem);
-				margin:0 15/50rem 15/50rem 10/50rem;
+				margin:0 15/50rem 15/50rem 15/50rem;
 				border:1/50rem solid #E5E8FA;
 	            border-radius:20/50rem;
+	            background-color: white;
 
-				.noticeItem{
-					background-color:#fff;
+				.v-f-cell-content{
+					overflow: hidden;
+					width: 100%;
+					height: 100/50rem;
+					line-height: 100/50rem;
+					border-bottom: 1/50rem solid #E5E8FA;
+					i{
+						font-size: 60/50rem;
+						width: 60/50rem;
+						height: 60/50rem;
+						color: #777;
+						margin-left: 10/50rem;
+						float: left;
+						margin-right: 10/50rem;
+					}
+					i.red{
+						color: red;
+					}
+					i.icon-yiduxiaoxi-{
+						font-size: 48/50rem;
+					}
 					&>div{
-						overflow: hidden;
-						height: 100/50rem;
-						line-height: 100/50rem;
-						border-bottom: 1/50rem solid #E5E8FA;
-						display:flex;
-						padding:0 10/50rem;
-						i{
-							font-size: 60/50rem;
-							width: 60/50rem;
-							margin-right: 10/50rem;
-							color: #777;
-							text-align: center;
-						}
-						i.red{
-							color: red;
-						}
-						i.icon-yiduxiaoxi-{
-							font-size: 48/50rem;
-						}
-						&>span:nth-child(4){
+						float: left;
+						&:nth-child(4){
 							color: #666;
 							font-size: 26/50rem;
+							margin-right: 22/50rem;
 							text-align: right;
-							width: 32%;
+							float: right;
 						}
 					}
 				}
+				
 			}
 			.toPage{
 				display:flex; 
