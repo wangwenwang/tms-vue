@@ -69,11 +69,8 @@ export default{
                     
                     //panel列表点击事件
 			        AMap.event.addListener(placeSearch,"listElementClick",function(e) {
-					    // 安卓
-                        try { CallAndroidOrIOS.callAndroid("导航", e.data.location.lng,e.data.location.lat) } 
-                        catch(error) { }
-                        // 苹果
-                        try { CallAndroidOrIOS("导航", e.data.address) }
+                        // 安卓
+                        try { CallAndroidOrIOS.nav_lnglat(e.data.location.lng, e.data.location.lat) }
                         catch(error) { }
                         try { window.webkit.messageHandlers.messageSend.postMessage({a:'导航', b:e.data.address, c_lng:e.data.location.lng, d_lat:e.data.location.lat,e_name:e.data.name}) }
                         catch(error) { }
