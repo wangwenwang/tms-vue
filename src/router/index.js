@@ -39,6 +39,7 @@ import UnloadAppoint from '@/pages/Waybill/UnloadAppoint'  //卸货预约
 import WayFeedback from '@/pages/Waybill/WayFeedback'  //途中反馈
 import DepartureConfirm from '@/pages/Waybill/DepartureConfirm'  //发车确认
 import ArrivalConfirm from '@/pages/Waybill/ArrivalConfirm'  //到达确认
+import InfoRegister from '@/pages/Waybill/InfoRegister'  //信息登记
 
 // @/pages/Waybill/WaybillInfo
 
@@ -210,6 +211,11 @@ export default new Router({
       name: 'WaybillInfo',
       component: WaybillInfo
     },
+	  {
+	    path: '/InfoRegister',
+	    name: 'InfoRegister',
+	    component: InfoRegister
+	  },
     {
       path: '/SelectAddress',
       name: 'SelectAddress',

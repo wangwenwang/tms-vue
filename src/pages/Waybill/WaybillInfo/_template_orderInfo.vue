@@ -52,12 +52,13 @@
 		    </div>
 		    <div class="goodsBtn">
 		    	<div class="TakeUp" @click="detail_takaUp(index)">
-			    	<div><span>查看商品信息</span><i  class="iconfont icon-up"></i></div>
+			    	<div><span>商品信息</span><i  class="iconfont icon-up"></i></div>
 			    </div>
 
 		    	<span v-if="dataItem.ifDeliver" class="g_btn" @click="toOrderDeliver(index)">交付</span>
 		    	<span v-if="!historyList"  @click="_ewm(dataItem.omsNo)" class="g_btn ewm">二维码</span>
 		    	<span v-if="!dataItem.ifDeliver" class="g_btn" style="visibility:hidden;">交付</span>
+				<span  @click="toInfoRegister(index)" class="g_btn ewm">信息登记</span>
 		    	<span v-if="historyList" class="g_btn" @click="toCheckDeliverPicture(dataItem)">查看交付照片</span>
 		    	
 		    </div>
@@ -66,7 +67,6 @@
 	            <div v-if="!selectAddr" @click="toSelectAdd(shipmentID, shipmentListDataNo)">按地址交付</div>
 	        </div>
 		</div>
-		<!--   -->
     </div>
 
 </template>
@@ -335,7 +335,7 @@ export default {
 
 			var this_icon = $(".goodsInfo").eq(index).find(".TakeUp").find("i");
 
-			if(this_span.html() == "查看商品信息"){
+			if(this_span.html() == "商品信息"){
 
 				$(".goodsInfo").eq(index).find(".goodsContent").show();
 
@@ -347,7 +347,7 @@ export default {
 
 				$(".goodsInfo").eq(index).find(".goodsContent").hide();
 
-				this_span.html("查看商品信息");
+				this_span.html("商品信息");
 
 				this_icon.css("transform","rotate(0deg)");
 			}
@@ -359,6 +359,15 @@ export default {
 				name:"QRCode",
 				query:{
 					omsNo:omsNo
+				}
+			})
+		},
+		//信息登记
+		toInfoRegister(index){
+			this.$router.push({
+				name:"InfoRegister",
+				query:{
+					orderInfo:this._orderInfo[index]
 				}
 			})
 		}
@@ -454,7 +463,7 @@ export default {
 				float: right;
 				height:60/50rem;
 				line-height: 60/50rem;
-				width: 200/50rem;
+				width: 150/50rem;
 			}
 			span.ewm{
 				margin-right: 15/50rem;
