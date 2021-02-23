@@ -2,32 +2,33 @@
     <div class="InfoRegister">
         <header><i class="iconfont icon-xiangzuo1"  @click="$router.back(-1)"></i><span>信息登记</span></header>
         <div class="container">
-            <div><span>订单地址：</span><input v-model="receivePartyAddr1" placeholder="请输入详情地址" ></input></div>
+            <div><span>订单地址：</span><input v-model="receivePartyAddr1" placeholder="请输入详情地址" @confirm="inpuConfirm"></input></div>
             <div class="car">
                 <span>限制车型：</span>
-                <div class="option">
-                    <el-checkbox-group v-model="carsLimit" >
-                        <el-checkbox v-for="car in cars" :label="car" :key="car">{{car}}</el-checkbox>
-                    </el-checkbox-group>
-                    <div class="other">其他：
-                        <select v-model="otherCarLimit">
-                            <option v-for="item in otherCar">{{item.v}}</option>
-                        </select>
-                    </div>
+
+                <div class="select">
+                    <el-select v-model="carsLimit_checked" multiple placeholder="请选择限制车型">
+                        <el-option
+                          v-for="item in carsLimit"
+                          :key="item.v"
+                          :label="item.v"
+                          :value="item.v">
+                        </el-option>
+                      </el-select>
                 </div>
             </div>
              
             <div class="car">
-                <span>仅限车型：</span>
-                <div class="option">
-                    <el-checkbox-group v-model="checkedCars" >
-                        <el-checkbox v-for="car in cars" :label="car" :key="car" >{{car}}</el-checkbox>
-                    </el-checkbox-group>
-                    <div class="other">其他：
-                        <select v-model="checkedotherCar">
-                            <option v-for="item in otherCar">{{item.v}}</option>
-                        </select>
-                    </div>
+                <span>仅限车型：</span> 
+                <div class="select">
+                    <el-select v-model="carsOnly_checked" multiple placeholder="请选择仅限车型">
+                        <el-option
+                          v-for="item in carsLimit"
+                          :key="item.v"
+                          :label="item.v"
+                          :value="item.v">
+                        </el-option>
+                    </el-select>
                 </div>
             </div>
             
@@ -118,7 +119,6 @@
 </template>
 
 <script type="text/javascript">
-const carOptions = ['依维柯', '小面包','4.2M', '6.8M', '7.6M', '9.6M', '13.5M', '17.5M'];
 const otherOptions = ['带板', '空间不便','道路不通', '送货预约', '劳务派遣', '限定交货时间', '通知对方卸货'];
 export default{
     data(){
@@ -130,13 +130,12 @@ export default{
             CurrentLocation:"",//当前位置
             longitude:"",//经度
             latitude:"",//纬度
-            carsLimit:[],//限制车型
-            otherCarLimit:'',//限制车型-其他
-            checkedCars:[],//仅限车型
-            checkedotherCar:'',//仅限车型-其他
-            cars: carOptions,
+            carsLimit:[],//车型列表
+            carsLimit_checked: [],//选择的限制车型
+            carsOnly_checked:[],//选择的仅限车型
             checkedOthers: [],
             others: otherOptions,
+            limitData:[],//限制信息
             
             heightOptions: [{
                 value: '2.5',
@@ -155,7 +154,6 @@ export default{
                 value: '5', 
                 label: '5米'
             }],
-            otherCar:[],
             receivePartyAddr1:'',
             typeLimit:'',
             heightLimit:'',
@@ -182,9 +180,45 @@ export default{
 			this.orderInfo = this.$route.query.orderInfo;
             this.receivePartyAddr1 = this.orderInfo.receivePartyAddr1
 		}
-        this.httpRequest( "getVehicleModel.do", "" ,function(res){
-            that.otherCar = res.data;
+        //查询车型列表
+        this.httpRequest( "getVehicleModel.do", "" ,function(res){  
+            that.carsLimit = res.data;
         })
+
+        if(this.receivePartyAddr1){
+            var postData = {
+                CustomerCode: this.orderInfo.customerCode,
+                ReceiveCode: this.orderInfo.receiveCode
+            }
+            //查询限制信息
+            this.httpRequest( "getVehicleModelLimit.do", postData ,function(res1){
+
+                if (res1.data.length) {
+                    that.limitData = res1.data;
+                    //数据赋值
+                    that.carsLimit_checked = that.limitData[0].vehicleModelLimit.split(",");
+                    that.carsOnly_checked = that.limitData[0].vehicleModelOnly.split(",");
+                    that.typeLimit = that.limitData[0].typeLimit;
+                    if(that.limitData[0].typeLimit == "timeType"){
+                        that.typeLimit = 1;
+                        that.timeFalse = false;
+                        that.startTime = that.limitData[0].beginLimit.substring(11,16);
+                        that.endTime = that.limitData[0].endLimit.substring(11,16);
+                    }
+                    if(that.limitData[0].typeLimit == "dateType"){
+                        that.typeLimit = 2;
+                        that.timeFalse = true;
+                        that.startDate = that.limitData[0].beginLimit.substring(0,10);
+                        that.endDate = that.limitData[0].endLimit.substring(0,10);
+                    }
+                    that.heightLimit = that.limitData[0].heightLimit;
+                    that.wideLimit = that.limitData[0].wideLimit;
+                    that.weightLimit = that.limitData[0].weightLimit;
+                    that.checkedOthers = that.limitData[0].otherLimit.split(",");
+                    that.notes = that.limitData[0].notes;
+                }
+            })
+        }
     },
     mounted(){
         // 获取当前位置
@@ -220,8 +254,10 @@ export default{
                 this.endTime = "";
             }
         },
+        inpuConfirm: function(event) {
+            var inputValue = event.target.value
+        },
         submit_click(){
-            
             if(!this.receivePartyAddr1){
                 this.$alert('请填写订单地址', '提示', {
                     confirmButtonText: '确定'
@@ -232,14 +268,13 @@ export default{
                 this.$alert('未获取当前坐标，请打开GPS，退出APP重新打开', '提示', {
                     confirmButtonText: '确定'
                 })
-
                 return;
-            }else if(this.carsLimit.length == 0 && this.otherCarLimit == ""){
+            }else if(this.carsLimit_checked.length == 0 ){
                 this.$alert('请选择限制车型', '提示', {
                     confirmButtonText: '确定'
                 })
                 return;
-            }else if(this.checkedCars.length == 0 && this.checkedotherCar == ""){
+            }else if(this.carsOnly_checked.length == 0 ){
                 this.$alert('请选择仅限车型', '提示', {
                     confirmButtonText: '确定' 
                 })
@@ -296,13 +331,6 @@ export default{
             }
 
             //全部已填写
-            if(this.otherCarLimit){
-                this.carsLimit.push(this.otherCarLimit)
-            }
-            if(this.checkedotherCar){
-                this.checkedCars.push(this.checkedotherCar)
-            }
-
             if(this.typeLimit == 1){
                 this.typeLimit = "timeType";
                 this.beginLimit = this.startTime;
@@ -317,15 +345,15 @@ export default{
             var vehicleModelLimit = ""
             var vehicleModelOnly = ""
             var otherLimit = ""
-            if(this.carsLimit.length != 0){
-                for (var i = this.carsLimit.length - 1; i >= 0; i--) {
-                    vehicleModelLimit += this.carsLimit[i] + ",";
+            if(this.carsLimit_checked.length != 0){
+                for (var i = this.carsLimit_checked.length - 1; i >= 0; i--) {
+                    vehicleModelLimit += this.carsLimit_checked[i] + ",";
                 }
                 vehicleModelLimit=vehicleModelLimit.slice(0,vehicleModelLimit.length-1)
             }
-            if(this.checkedCars.length != 0){
-                for (var i = this.checkedCars.length - 1; i >= 0; i--) {
-                    vehicleModelOnly += this.checkedCars[i] + ",";
+            if(this.carsOnly_checked.length != 0){
+                for (var i = this.carsOnly_checked.length - 1; i >= 0; i--) {
+                    vehicleModelOnly += this.carsOnly_checked[i] + ",";
                 }
                 vehicleModelOnly=vehicleModelOnly.slice(0,vehicleModelOnly.length-1)
             }
@@ -359,7 +387,6 @@ export default{
                 addDate:this.getNowTime()
             }
             this.httpRequest("saveVehicleModelLimit.do",postData,function(res){
-                console.log(res)
                 that.ifTips = true;
                 that.tips_Msg = res.Msg;
 
@@ -379,33 +406,42 @@ export default{
         height: 100%;
         .container{
             padding: 0 5/50rem;
+            .carlimits{
+                width: 75%; 
+                background-color:pink;
+            }
             &>div{
-                line-height: 60/50rem;
+                line-height: 80/50rem;
                 padding: 18/50rem 0 ;
                 border-bottom: 1/50rem dashed #ddd;
                 input{
-                    width: 75%;
+                    width: 80%; 
                 }
-                .option{
-                    width: 79%;
-                    .el-checkbox{
-                        margin: 0;
-                        width: 32%;
-                        line-height: 50/50rem;
-                    }
-                    .other{
-                        color: #666;
+                .select{
+                    .el-select{
+                        width: 598/50rem;
                     }
                 }
                 .el-time-picker{
                     padding: 0;
                 }
                 .el-radio-group{
-                    padding-top:20/50rem;
+                    padding-top:30/50rem;
                 }
             }
             .car,.type,.date{
                 display: flex;
+                input{
+                    margin: auto 0; 
+                }
+            }
+            .option{
+                width: 79%;
+                .el-checkbox{
+                    margin: 0;
+                    width: 32%;
+                    line-height: 50/50rem;
+                }
             }
             .submit{
                 line-height: 200/50rem;
@@ -414,7 +450,6 @@ export default{
                     padding: 25/50rem  100/50rem;
                 }
             }
-            
         }
     }
 </style>
