@@ -167,6 +167,14 @@ export default {
 		// 查看轨迹
 		ViewTrajectoryInVue(shipmentID, shipmentCode){
 			
+			// 订单追踪（未完成）
+			// this.$router.push({
+			// 	name:"OrderTracking",
+			// 	query:{
+			// 		shipmentCode:shipmentCode,//配载单号
+			// 		shipmentID:shipmentID,
+			// 	}
+			// })
 			this.ViewTrajectoryInMain(shipmentID, shipmentCode, "在途");
 		},
     	// 跳转到二维码页面
