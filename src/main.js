@@ -23,6 +23,9 @@ import preview from 'vue-photo-preview'
 import 'vue-photo-preview/dist/skin.css'
 Vue.use(preview)
 
+import toast from './components/toast/index'
+Vue.use(toast)
+
 Vue.use(VueResouse)
 
 // element 日期时间选择器
