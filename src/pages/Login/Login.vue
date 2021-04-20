@@ -56,12 +56,17 @@
 			window.WXInstall_Check_Ajax = this.WXInstall_Check_Ajax;
 			window.Device_Ajax = this.Device_Ajax;
 			this.tellServerAddress(this.HOST);
+			window.VoiceStatus = this.VoiceStatus
 		},
 		created(){
 			//
 			this.getCookie("e");
 		},
 		methods:{
+			VoiceStatus(status){
+
+				this.$store.state.voice_status = status == `open` ? true : false
+			},
 			// 检查手机是否安装微信，以免App Store审核被拒
 			WXInstall_Check_Ajax:function(isInstall) {
 

@@ -129,16 +129,28 @@ import FooterIndex from "../../components/footer"
   	  this.VersionNum = this.VersionNum.replace("版本:","")
       // this.imageUrl = this.$store.state.userInfo.imageUrl;
       
+	  this.switch_value = this.$store.state.voice_status
   	},
   	methods:{
       // 开启声音播报
       open_voice(){
 
+        this.$store.state.voice_status = true
+        this.tellVoiceStatus(`open`)
       },
       // 关闭声音播报
       close_voice(){
 
+        this.$store.state.voice_status = false
+        this.tellVoiceStatus(`close`)
       },
+	  tellVoiceStatus(status){
+
+		// 安卓
+		try { CallAndroidOrIOS.VoiceStatus(status) } catch(error) { }
+		// 苹果
+		try { window.webkit.messageHandlers.messageSend.postMessage({a:'声音播报状态',b:status}) } catch(error) { }
+	  },
   	  // 跳转到 我的订单 页面
   	  toOdBid(){  
   	  	this.$router.push({

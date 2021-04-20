@@ -63,5 +63,6 @@ export default new vuex.Store({
 		choose_carIdx:'',
 		choose_weightIdx:'',
 		choose_volumeIdx:'',
+		voice_status:false,
 	}
 })
