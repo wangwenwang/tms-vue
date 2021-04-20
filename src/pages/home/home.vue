@@ -6,39 +6,79 @@
   	    <div class='background'></div>
   	    <div class='background_blank'></div>
   	    <div class='head'>
-  	      <div class="image" >
-            
-          </div>
+  	      <div class="image"></div>
           <el-upload
               class="avatar-uploader"
               action="https://jsonplaceholder.typicode.com/posts/"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload">
-              <img v-if="imageUrl" :src="imageUrl" class="userinfo-avatar">
-              <!-- <i v-else class="el-icon-plus avatar-uploader-icon"></i> -->
-              <img  v-if="!imageUrl" class="userinfo-avatar" src="../../assets/images/defaultHead.png">
-            </el-upload> 
-          
+            <img v-if="imageUrl" :src="imageUrl" class="userinfo-avatar">
+            <img  v-if="!imageUrl" class="userinfo-avatar" src="../../assets/images/defaultHead.png">
+          </el-upload> 
   	      <div class='userName'>{{userName}}</div>
   	      <div class='userName'>{{cellphone}}</div>
   	    </div>
+
   	   	<div class="stripInfo">
-          <div  @click="toOdBid" v-if='$store.state.userInfo.userType == "driver"'><i class="iconfont icon-quanbudingdan" ></i><span>我的订单</span>
-            <i  class="iconfont icon-xiangshang" ></i></div>
-  	   	  <div  @click="toMyPublish" v-if='$store.state.userInfo.userType == "driver"'><i class="iconfont icon-cheb" ></i><span>我的发布</span>
-  	   	  	<i class= "iconfont icon-xiangshang" ></i></div>
-  	   	  <div  @click="toHistoricalTrack" v-if='$store.state.userInfo.userType == "driver"'><i class="iconfont icon-lishiguiji" ></i><span>历史轨迹</span>  
-  	   	  	<i  class="iconfont icon-xiangshang" ></i></div>
-          <div  @click="toOpen"><i class="iconfont icon-xiazai" ></i><span>二维码下载</span>
-            <i class="iconfont icon-xiangshang" ></i></div>
-  	   	  <div  @click="toPersonalData"><i class="iconfont icon-gerenziliaoxiugai" ></i><span>个人资料</span>
-  	   	  	<i class="iconfont icon-xiangshang" ></i></div>
-  	   	  <div  @click="toPassword"><i class="iconfont icon-xiugaimima" ></i><span>修改密码</span>
-  	   	  	<i  class="iconfont icon-xiangshang" ></i></div>
-  	   	  <div  @click="toCheckVersion"><i class="iconfont icon-guanyu" ></i><span>版本更新</span>
-  	   	  	<span>{{VersionNum}}.63</span></div>
+          <div>
+            <div>
+              <i class="iconfont icon-yuyin"></i>
+              <span>语音播报</span>
+            </div>
+            <el-switch v-model="switch_value" active-color="#13ce66" inactive-color="#ccc"></el-switch>
+          </div>
+          <div  @click="toOdBid" v-if='$store.state.userInfo.userType == "driver"'>
+            <div>
+              <i class="iconfont icon-quanbudingdan" ></i>
+              <span>我的订单</span>
+            </div>
+            <i  class="iconfont icon-xiangshang" ></i>
+          </div>
+  	   	  <div  @click="toMyPublish" v-if='$store.state.userInfo.userType == "driver"'>
+            <div>
+              <i class="iconfont icon-cheb" ></i>
+              <span>我的发布</span>
+            </div>
+  	   	  	<i class= "iconfont icon-xiangshang" ></i>
+          </div>
+  	   	  <div  @click="toHistoricalTrack" v-if='$store.state.userInfo.userType == "driver"'>
+            <div>
+              <i class="iconfont icon-lishiguiji" id="lishiguiji"></i>
+              <span>历史轨迹</span>  
+            </div>
+  	   	  	<i  class="iconfont icon-xiangshang" ></i>
+          </div>
+          <div  @click="toOpen">
+            <div>
+              <i class="iconfont icon-xiazai" ></i>
+              <span>二维码下载</span>
+            </div>
+            <i class="iconfont icon-xiangshang" ></i>
+          </div>
+  	   	  <div  @click="toPersonalData">
+            <div>
+              <i class="iconfont icon-gerenziliaoxiugai" id="gerenziliaoxiugai"></i>
+              <span>个人资料</span>
+            </div>
+  	   	  	<i class="iconfont icon-xiangshang" ></i>
+          </div>
+  	   	  <div  @click="toPassword">
+            <div>
+              <i class="iconfont icon-xiugaimima" id="xiugaimima"></i>
+              <span>修改密码</span>
+            </div>
+  	   	  	<i  class="iconfont icon-xiangshang" ></i>
+          </div>
+  	   	  <div  @click="toCheckVersion">
+            <div>
+              <i class="iconfont icon-guanyu" ></i>
+              <span>版本更新</span>
+            </div>
+  	   	  	<span>{{VersionNum}}.64</span>
+          </div>
   	   	</div>
+
   	    <div class='Exit_logon' >
   	      <i class="iconfont icon-icon-yxj-switch-account"  @click="exit" ></i>
   	      <div><span @click="exit">退出登录</span></div>
@@ -49,12 +89,10 @@
             <div class="center">
               <img src="../../assets/images/app_QRCode.png" class="appImg"></img>
             </div>
-            
-         </el-dialog>
+          </el-dialog>
         </div>
   	  </div>
   	</div>
-    
   	<FooterIndex/>
   </div>
 </template>
@@ -69,12 +107,21 @@ import FooterIndex from "../../components/footer"
   	  	VersionNum: "",//版本号
         imageUrl: "",//用户头像
         dialogVisible: false,//二维码弹框
-
+        switch_value: false,//语音播报开关
   	  }
   	},
   	components:{
   	  FooterIndex
   	},
+    watch:{
+      switch_value(val, oldVal){
+        if(val){
+          this.open_voice();
+        }else{
+          this.close_voice();
+        }
+      }
+    },
   	created(){  
   	  this.userName = this.$store.state.userInfo.userName;
   	  this.cellphone = this.$store.state.userInfo.cellphone;
@@ -84,6 +131,14 @@ import FooterIndex from "../../components/footer"
       
   	},
   	methods:{
+      // 开启声音播报
+      open_voice(){
+
+      },
+      // 关闭声音播报
+      close_voice(){
+
+      },
   	  // 跳转到 我的订单 页面
   	  toOdBid(){  
   	  	this.$router.push({
@@ -284,51 +339,39 @@ import FooterIndex from "../../components/footer"
   	  	  display: block;
   	  	  margin: 0 auto 40/50rem; 
   	  	}
-  	  	.stripInfo{
-  	  	  margin-top: 170/50rem;
-  	  	  font-size: 30/50rem;
-  	  	  &>div{
-  	  	  	width: 100%;
-  	  	  	height: 80/50rem;
-  	  	  	line-height: 80/50rem;
-  	  	  	background-color: #fff;
-  	  	  	margin-bottom: 20/50rem;
-  	  	  	padding-left: 20/50rem;
-  	  	  	box-sizing: border-box;
-  	  	  	overflow: hidden;
-  	  	  	&>i:nth-child(1){
-  	  	  	  float: left;
-  	  	  	  margin-right: 20/50rem;
-  	  	  	  color: #5965D8;
-  	  	  	  font-size: 40/50rem;
-              padding-top: 5/50rem;
-  	  	  	}
-  	  	  	&>i:nth-child(3),&>span:nth-child(3){
-  	  	  	  float: right;
-  	  	  	  margin-right: 20/50rem;
-  	  	  	  color: #777;
-  	  	  	  
-  	  	  	  &>span:nth-child(3){
-  	  	  	    margin-right: 30/50rem;
-  	  	  	  }
-  	  	    }
-  	  	    &>div:nth-child(1){
-  	  	      &>i:nth-child(1){
-  	  	        font-size: 42/50rem;
-  	  	      }
-  	  	    }
-  	  	    &>div:nth-child(3){
-  	  	      &>i:nth-child(1){
-  	  	        font-size: 44/50rem;
-  	  	      }
-  	  	    }
-  	  	    &>div:nth-child(4){
-  	  	      &>i:nth-child(1){
-  	  	        font-size: 46/50rem;
-  	  	      }
-  	  	    }
-  	  	  }
-  	  	}  
+        .stripInfo{
+          margin-top: 170/50rem;
+          font-size: 30/50rem;
+          &>div{
+            padding:0 30/50rem;
+            line-height: 80/50rem;
+            background-color: #fff;
+            margin-bottom: 20/50rem;
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            &>div:nth-child(1){
+              i{
+                color: #5965D8;
+                margin-right: 20/50rem;
+                font-size: 50/50rem;
+              }
+            }
+            .el-switch{
+              height: 80/50rem;
+              line-height: 80/50rem;
+            }
+          }
+          #lishiguiji{
+            font-size: 46/50rem;
+          }
+          #gerenziliaoxiugai{
+            font-size: 40/50rem;
+          }
+          #xiugaimima{
+            font-size: 44/50rem;
+          }
+        } 
   	  	///* 切换账号 */
   	  	.Exit_logon{
   	  	  margin-top: 50/50rem;
