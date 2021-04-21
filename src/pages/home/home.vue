@@ -21,7 +21,7 @@
   	    </div>
 
   	   	<div class="stripInfo">
-          <div>
+          <div v-if="this.$store.state.Device != `iOS`">
             <div>
               <i class="iconfont icon-yuyin"></i>
               <span>语音播报</span>
