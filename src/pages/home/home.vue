@@ -114,12 +114,17 @@ import FooterIndex from "../../components/footer"
   	  FooterIndex
   	},
     watch:{
-      switch_value(val, oldVal){
-        if(val){
-          this.open_voice();
-        }else{
-          this.close_voice();
-        }
+      switch_value(val){
+		if(val){
+			this.open_voice()
+		}else{
+			if(this.can_control_the_sound()){
+				this.close_voice()
+			}else{
+				this.switch_value = true
+				this.$toast({message:`版本太低，无法使用此功能，请升级版本`, type:'', position:'bottom', duration:'2000'})
+			}
+		}
       }
     },
   	created(){  
@@ -129,7 +134,11 @@ import FooterIndex from "../../components/footer"
   	  this.VersionNum = this.VersionNum.replace("版本:","")
       // this.imageUrl = this.$store.state.userInfo.imageUrl;
       
-	  this.switch_value = this.$store.state.voice_status
+	  if(this.can_control_the_sound()){
+		this.switch_value = this.$store.state.voice_status
+	  }else{
+		this.switch_value = true
+	  }
   	},
   	methods:{
       // 开启声音播报
@@ -144,6 +153,34 @@ import FooterIndex from "../../components/footer"
         this.$store.state.voice_status = false
         this.tellVoiceStatus(`close`)
       },
+	  // 是否具备关闭语音播报功能
+	  can_control_the_sound(){
+		// 安卓版本要高于1.2.7，或苹果版本要高于1.1.0，否则禁止使用关闭语音播报功能
+		if((this.is_nwe_version(`1.2.7`) > 0 && this.$store.state.Device == `android`) || (this.is_nwe_version(`1.1.0`) > 0 && this.$store.state.Device == `iOS`)){
+			return true
+		}
+		return false
+	  },
+	  // 判断版本号。-1：minVersion是老版本  0：版本相同  1：minVersion是新版本
+	  is_nwe_version(minVersion){
+		if(this.VersionNum){
+			var arr1 = this.VersionNum.split('.'),
+				arr2 = minVersion.split('.')
+			var minLength = Math.min(arr1.length,arr2.length)
+			for (var i = 0; i < minLength; i++) {
+				if (parseInt(arr1[i]) != parseInt(arr2[i])) {
+					return (parseInt(arr1[i]) > parseInt(arr2[i])) ? 1 : -1
+				}
+			}
+			if (arr1.length == arr2.length) {
+				return 0
+			} else {
+				return (arr1.length > arr2.length) ? 1 : -1
+			}
+		}else{
+			return -1
+		}
+	  },
 	  tellVoiceStatus(status){
 
 		// 安卓
