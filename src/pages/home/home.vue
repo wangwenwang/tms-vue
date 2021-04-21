@@ -75,6 +75,7 @@
               <i class="iconfont icon-guanyu" ></i>
               <span>版本更新</span>
             </div>
+			<!--  -->
   	   	  	<span>{{VersionNum}}.64</span>
           </div>
   	   	</div>
